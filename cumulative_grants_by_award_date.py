@@ -202,10 +202,10 @@ def create_cumulative_counts(year_days, cutoff):
         cum_data[year] = (dates_array, cum_counts)
     return cum_data
 
-def plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=None, output_filename="cumulative_awards.html"):
+def plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=None, output_filename="nih_awards"):
     """
     Plot cumulative awards (YTD) by award notice date using Plotly.
-    The current year is highlighted in bright red; other years use pastel colors.
+    Saves both interactive HTML and static PNG versions.
     """
     fig = go.Figure()
 
@@ -235,13 +235,19 @@ def plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=None, o
     fig.update_xaxes(tickmode="array", tickvals=tick_vals)
 
     fig.update_layout(
-        title="Cumulative Awards (YTD) by Award Notice Date",
+        title="Cumulative NIH Awards (YTD) by Award Notice Date",
         xaxis_title="Date (Month-Day)",
         yaxis_title="Cumulative Number of Awards"
     )
 
-    fig.write_html(output_filename)
-    print(f"Plot saved to {output_filename}")
+    # Save both formats with fixed filenames
+    html_file = f"{output_filename}.html"
+    png_file = f"{output_filename}.png"
+    
+    fig.write_html(html_file)
+    fig.write_image(png_file, width=1200, height=800)
+    
+    print(f"Plots saved as {html_file} and {png_file}")
 
 def main():
     parser = argparse.ArgumentParser(
@@ -250,8 +256,6 @@ def main():
     )
     parser.add_argument("--tick_interval", type=int, default=7,
                         help="Interval (in days) for x-axis tick labels. Default is 7.")
-    parser.add_argument("--output", type=str, default=None,
-                        help="Output HTML file name. If not provided, a default name with timestamp is used.")
     args = parser.parse_args()
 
     today = datetime.date.today()
@@ -281,15 +285,11 @@ def main():
         colors[year] = get_pastel_color(i, total if total > 0 else 1)
     colors[current_year] = "#FF0000"  # Current year in bright red
 
-    if args.output is None:
-        timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
-        output_filename = f"NIH_RePORTER_{timestamp}_cumulative_awards.html"
-    else:
-        output_filename = args.output
-
+    output_basename = "nih_awards"  # Fixed base filename
+    
     print("Plotting the results...")
     plot_cumulative_data(cum_data, current_year, tick_interval=args.tick_interval,
-                           colors=colors, output_filename=output_filename)
+                        colors=colors, output_filename=output_basename)
 
 if __name__ == "__main__":
     main()
