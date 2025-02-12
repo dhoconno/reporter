@@ -8,6 +8,7 @@ This should update weekly, though I'm new to using GitHub Actions.
 ## Caveats
 - There may be delays between award notices sent to investigators and their appearance in RePORTER, so that may introduce artifactual lag for the most recent days.
 - I am not an expert on NIH RePORTER and rely on `award_notice_date` as an indicator. There may be subtleties to how RePORTER works that distorts these results.
+- One of the grant months didn't load correctly initially and I had to repopulate it by regenerating the cache. If there are flatlines for any month, please let me know so I can check for an error in the API call results.
 
 ## Latest Cumulative Awards Plots
 ![Cumulative Awards Plot](./nih_awards.png)
