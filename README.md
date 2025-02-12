@@ -12,7 +12,7 @@ This should update weekly, though I'm new to using GitHub Actions.
 ## Latest Cumulative Awards Plots
 ![Cumulative Awards Plot](./nih_awards.png)
 
-[Interactive Version](./nih_awards.html)
+<a href="https://dhoconno.github.io/reporter/nih_awards.html" target="_blank">Interactive Version (opens in new tab)</a>
 
 ## Acknowledgements
 - ChatGPT o3-mini-high and Claude Sonnet assisted with deciphering the RePORTER API format and preparing the plots and GitHub Actions.
