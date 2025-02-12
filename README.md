@@ -3,7 +3,7 @@ Like the 80s band Mister Mister, this is the RePORTER reporter. It generates a p
 
 It uses the RePORTER API to retrieve all grants by `award_notice_date` and then creates the output graph. I think that this includes awards that both newly awarded and those that are receiving funding in subsequent years.
 
-This should update weekly, though I'm new to using GitHub Actions.
+This should update daily, though I'm new to using GitHub Actions.
 
 ## Caveats
 - There may be delays between award notices sent to investigators and their appearance in RePORTER, so that may introduce artifactual lag for the most recent days.
