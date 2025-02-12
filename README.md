@@ -7,6 +7,7 @@ This should update daily, though I'm new to using GitHub Actions.
 
 ## Caveats
 - There may be delays between award notices sent to investigators and their appearance in RePORTER, so that may introduce artifactual lag for the most recent days.
+- As I write this on 2025-02-12, the data in RePORTER is current to 2025-02-09 per their web site, so the last 4-5 days of awards may not be fully captured in the plots.
 - I am not an expert on NIH RePORTER and rely on `award_notice_date` as an indicator. There may be subtleties to how RePORTER works that distorts these results.
 - One of the grant months didn't load correctly initially and I had to repopulate it by regenerating the cache. If there are flatlines for any month, please let me know so I can check for an error in the API call results.
 - I'm a virologist not a proper data scientist. So I welcome any and all constructive feedback from those who find problems or areas of improvement.
