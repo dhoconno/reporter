@@ -22,7 +22,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install requests plotly numpy colorsys
+        pip install requests plotly numpy
     
     - name: Run update script
       run: |
