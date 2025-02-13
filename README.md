@@ -11,6 +11,8 @@ This should update daily, though I'm new to using GitHub Actions.
 - I am not an expert on NIH RePORTER and rely on `award_notice_date` as an indicator. There may be subtleties to how RePORTER works that distorts these results.
 - One of the grant months didn't load correctly initially and I had to repopulate it by regenerating the cache. If there are flatlines for any month, please let me know so I can check for an error in the API call results.
 - I'm a virologist not a proper data scientist. So I welcome any and all constructive feedback from those who find problems or areas of improvement.
+- I'm spot checking the results but there is no guarantee of accuracy. 
+- On 2025-02-13 I tried to compress the cache files and use smarter logic to find new grants, but for several hours the display had information that I don't think was accurate. I reverted the code and as of 2025-02-13 the number of 2025 grants matches the number retrieved from the web RePORTER interface (3309). I spot checked the same date range in 2020 and the plot shows the same value as the web interface (5937). The date range on the web search is set to 2020-01-01 to 2020-02-14 and I'm not sure how this search handles boundary dates, though the numbers match exactly.
 
 ## Latest Cumulative Awards Plots
 ![Cumulative Awards Plot](./nih_awards.png)
