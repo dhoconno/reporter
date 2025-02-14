@@ -17,7 +17,7 @@ This should update daily, though I'm new to using GitHub Actions.
 ## Latest Cumulative Award Count Plot
 ![Cumulative Awards Plot](./nih_awards.png)
 
-[Interactive Version (Award Counts)](https://dhoconno.github.io/reporter/nih_awards.html){:target="_blank"}
+[Interactive Version (Award Counts)](https://dhoconno.github.io/reporter/nih_awards.html)
 
 ## Latest Cumulative Award Amount Plot
 
@@ -25,7 +25,7 @@ Inspired by [this analysis in the NYT](https://www.nytimes.com/2025/02/14/health
 
 ![Cumulative Award Amounts Plot](./nih_award_amounts.png)
 
-[Interactive Version (Award Amounts)](https://dhoconno.github.io/reporter/nih_award_amounts.html){:target="_blank"}
+[Interactive Version (Award Amounts)](https://dhoconno.github.io/reporter/nih_award_amounts.html)
 
 ## Acknowledgements
 - ChatGPT o3-mini-high and Claude Sonnet assisted with deciphering the RePORTER API format and preparing the plots and GitHub Actions.
