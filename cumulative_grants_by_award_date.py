@@ -24,8 +24,13 @@ class NIHReporterCache:
     def get_cached_data(self, year, month):
         """
         Retrieve cached data for a specific year and month.
-        Returns None if no cache exists or if cache is invalid.
+        Always bypass cache for the current month.
         """
+        today = datetime.date.today()
+        # Always update cache for the current month.
+        if year == today.year and month == today.month:
+            return None
+
         cache_path = self.get_cache_path(year, month)
         if not cache_path.exists():
             return None
@@ -36,7 +41,7 @@ class NIHReporterCache:
                 if not all(key in data for key in ['fetch_date', 'grants']):
                     return None
                 fetch_date = datetime.datetime.strptime(data['fetch_date'], "%Y-%m-%d").date()
-                if (datetime.date.today() - fetch_date).days > 7:
+                if (today - fetch_date).days > 7:
                     return None
                 return data['grants']
         except (json.JSONDecodeError, KeyError):
