@@ -5,13 +5,14 @@ It uses the [RePORTER API](https://api.reporter.nih.gov) to retrieve all grants 
 
 Based on a spot check of NIH RePORTER web captures in the [Internet Archive Wayback Machine](https://web.archive.org/web/20241206064251/https://reporter.nih.gov/) data is refreshed on Sundays. Therefore, I only plot grants through the start of the current week. For example, as I write this on February 14, 2025 (happy ❤️ day!) only data through February 10, 2025 is shown.
 
-## Caveats
+## Notes and caveats
 - There may be delays between award notices sent to investigators and their appearance in RePORTER, so that may introduce artifactual lag for the most recent days.
 - I am not an expert on NIH RePORTER and rely on `award_notice_date` as an indicator. There may be subtleties to how RePORTER works that distort these results.
 - One of the grant months didn't load correctly initially and I had to repopulate it by regenerating the cache. If there are flatlines for any month, please let me know so I can check for an error in the API call results.
 - I'm a virologist, not a proper data scientist. So I welcome any and all constructive feedback from those who find problems or areas of improvement.
 - I'm spot checking the results but there is no guarantee of accuracy.
 - On 2025-02-13 I tried to compress the cache files and use smarter logic to find new grants, but for several hours the display had information that I don't think was accurate. I reverted the code and as of 2025-02-13 the number of 2025 grants matches the number retrieved from the web RePORTER interface (3309). I spot checked the same date range in 2020 and the plot shows the same value as the web interface (5937). The date range on the web search is set to 2020-01-01 to 2020-02-14 and I'm not sure how this search handles boundary dates, though the numbers match exactly.
+- This week (2025-02-19), there is a difference between the number of awards retrieved by the API (3,731) and what I see in a web search of RePORTER (3,737) for 2025. I don't know how to reconcile this without going through each web result individually. Happy to take suggestions. For now, just know there is a small difference between the data shown here and the web interface. I intend to follow-up again after the next data push on Sunday.
 
 ## Latest Cumulative Award Count Plot
 ![Cumulative Awards Plot](./nih_awards.png)
