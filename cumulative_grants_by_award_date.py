@@ -160,10 +160,12 @@ def fetch_all_grants_by_month(start_year, current_year, cutoff_date):
             grants, cache_status = fetch_grants_with_cache(start_date, cache)
             print(f"Fetched {len(grants)} grants ({cache_status}).")
             
-            for grant in grants:
+            # Filter out grants with missing award_notice_date and sort by award_notice_date
+            valid_grants = [g for g in grants if g.get("award_notice_date")]
+            valid_grants.sort(key=lambda grant: datetime.datetime.strptime(grant.get("award_notice_date"), "%Y-%m-%dT%H:%M:%SZ"))
+            
+            for grant in valid_grants:
                 award_date_str = grant.get("award_notice_date")
-                if not award_date_str:
-                    continue
                 try:
                     dt = datetime.datetime.strptime(award_date_str, "%Y-%m-%dT%H:%M:%SZ").date()
                 except Exception as e:
@@ -192,18 +194,17 @@ def fetch_all_grants_by_month(start_year, current_year, cutoff_date):
                 all_ics.add(ic)
                 
                 # Track current year ICs separately
-                if year >= current_year - 1:  # Current and previous year
+                if year >= current_year - 1:  # current and previous year
                     current_ics.add(ic)
                 
-                # Update IC cumulative counts
+                # Update cumulative totals (since grants are now processed in order, these will be cumulative)
                 ic_counts_cumulative[ic] = ic_counts_cumulative.get(ic, 0) + 1
-                # Update IC cumulative amounts
                 ic_amounts_cumulative[ic] = ic_amounts_cumulative.get(ic, 0) + amount
                 
-                # Store cumulative data for this day of year
+                # Save cumulative totals for this day
                 ic_data_by_year[year][day_of_year] = {
-                    "counts": dict(ic_counts_cumulative),  # Copy to avoid reference issues
-                    "amounts": dict(ic_amounts_cumulative)  # Copy to avoid reference issues
+                    "counts": dict(ic_counts_cumulative),  # copy current cumulative counts
+                    "amounts": dict(ic_amounts_cumulative)  # copy current cumulative amounts
                 }
     
     return data_by_year_counts, data_by_year_amounts, ic_data_by_year, current_ics
@@ -289,7 +290,6 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
     )
     
     # Convert IC data to JSON for use in the callback
-    import json
     ic_data_json = json.dumps(ic_data)
     current_ics_json = json.dumps(list(current_ics))
     
@@ -374,6 +374,10 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
                     // Create color array matching the length of data
                     var barColors = Array(icNames.length).fill(yearColor);
                     
+                    // Format the date into a proper date range
+                    var formattedClickDate = formatMonthDay(date, year);
+                    var dateRangeText = "From " + year + "-01-01 through " + formattedClickDate;
+                    
                     // Create inset chart
                     var insetData = [{
                         type: 'bar',
@@ -385,20 +389,33 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
                     }];
                     
                     var insetLayout = {
-                        title: 'Cumulative IC Breakdown for ' + date + ', ' + year,
+                        annotations: [{
+                            xref: 'paper',
+                            yref: 'paper',
+                            x: 0.5,
+                            y: 1.05,
+                            xanchor: 'center',
+                            yanchor: 'bottom',
+                            text: dateRangeText,
+                            showarrow: false,
+                            font: {
+                                size: 12,
+                                color: '#666'
+                            }
+                        }],
                         xaxis: {
                             title: 'Institute/Center',
                             tickangle: 90
                         },
                         yaxis: {
                             title: {
-                                text: 'Number of Awards (YTD)',
+                                text: 'Award Amount ($ Millions) YTD',
                                 standoff: 10
                             },
                             automargin: true
                         },
                         margin: {
-                            t: 40, r: 20, b: 120, l: 80
+                            t: 60, r: 20, b: 120, l: 80
                         },
                         height: 500,
                         width: 800,
@@ -447,6 +464,21 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
                 }
             });
         };
+        
+        // Helper function to format month-day with proper year
+        function formatMonthDay(monthDayStr, year) {
+            // Parse the month-day string
+            var monthNames = {
+                'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06',
+                'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'
+            };
+            
+            var parts = monthDayStr.split(' ');
+            var month = monthNames[parts[0]];
+            var day = parts[1].padStart(2, '0');
+            
+            return year + '-' + month + '-' + day;
+        }
         
         // Start trying to set up the handler
         setupClickHandler();
@@ -516,7 +548,6 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
     )
     
     # Convert IC data to JSON for use in the callback
-    import json
     ic_data_json = json.dumps(ic_data)
     current_ics_json = json.dumps(list(current_ics))
     
@@ -603,6 +634,10 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
                         return (val / 1000000).toFixed(2);
                     });
                     
+                    // Format the date into a proper date range
+                    var formattedClickDate = formatMonthDay(date, year);
+                    var dateRangeText = "From " + year + "-01-01 through " + formattedClickDate;
+                    
                     // Create color array matching the length of data
                     var barColors = Array(icNames.length).fill(yearColor);
                     
@@ -617,7 +652,20 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
                     }];
                     
                     var insetLayout = {
-                        title: 'Cumulative IC Funding for ' + date + ', ' + year,
+                        annotations: [{
+                            xref: 'paper',
+                            yref: 'paper',
+                            x: 0.5,
+                            y: 1.05,
+                            xanchor: 'center',
+                            yanchor: 'bottom',
+                            text: dateRangeText,
+                            showarrow: false,
+                            font: {
+                                size: 12,
+                                color: '#666'
+                            }
+                        }],
                         xaxis: {
                             title: 'Institute/Center',
                             tickangle: 90
@@ -630,7 +678,7 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
                             automargin: true
                         },
                         margin: {
-                            t: 40, r: 20, b: 120, l: 80
+                            t: 60, r: 20, b: 120, l: 80
                         },
                         height: 500,
                         width: 800,
@@ -680,6 +728,21 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
             });
         };
         
+        // Helper function to format month-day with proper year
+        function formatMonthDay(monthDayStr, year) {
+            // Parse the month-day string
+            var monthNames = {
+                'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 'May': '05', 'Jun': '06',
+                'Jul': '07', 'Aug': '08', 'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12'
+            };
+            
+            var parts = monthDayStr.split(' ');
+            var month = monthNames[parts[0]];
+            var day = parts[1].padStart(2, '0');
+            
+            return year + '-' + month + '-' + day;
+        }
+        
         // Start trying to set up the handler
         setupClickHandler();
     });
@@ -699,7 +762,7 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
     fig.write_image(png_file, width=1200, height=800)
     
     print(f"Award amount plots saved as {html_file} and {png_file}")
-        
+            
 def main():
     parser = argparse.ArgumentParser(
         description=("Extract NIH RePORTER grant data (last 10 years, by day) and plot "
