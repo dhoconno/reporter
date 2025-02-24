@@ -293,8 +293,10 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
     ic_data_json = json.dumps(ic_data)
     current_ics_json = json.dumps(list(current_ics))
     
+    # Convert colors to JSON for use in JavaScript
+    colors_json = json.dumps(colors)
+    
     # Create the JavaScript with manually inserted JSON variables
-    # This avoids Python's string formatting issues
     fig_js = """
     <script>
     // Wait for the DOM to be fully loaded
@@ -302,6 +304,10 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
         // Store IC data in a global variable
         var icData = """ + ic_data_json + """;
         var currentICs = """ + current_ics_json + """;
+        var yearColors = """ + colors_json + """;
+        
+        // Add the current year color which might not be in the colors object
+        yearColors[""" + str(current_year) + """] = "#FF0000";
         
         // Find the Plotly container - might have different class names in different browsers
         var setupClickHandler = function() {
@@ -319,6 +325,9 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
                 var year = customData[0];
                 var dayOfYear = customData[1];
                 var date = point.x;
+                
+                // Get the year's color for the bars
+                var yearColor = yearColors[year] || "#1f77b4";  // Default Plotly blue if not found
                 
                 // Check if we have IC data for this point
                 if (icData[year] && icData[year][dayOfYear]) {
@@ -362,13 +371,16 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
                     icNames = combinedData.map(function(item) { return item.name; });
                     icValues = combinedData.map(function(item) { return item.value; });
                     
+                    // Create color array matching the length of data
+                    var barColors = Array(icNames.length).fill(yearColor);
+                    
                     // Create inset chart
                     var insetData = [{
                         type: 'bar',
                         x: icNames,
                         y: icValues,
                         marker: {
-                            color: 'rgba(50, 171, 96, 0.7)'
+                            color: barColors
                         }
                     }];
                     
@@ -379,10 +391,14 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
                             tickangle: 90
                         },
                         yaxis: {
-                            title: 'Number of Awards (YTD)'
+                            title: {
+                                text: 'Number of Awards (YTD)',
+                                standoff: 10
+                            },
+                            automargin: true
                         },
                         margin: {
-                            t: 40, r: 20, b: 120, l: 60
+                            t: 40, r: 20, b: 120, l: 80
                         },
                         height: 500,
                         width: 800,
@@ -504,8 +520,10 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
     ic_data_json = json.dumps(ic_data)
     current_ics_json = json.dumps(list(current_ics))
     
+    # Convert colors to JSON for use in JavaScript
+    colors_json = json.dumps(colors)
+    
     # Create the JavaScript with manually inserted JSON variables
-    # This avoids Python's string formatting issues
     fig_js = """
     <script>
     // Wait for the DOM to be fully loaded
@@ -513,6 +531,10 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
         // Store IC data in a global variable
         var icData = """ + ic_data_json + """;
         var currentICs = """ + current_ics_json + """;
+        var yearColors = """ + colors_json + """;
+        
+        // Add the current year color which might not be in the colors object
+        yearColors[""" + str(current_year) + """] = "#FF0000";
         
         // Find the Plotly container - might have different class names in different browsers
         var setupClickHandler = function() {
@@ -530,6 +552,9 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
                 var year = customData[0];
                 var dayOfYear = customData[1];
                 var date = point.x;
+                
+                // Get the year's color for the bars
+                var yearColor = yearColors[year] || "#1f77b4";  // Default Plotly blue if not found
                 
                 // Check if we have IC data for this point
                 if (icData[year] && icData[year][dayOfYear]) {
@@ -578,13 +603,16 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
                         return (val / 1000000).toFixed(2);
                     });
                     
+                    // Create color array matching the length of data
+                    var barColors = Array(icNames.length).fill(yearColor);
+                    
                     // Create inset chart
                     var insetData = [{
                         type: 'bar',
                         x: icNames,
                         y: formattedValues,
                         marker: {
-                            color: 'rgba(50, 171, 96, 0.7)'
+                            color: barColors
                         }
                     }];
                     
@@ -595,10 +623,14 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
                             tickangle: 90
                         },
                         yaxis: {
-                            title: 'Award Amount ($ Millions) YTD'
+                            title: {
+                                text: 'Award Amount ($ Millions) YTD',
+                                standoff: 10
+                            },
+                            automargin: true
                         },
                         margin: {
-                            t: 40, r: 20, b: 120, l: 60
+                            t: 40, r: 20, b: 120, l: 80
                         },
                         height: 500,
                         width: 800,
@@ -667,7 +699,7 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
     fig.write_image(png_file, width=1200, height=800)
     
     print(f"Award amount plots saved as {html_file} and {png_file}")
-    
+        
 def main():
     parser = argparse.ArgumentParser(
         description=("Extract NIH RePORTER grant data (last 10 years, by day) and plot "
