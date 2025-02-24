@@ -13,6 +13,7 @@ Based on a spot check of NIH RePORTER web captures in the [Internet Archive Wayb
 - I'm spot checking the results but there is no guarantee of accuracy.
 - On 2025-02-13 I tried to compress the cache files and use smarter logic to find new grants, but for several hours the display had information that I don't think was accurate. I reverted the code and as of 2025-02-13 the number of 2025 grants matches the number retrieved from the web RePORTER interface (3309). I spot checked the same date range in 2020 and the plot shows the same value as the web interface (5937). The date range on the web search is set to 2020-01-01 to 2020-02-14 and I'm not sure how this search handles boundary dates, though the numbers match exactly.
 - This week (2025-02-19), there is a difference between the number of awards retrieved by the API (3,731) and what I see in a web search of RePORTER (3,737) for 2025. I don't know how to reconcile this without going through each web result individually. Happy to take suggestions. For now, just know there is a small difference between the data shown here and the web interface. I intend to follow-up again after the next data push on Sunday.
+- From the RePORTER data update on 2024-02-23, there are 4,061 awards in the web search of RePORTER and 4,058 from my API search. Still very similar, but a small discrepancy nonetheless (same as last week)
 
 ## Latest Cumulative Award Count Plot
 ![Cumulative Awards Plot](./nih_awards.png)
