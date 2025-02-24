@@ -30,3 +30,4 @@ Inspired by [this analysis in the NYT](https://www.nytimes.com/2025/02/14/health
 
 ## Acknowledgements
 - ChatGPT o3-mini-high and Claude Sonnet assisted with deciphering the RePORTER API format and preparing the plots and GitHub Actions.
+- Claude Sonnet 3.7 wrote the code for plotting insets, which is much fancier than I know how to do myself
