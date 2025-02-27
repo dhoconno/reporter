@@ -25,11 +25,15 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests plotly numpy kaleido
+          pip install requests plotly numpy kaleido bs4 pandas
       
       - name: Run update script
         run: |
           python cumulative_grants_by_award_date.py
+
+      - name: Run federal register script
+        run: |
+          python cumulative_fr_announcements.py
       
       - name: Commit and push if changes exist
         run: |
