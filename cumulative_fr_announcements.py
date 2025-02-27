@@ -359,7 +359,7 @@ def create_cumulative_counts(meetings_by_year, cutoff):
         cum_data[year] = (dates_array, np.cumsum(counts))
     return cum_data
 
-def plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=None, output_filename="nih_awards"):
+def plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=None, output_filename="nih_fr_meetings"):
     fig = go.Figure()
     for year in sorted(cum_data.keys()):
         x, y = cum_data[year]
@@ -405,7 +405,7 @@ def export_meetings_to_csv(meetings_by_year, filename=None):
         print("No meetings found to export.")
         return
     if not filename:
-        filename = "nih_awards_all.csv"
+        filename = "nih_fr_meetings_all.csv"
     df = pd.DataFrame(all_meetings)
     df.to_csv(filename, index=False)
     print(f"Exported {len(all_meetings)} meetings to {filename}")
@@ -455,9 +455,9 @@ def run_analysis(start_year=2016, end_year=None, use_cached=True, small_test=Fal
     for i, year in enumerate(sorted(non_current_years)):
         colors[year] = get_pastel_color(i, total if total > 0 else 1)
     colors[current_year] = "#FF0000"
-    fig = plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=colors, output_filename="nih_awards")
+    fig = plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=colors, output_filename="nih_fr_meetings")
     df = display_meetings_table(meetings_by_year, current_year, n=15)
-    export_meetings_to_csv(meetings_by_year, filename="nih_awards_all.csv")
+    export_meetings_to_csv(meetings_by_year, filename="nih_fr_meetings_all.csv")
     try:
         xml_cache_count = len(list(cache.xml_cache_dir.glob("*.xml")))
         raw_cache_count = len(list(cache.raw_cache_dir.glob("*.txt")))

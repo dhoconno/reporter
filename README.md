@@ -5,6 +5,9 @@ It uses the [RePORTER API](https://api.reporter.nih.gov) to retrieve all grants 
 
 Based on a spot check of NIH RePORTER web captures in the [Internet Archive Wayback Machine](https://web.archive.org/web/20241206064251/https://reporter.nih.gov/) data is refreshed on Sundays. Therefore, I only plot grants through the start of the current week. For example, as I write this on February 14, 2025 (happy ❤️ day!) only data through February 10, 2025 is shown.
 
+## Now with 100% more federal register
+Under the [Federal Advisory Committee Act](https://www.gsa.gov/policy-regulations/policy/federal-advisory-committee-management/legislation-and-regulations/federal-advisory-committee-act) study sections that review NIH grants need to be announced in the [Federal Register](https://www.federalregister.gov) at least 15 days before the study section meets. I parsed the meetings from Federal Register notices and created plots comparing the current year to the previous nine years.
+
 ## Notes and caveats
 - There may be delays between award notices sent to investigators and their appearance in RePORTER, so that may introduce artifactual lag for the most recent days.
 - I am not an expert on NIH RePORTER and rely on `award_notice_date` as an indicator. There may be subtleties to how RePORTER works that distort these results.
@@ -28,6 +31,11 @@ Inspired by [this analysis in the NYT](https://www.nytimes.com/2025/02/14/health
 ![Cumulative Award Amounts Plot](./nih_award_amounts.png)
 
 [Interactive Version (Award Amounts)](https://dhoconno.github.io/reporter/nih_award_amounts.html)
+
+## Latest Federal Register Study Section Announcements Plot
+![Cumulative Federal Register Study Section Announcements](./nih_fr_meetings.png)
+
+[Interactive Version (Federal Register Study Section Announcements)](https://dhoconno.github.io/reporter/nih_fr_meetings.html)
 
 ## Acknowledgements
 - ChatGPT o3-mini-high and Claude Sonnet assisted with deciphering the RePORTER API format and preparing the plots and GitHub Actions.
