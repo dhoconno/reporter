@@ -396,8 +396,10 @@ def plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=None, o
     print(f"Plot saved as {output_filename}.html and {output_filename}.png")
     return fig
 
-def export_meetings_to_csv(meetings_by_year, filename=None):
-    """Export all meetings across all years to a CSV file."""
+def export_meetings_to_csv(meetings_by_year, filename=None, compress=True):
+    """Export all meetings across all years to a CSV file and optionally compress with zstd."""
+    import zstandard as zstd
+    
     all_meetings = []
     for year in meetings_by_year:
         all_meetings.extend(meetings_by_year[year])
@@ -406,9 +408,33 @@ def export_meetings_to_csv(meetings_by_year, filename=None):
         return
     if not filename:
         filename = "nih_fr_meetings_all.csv"
+    
     df = pd.DataFrame(all_meetings)
+    
+    # Save the CSV
     df.to_csv(filename, index=False)
     print(f"Exported {len(all_meetings)} meetings to {filename}")
+    
+    # Compress with zstd if requested
+    if compress:
+        compressed_file = f"{filename}.zst"
+        print(f"Compressing to {compressed_file}...")
+        
+        with open(filename, 'rb') as f_in:
+            data = f_in.read()
+            
+        cctx = zstd.ZstdCompressor(level=19)  # Maximum compression
+        compressed = cctx.compress(data)
+        
+        with open(compressed_file, 'wb') as f_out:
+            f_out.write(compressed)
+        
+        print(f"Data compressed to {compressed_file}")
+        
+        # Remove the uncompressed CSV file to save space
+        import os
+        os.remove(filename)
+        print(f"Removed uncompressed CSV file {filename}")
 
 def display_meetings_table(meetings_by_year, current_year, n=10):
     if current_year not in meetings_by_year or not meetings_by_year[current_year]:
@@ -457,7 +483,7 @@ def run_analysis(start_year=2016, end_year=None, use_cached=True, small_test=Fal
     colors[current_year] = "#FF0000"
     fig = plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=colors, output_filename="nih_fr_meetings")
     df = display_meetings_table(meetings_by_year, current_year, n=15)
-    export_meetings_to_csv(meetings_by_year, filename="nih_fr_meetings_all.csv")
+    export_meetings_to_csv(meetings_by_year, filename="nih_fr_meetings_all.csv", compress=True)
     try:
         xml_cache_count = len(list(cache.xml_cache_dir.glob("*.xml")))
         raw_cache_count = len(list(cache.raw_cache_dir.glob("*.txt")))
