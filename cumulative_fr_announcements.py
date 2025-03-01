@@ -432,7 +432,7 @@ def plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=None, o
     today_str = today.strftime("%b %d")
     
     fig.update_layout(
-        title=f"Cumulative NIH Closed Meetings Announced (YTD through {today_str})",
+        title=f"Cumulative NIH Closed Meetings Announced (YTD)",
         xaxis_title="Date (Month-Day)",
         yaxis_title="Cumulative Meetings",
         margin=dict(t=100, r=20, b=70, l=20)
