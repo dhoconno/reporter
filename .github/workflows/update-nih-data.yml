@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests plotly numpy kaleido bs4 pandas
+          pip install requests plotly numpy kaleido bs4 pandas zstd
       - name: Run update script
         run: |
           python cumulative_grants_by_award_date.py
