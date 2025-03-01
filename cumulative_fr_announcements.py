@@ -370,8 +370,26 @@ def create_cumulative_counts(meetings_by_year, cutoff):
 
 def plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=None, output_filename="nih_fr_meetings"):
     fig = go.Figure()
+    
+    # Find the maximum length of data across all years to ensure consistent x-axis range
+    max_len = 0
+    for year in cum_data:
+        x, y = cum_data[year]
+        max_len = max(max_len, len(x))
+    
     for year in sorted(cum_data.keys()):
         x, y = cum_data[year]
+        
+        # Extend the x and y arrays to ensure they all have the same length
+        # This ensures the plot extends to the full date range
+        if len(x) < max_len:
+            # Create extended arrays
+            full_x = x + [x[-1]] * (max_len - len(x))
+            full_y = y.tolist() + [y[-1]] * (max_len - len(y))
+        else:
+            full_x = x
+            full_y = y
+        
         if year == current_year:
             color = "#FF0000"
             line_width = 3
@@ -380,31 +398,49 @@ def plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=None, o
             color = colors.get(year, "lightgray") if colors else "lightgray"
             line_width = 2
             dash = "dash"
+            
         fig.add_trace(go.Scatter(
-            x=x,
-            y=y,
+            x=full_x,
+            y=full_y,
             mode="lines",
             name=str(year),
             line=dict(color=color, width=line_width, dash=dash)
         ))
-    full_x = list(cum_data.values())[0][0]
+    
+    # Use the full date range for tick marks
+    full_x = [(datetime.date(2000, 1, 1) + datetime.timedelta(days=i)).strftime("%b %d")
+              for i in range(max_len)]
     tick_vals = full_x[::tick_interval]
-    fig.update_xaxes(tickmode="array", tickvals=tick_vals)
+    
+    # Set explicit range on x-axis to ensure it shows the full date range
+    fig.update_xaxes(
+        tickmode="array", 
+        tickvals=tick_vals,
+        range=[0, len(full_x)-1]  # Explicit range from first to last day
+    )
+    
+    today = datetime.date.today()
+    today_str = today.strftime("%b %d")
+    
     fig.update_layout(
-        title="Cumulative NIH Closed Meetings Announced (YTD through Today)",
+        title=f"Cumulative NIH Closed Meetings Announced (YTD through {today_str})",
         xaxis_title="Date (Month-Day)",
         yaxis_title="Cumulative Meetings",
         margin=dict(t=100, r=20, b=70, l=20)
     )
-    fig.write_html(f"{output_filename}.html")
+    
+    # Export HTML with plotly.js included
+    fig.write_html(f"{output_filename}.html", include_plotlyjs=True, full_html=True)
+    
     # Export PNG using Kaleido
     try:
         fig.write_image(f"{output_filename}.png")
     except Exception as e:
         print(f"Error writing PNG: {e}")
+    
     print(f"Plot saved as {output_filename}.html and {output_filename}.png")
     return fig
-
+    
 def export_meetings_to_csv(meetings_by_year, filename=None, compress=True):
     """Export all meetings across all years to a CSV file and optionally compress with zstd."""
     import zstandard as zstd
