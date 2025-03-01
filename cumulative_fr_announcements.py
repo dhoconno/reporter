@@ -319,6 +319,7 @@ def fetch_all_meetings(start_year, current_year, cutoff_date):
     cache = FederalRegisterCache()
     meetings_by_year = {}
     month_limit = cutoff_date.month
+    
     for year in range(start_year, current_year + 1):
         year_meetings = []
         for month in range(1, month_limit + 1):
@@ -326,6 +327,7 @@ def fetch_all_meetings(start_year, current_year, cutoff_date):
             documents, cache_status = fetch_monthly_documents_with_cache(year, month, cache)
             print(f"{len(documents)} documents ({cache_status}).")
             doc_meeting_count = 0
+            
             for document in documents:
                 pub_date_str = document.get("publication_date")
                 if not pub_date_str:
@@ -334,16 +336,23 @@ def fetch_all_meetings(start_year, current_year, cutoff_date):
                     pub_date = datetime.datetime.strptime(pub_date_str, "%Y-%m-%d").date()
                 except ValueError:
                     continue
-                if (pub_date.month, pub_date.day) > (cutoff_date.month, cutoff_date.day):
+                    
+                # Only filter out dates after today's date (not Monday)
+                if (pub_date.month > cutoff_date.month) or \
+                   (pub_date.month == cutoff_date.month and pub_date.day > cutoff_date.day):
                     continue
+                    
                 document_meetings = extract_meeting_data(document, cache)
                 doc_meeting_count += len(document_meetings)
                 for meeting in document_meetings:
                     meeting["day_of_year"] = pub_date.timetuple().tm_yday
                     year_meetings.append(meeting)
+                    
             print(f"Extracted {doc_meeting_count} meetings.")
+            
         meetings_by_year[year] = year_meetings
         print(f"{year}: {len(year_meetings)} meetings total.")
+        
     return meetings_by_year
 
 def create_cumulative_counts(meetings_by_year, cutoff):
@@ -382,7 +391,7 @@ def plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=None, o
     tick_vals = full_x[::tick_interval]
     fig.update_xaxes(tickmode="array", tickvals=tick_vals)
     fig.update_layout(
-        title="Cumulative NIH Closed Meetings Announced (YTD)",
+        title="Cumulative NIH Closed Meetings Announced (YTD through Today)",
         xaxis_title="Date (Month-Day)",
         yaxis_title="Cumulative Meetings",
         margin=dict(t=100, r=20, b=70, l=20)
@@ -455,25 +464,35 @@ def run_analysis(start_year=2016, end_year=None, use_cached=True, small_test=Fal
     """
     if not end_year:
         end_year = datetime.date.today().year
+    
+    # Use today's date as cutoff rather than the most recent Monday
     today = datetime.date.today()
-    monday_cutoff = today - datetime.timedelta(days=today.weekday())
-    cutoff_day = monday_cutoff.timetuple().tm_yday
+    cutoff_date = today  # Use today instead of monday_cutoff
+    cutoff_day = cutoff_date.timetuple().tm_yday
     current_year = today.year
-    print(f"Using data up to {monday_cutoff.strftime('%b %d, %Y')}.")
+    
+    print(f"Using data up to {cutoff_date.strftime('%b %d, %Y')} (current day).")
+    
     if small_test:
         start_year = max(2023, start_year)
         end_year = current_year
+        
     cache = FederalRegisterCache()
     if not use_cached:
         import shutil
         shutil.rmtree(cache.cache_dir, ignore_errors=True)
         cache = FederalRegisterCache()
-    meetings_by_year = fetch_all_meetings(start_year, end_year, monday_cutoff)
+        
+    meetings_by_year = fetch_all_meetings(start_year, end_year, cutoff_date)
+    
+    # Rest of function remains the same
     if not meetings_by_year:
         print("No meeting data retrieved.")
         return None
+    
     for year in sorted(meetings_by_year.keys()):
         print(f"{year}: {len(meetings_by_year[year])} meetings.")
+        
     cum_data = create_cumulative_counts(meetings_by_year, cutoff_day)
     non_current_years = [y for y in meetings_by_year.keys() if y != current_year]
     colors = {}
@@ -483,7 +502,7 @@ def run_analysis(start_year=2016, end_year=None, use_cached=True, small_test=Fal
     colors[current_year] = "#FF0000"
     fig = plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=colors, output_filename="nih_fr_meetings")
     df = display_meetings_table(meetings_by_year, current_year, n=15)
-    export_meetings_to_csv(meetings_by_year, filename="nih_fr_meetings_all.csv", compress=True)
+    export_meetings_to_csv(meetings_by_year, filename="nih_fr_meetings_all.csv")
     try:
         xml_cache_count = len(list(cache.xml_cache_dir.glob("*.xml")))
         raw_cache_count = len(list(cache.raw_cache_dir.glob("*.txt")))
