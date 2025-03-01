@@ -494,9 +494,9 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
     with open(html_file, 'w') as f:
         f.write(html_content)
     
-    # Save static PNG (this won't have interactive features)
+    # Save static PNG with standardized size and high resolution
     png_file = f"{output_filename}.png"
-    fig.write_image(png_file, width=1200, height=800)
+    fig.write_image(png_file, width=1200, height=800, scale=2)  # Scale=2 doubles resolution
     
     print(f"Count plots saved as {html_file} and {png_file}")
 
@@ -853,9 +853,9 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
     with open(html_file, 'w') as f:
         f.write(html_content)
     
-    # Save static PNG (this won't have interactive features)
+    # Save static PNG with standardized size and high resolution
     png_file = f"{output_filename}.png"
-    fig.write_image(png_file, width=1200, height=800)
+    fig.write_image(png_file, width=1200, height=800, scale=2)
     
     print(f"Award amount plots saved as {html_file} and {png_file}")
             
@@ -911,6 +911,6 @@ def main():
     
     print("Saving underlying data to CSV and compressing...")
     save_data_to_csv(data_counts, data_amounts, ic_data, output_filename="nih_awards_all")
-    
+
 if __name__ == "__main__":
     main()
