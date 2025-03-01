@@ -19,7 +19,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests plotly numpy kaleido bs4 pandas zstd
+          pip install requests plotly numpy kaleido bs4 pandas zstandard
       - name: Run update script
         run: |
           python cumulative_grants_by_award_date.py
@@ -42,5 +42,5 @@ jobs:
           # Add output files from the second script
           git add nih_fr_meetings.html
           git add nih_fr_meetings.png
-          git add nih_fr_meetings_all.csv
+          git add nih_fr_meetings_all.csv.zst
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update NIH Reporter data $(date +'%Y-%m-%d')" && git push)
