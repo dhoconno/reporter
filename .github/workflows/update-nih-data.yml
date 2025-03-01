@@ -38,6 +38,7 @@ jobs:
           git add nih_awards.png
           git add nih_award_amounts.html
           git add nih_award_amounts.png
+          git add nih_awards_all.csv.zst
           # Add output files from the second script
           git add nih_fr_meetings.html
           git add nih_fr_meetings.png

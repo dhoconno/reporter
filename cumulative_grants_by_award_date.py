@@ -271,7 +271,7 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
             
         fig.add_trace(go.Scatter(
             x=x, 
-            y=y, 
+            y=y,
             mode="lines", 
             name=str(year),
             line=dict(color=color, width=line_width, dash=dash),
@@ -499,6 +499,102 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
     fig.write_image(png_file, width=1200, height=800)
     
     print(f"Count plots saved as {html_file} and {png_file}")
+
+def save_data_to_csv(data_by_year_counts, data_by_year_amounts, ic_data_by_year, output_filename="nih_awards_data"):
+    """
+    Save the underlying data used for plotting to a CSV file.
+    """
+    import pandas as pd
+    import zstandard as zstd
+    
+    # Create a DataFrame with daily counts and amounts for each year
+    # Get the maximum day of year across all years
+    max_day = 366  # Account for leap years
+    
+    # Initialize empty DataFrames
+    counts_df = pd.DataFrame(index=range(1, max_day + 1))
+    amounts_df = pd.DataFrame(index=range(1, max_day + 1))
+    
+    # Fill with data for each year
+    for year in sorted(data_by_year_counts.keys()):
+        # Count data
+        days_array = np.zeros(max_day)
+        for day in data_by_year_counts[year]:
+            if 1 <= day <= max_day:
+                days_array[day - 1] += 1
+        counts_df[f'{year}_count'] = days_array
+        counts_df[f'{year}_cumulative'] = np.cumsum(days_array)
+        
+        # Amount data - convert list of tuples to a day-indexed array
+        amounts_array = np.zeros(max_day)
+        for day, amount in data_by_year_amounts.get(year, []):
+            if 1 <= day <= max_day:
+                amounts_array[day - 1] += amount
+        amounts_df[f'{year}_amount'] = amounts_array
+        amounts_df[f'{year}_cumulative'] = np.cumsum(amounts_array)
+    
+    # Create a DataFrame with IC breakdown for each year
+    ic_dfs = {}
+    for year in sorted(ic_data_by_year.keys()):
+        year_data = []
+        for day in sorted(ic_data_by_year[year].keys()):
+            day_data = {'day_of_year': day}
+            date = (datetime.datetime(2000, 1, 1) + datetime.timedelta(days=day-1)).strftime("%b %d")
+            day_data['date'] = date
+            
+            # Add counts and amounts for each IC
+            for ic, count in ic_data_by_year[year][day].get('counts', {}).items():
+                day_data[f'{ic}_count'] = count
+            
+            for ic, amount in ic_data_by_year[year][day].get('amounts', {}).items():
+                day_data[f'{ic}_amount'] = amount
+            
+            year_data.append(day_data)
+        
+        if year_data:
+            ic_dfs[year] = pd.DataFrame(year_data)
+    
+    # Save to CSV
+    csv_file = f"{output_filename}.csv"
+    print(f"Saving data to {csv_file}...")
+    
+    # Combine counts and amounts
+    combined_df = pd.concat([counts_df, amounts_df], axis=1)
+    combined_df.index.name = 'day_of_year'
+    combined_df.to_csv(csv_file)
+    
+    # Save IC breakdowns by year
+    for year, df in ic_dfs.items():
+        year_csv = f"{output_filename}_{year}_ic_breakdown.csv"
+        df.to_csv(year_csv, index=False)
+    
+    # Compress with zstd
+    compressed_file = f"{csv_file}.zst"
+    print(f"Compressing to {compressed_file}...")
+    
+    with open(csv_file, 'rb') as f_in:
+        data = f_in.read()
+        
+    cctx = zstd.ZstdCompressor(level=19)  # Maximum compression
+    compressed = cctx.compress(data)
+    
+    with open(compressed_file, 'wb') as f_out:
+        f_out.write(compressed)
+    
+    # Also compress the IC breakdown files
+    for year in ic_dfs.keys():
+        year_csv = f"{output_filename}_{year}_ic_breakdown.csv"
+        year_compressed = f"{year_csv}.zst"
+        
+        with open(year_csv, 'rb') as f_in:
+            data = f_in.read()
+            
+        compressed = cctx.compress(data)
+        
+        with open(year_compressed, 'wb') as f_out:
+            f_out.write(compressed)
+    
+    print(f"Data files compressed with zstd")
 
 def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_interval=7, colors=None, output_filename="nih_award_amounts"):
     """
@@ -812,6 +908,9 @@ def main():
     print("Plotting cumulative award amount results...")
     plot_cumulative_amounts(cum_amounts, ic_data, current_ics, current_year, tick_interval=args.tick_interval,
                             colors=colors, output_filename="nih_award_amounts")
-
+    
+    print("Saving underlying data to CSV and compressing...")
+    save_data_to_csv(data_counts, data_amounts, ic_data, output_filename="nih_awards_all")
+    
 if __name__ == "__main__":
     main()
