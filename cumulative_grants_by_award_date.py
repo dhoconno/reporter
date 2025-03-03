@@ -862,22 +862,23 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
 def main():
     parser = argparse.ArgumentParser(
         description=("Extract NIH RePORTER grant data (last 10 years, by day) and plot "
-                     "cumulative counts and award amounts (YTD) up to the current week's Monday.")
+                     "cumulative counts and award amounts (YTD) up to the current week's Wednesday.")
     )
     parser.add_argument("--tick_interval", type=int, default=7,
                         help="Interval (in days) for x-axis tick labels. Default is 7.")
     args = parser.parse_args()
 
     today = datetime.date.today()
-    # Compute the most recent Monday.
-    monday_cutoff = today - datetime.timedelta(days=today.weekday())
-    cutoff_day = monday_cutoff.timetuple().tm_yday
+    # Compute the most recent Wednesday (weekday 2)
+    days_since_wednesday = (today.weekday() - 2) % 7
+    wednesday_cutoff = today - datetime.timedelta(days=days_since_wednesday)
+    cutoff_day = wednesday_cutoff.timetuple().tm_yday
     current_year = today.year
-    print(f"Using data up to {monday_cutoff.strftime('%b %d, %Y')} (most recent Monday).")
+    print(f"Using data up to {wednesday_cutoff.strftime('%b %d, %Y')} (most recent Wednesday).")
     
     start_year = current_year - 9
-    print(f"Fetching grant data from {start_year} to {current_year} for awards up to {monday_cutoff.month:02d}-{monday_cutoff.day:02d}...")
-    data_counts, data_amounts, ic_data, current_ics = fetch_all_grants_by_month(start_year, current_year, monday_cutoff)
+    print(f"Fetching grant data from {start_year} to {current_year} for awards up to {wednesday_cutoff.month:02d}-{wednesday_cutoff.day:02d}...")
+    data_counts, data_amounts, ic_data, current_ics = fetch_all_grants_by_month(start_year, current_year, wednesday_cutoff)
     
     if not data_counts:
         print("No grant count data retrieved. Exiting.")
