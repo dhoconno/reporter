@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 """
-This script extracts NIH RePORTER grant data and plots cumulative counts and award amounts (YTD).
+This script extracts NIH RePORTER grant data and plots cumulative counts and award amounts (YTD)
+using data through today's date (even though RePORTER updates only weekly – see README for details).
 Monthly queries are run (with caching) and if any month reaches the API limit (15,000 results) a warning is issued.
-At the end, a CSV is generated containing one row per grant (with award_date and grant_number),
-which is then compressed using zstd.
+At the end, a CSV is generated (compressed with zstd) listing each grant's award date and grant number.
 """
 
 import argparse
@@ -197,6 +197,7 @@ def fetch_all_grants_by_month(start_year, current_year, cutoff_date):
                 except Exception as e:
                     print(f"Warning: Could not parse award_notice_date '{award_date_str}': {e}")
                     continue
+                # Only include awards on or before the cutoff_date.
                 if (dt.month, dt.day) > (cutoff_date.month, cutoff_date.day):
                     continue
                 day_of_year = dt.timetuple().tm_yday
@@ -265,6 +266,7 @@ def create_cumulative_amounts(year_awards, cutoff):
 def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_interval=7, colors=None, output_filename="nih_awards", validation_info=None):
     """
     Plot cumulative NIH awards (YTD) by award notice date.
+    The X-axis is set to show tick labels every `tick_interval` days (weekly by default).
     """
     fig = go.Figure()
     for year in sorted(cum_data.keys()):
@@ -279,7 +281,7 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
             line_width = 3
             dash = "solid"
         else:
-            color = colors.get(year, "lightgray") if colors else "lightgray"
+            color = colors[year]  # use pastel color from the passed dictionary
             line_width = 2
             dash = "dash"
         fig.add_trace(
@@ -295,18 +297,15 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
     full_x = list(cum_data.values())[0][0]
     tick_vals = full_x[::tick_interval]
     fig.update_xaxes(tickmode="array", tickvals=tick_vals)
-    title = "Cumulative NIH Awards (YTD) by Award Notice Date<br>(Updated Wednesdays)"
-    if validation_info and validation_info.get("monthly_warnings"):
-        title += "<br><span style='color:red'>Warning: Some monthly queries reached the API limit (15,000 results).</span>"
     fig.update_layout(
-        title=title,
+        title="Cumulative NIH Awards (YTD) by Award Notice Date",
         xaxis_title="Date (Month-Day)",
         yaxis_title="Cumulative Number of Awards",
         clickmode="event",
         margin=dict(t=100, r=20, b=70, l=20),
     )
     html_file = f"{output_filename}.html"
-    fig.write_html(html_file)
+    fig.write_html(html_file, full_html=True, include_plotlyjs="cdn")
     png_file = f"{output_filename}.png"
     fig.write_image(png_file, width=1200, height=800, scale=2)
     print(f"Count plots saved as {html_file} and {png_file}")
@@ -315,6 +314,7 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
 def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_interval=7, colors=None, output_filename="nih_award_amounts", validation_info=None):
     """
     Plot cumulative NIH award amounts (YTD) by award notice date.
+    The X-axis shows tick labels every `tick_interval` days (weekly by default).
     """
     fig = go.Figure()
     for year in sorted(cum_data.keys()):
@@ -329,7 +329,7 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
             line_width = 3
             dash = "solid"
         else:
-            color = colors.get(year, "lightgray") if colors else "lightgray"
+            color = colors[year]
             line_width = 2
             dash = "dash"
         fig.add_trace(
@@ -353,7 +353,7 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
         margin=dict(t=100, r=20, b=70, l=20),
     )
     html_file = f"{output_filename}.html"
-    fig.write_html(html_file)
+    fig.write_html(html_file, full_html=True, include_plotlyjs="cdn")
     png_file = f"{output_filename}.png"
     fig.write_image(png_file, width=1200, height=800, scale=2)
     print(f"Award amount plots saved as {html_file} and {png_file}")
@@ -397,30 +397,21 @@ def main():
     parser = argparse.ArgumentParser(
         description=(
             "Extract NIH RePORTER grant data (last 10 years, by day) and plot cumulative counts and award amounts (YTD) "
-            "up to the current week's Wednesday. Validation is performed per month. A compressed list of grants is saved."
+            "using data through today's date. A compressed list of grants is also saved."
         )
-    )
-    parser.add_argument(
-        "--tick_interval",
-        type=int,
-        default=7,
-        help="Interval (in days) for x-axis tick labels. Default is 7.",
     )
     args = parser.parse_args()
 
+    # Use today's date for plotting (even though RePORTER updates weekly – note this in the README)
     today = datetime.date.today()
-    days_since_wednesday = (today.weekday() - 2) % 7
-    wednesday_cutoff = today - datetime.timedelta(days=days_since_wednesday)
-    cutoff_day = wednesday_cutoff.timetuple().tm_yday
+    cutoff_day = today.timetuple().tm_yday
     current_year = today.year
-    print(f"Using data up to {wednesday_cutoff.strftime('%b %d, %Y')} (most recent Wednesday).")
+    print(f"Using data up to {today.strftime('%b %d, %Y')}.")
 
     start_year = current_year - 9
-    print(
-        f"Fetching grant data from {start_year} to {current_year} for awards up to {wednesday_cutoff.month:02d}-{wednesday_cutoff.day:02d}..."
-    )
+    print(f"Fetching grant data from {start_year} to {current_year} for awards up to {today.month:02d}-{today.day:02d}...")
     data_counts, data_amounts, ic_data, current_ics, validation_info, all_award_date_grants = fetch_all_grants_by_month(
-        start_year, current_year, wednesday_cutoff
+        start_year, current_year, today
     )
 
     if not data_counts:
@@ -437,6 +428,7 @@ def main():
     cum_counts = create_cumulative_counts(data_counts, cutoff_day)
     cum_amounts = create_cumulative_amounts(data_amounts, cutoff_day)
 
+    # Generate pastel colors for non-current years.
     non_current_years = [y for y in data_counts.keys() if y != current_year]
     colors = {}
     total = len(non_current_years)
@@ -450,7 +442,7 @@ def main():
         ic_data,
         current_ics,
         current_year,
-        tick_interval=args.tick_interval,
+        tick_interval=7,
         colors=colors,
         output_filename="nih_awards",
         validation_info=validation_info,
@@ -462,7 +454,7 @@ def main():
         ic_data,
         current_ics,
         current_year,
-        tick_interval=args.tick_interval,
+        tick_interval=7,
         colors=colors,
         output_filename="nih_award_amounts",
         validation_info=validation_info,
