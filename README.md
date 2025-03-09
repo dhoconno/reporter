@@ -7,7 +7,7 @@ Based on a spot check of NIH RePORTER web captures in the [Internet Archive Wayb
 
 I welcome feedback and corrections if you find any mistakes!
 
-*2025-03-09 - when NIH RePORTER is down, as it is this weekend, the plots from the current and previous month erroneously show **no** grants from these months. This should self-resolve as soon as RePORTER is online during a daily refresh.*
+*2025-03-09 - when NIH RePORTER is down, the plots from the current and previous month erroneously show **no** grants from these months. This should self-resolve as soon as RePORTER is online during a daily refresh.*
 
 ## Now with 100% more federal register
 Under the [Federal Advisory Committee Act](https://www.gsa.gov/policy-regulations/policy/federal-advisory-committee-management/legislation-and-regulations/federal-advisory-committee-act) study sections that review NIH grants need to be announced in the [Federal Register](https://www.federalregister.gov) at least 15 days before the study section meets. I parsed the meetings from Federal Register notices and created plots comparing the current year to the previous nine years.
