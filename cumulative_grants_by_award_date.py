@@ -137,9 +137,12 @@ def fetch_grants_by_award_date(start_date):
     return results
 
 
-def fetch_grants_with_cache(start_date, cache):
+def fetch_grants_with_cache(start_date, cache, force_refresh=False):
     """Fetch grant data for a given month using award_notice_date criteria, with caching."""
-    cached_data = cache.get_cached_data(start_date.year, start_date.month)
+    if force_refresh:
+        cached_data = None
+    else:
+        cached_data = cache.get_cached_data(start_date.year, start_date.month)
     if cached_data is not None:
         return cached_data, "hit"
     grants = fetch_grants_by_award_date(start_date)
@@ -147,17 +150,11 @@ def fetch_grants_with_cache(start_date, cache):
     return grants, "miss"
 
 
-def fetch_all_grants_by_month(start_year, current_year, cutoff_date):
+def fetch_all_grants_by_month(start_year, current_year, cutoff_date, force_refresh=False):
     """
     For each year from start_year to current_year, fetch monthly grant data (using award_notice_date)
     up to cutoff_date.month. Only awards with a date on or before cutoff_date are kept.
-    Returns:
-      - data_by_year_counts: For plotting cumulative counts.
-      - data_by_year_amounts: For plotting cumulative award amounts.
-      - ic_data_by_year: Cumulative Institute/Center data.
-      - current_ics: Set of all encountered IC abbreviations.
-      - validation_info: Warnings (if any) when monthly queries hit the API limit.
-      - all_award_date_grants: Raw list of grants per year.
+    If force_refresh is True, current year data will bypass the cache.
     """
     cache = NIHReporterCache()
     data_by_year_counts = {}
@@ -173,17 +170,14 @@ def fetch_all_grants_by_month(start_year, current_year, cutoff_date):
         all_award_date_grants[year] = []
         for month in range(1, month_limit + 1):
             start_date = datetime.date(year, month, 1)
+            
+            # Only force refresh for the current year
+            should_force_refresh = force_refresh and year == current_year
+            
             print(f"Fetching grants for {year}-{month:02d}...", end=" ")
-            grants, cache_status = fetch_grants_with_cache(start_date, cache)
-            print(f"Fetched {len(grants)} grants ({cache_status}).")
-            if len(grants) == 15000:
-                warning_msg = (
-                    f"WARNING: {year}-{month:02d} reached the API limit of 15000 results; data may be incomplete."
-                )
-                print(warning_msg)
-                monthly_warnings[f"{year}-{month:02d}"] = len(grants)
-            all_award_date_grants[year].extend(grants)
-
+            grants, cache_status = fetch_grants_with_cache(start_date, cache, should_force_refresh)
+            print(f"Fetched {len(grants)} grants ({cache_status})")
+            
             valid_grants = [g for g in grants if g.get("award_notice_date")]
             valid_grants.sort(
                 key=lambda grant: datetime.datetime.strptime(
@@ -400,6 +394,8 @@ def main():
             "using data through today's date. A compressed list of grants is also saved."
         )
     )
+    parser.add_argument("--force-refresh", action="store_true",
+                        help="Force refresh the current year's data, ignoring cache")
     args = parser.parse_args()
 
     # Use today's date for plotting (even though RePORTER updates weekly – note this in the README)
@@ -407,11 +403,14 @@ def main():
     cutoff_day = today.timetuple().tm_yday
     current_year = today.year
     print(f"Using data up to {today.strftime('%b %d, %Y')}.")
+    
+    if args.force_refresh:
+        print(f"Force refreshing data for the current year ({current_year})...")
 
     start_year = current_year - 9
     print(f"Fetching grant data from {start_year} to {current_year} for awards up to {today.month:02d}-{today.day:02d}...")
     data_counts, data_amounts, ic_data, current_ics, validation_info, all_award_date_grants = fetch_all_grants_by_month(
-        start_year, current_year, today
+        start_year, current_year, today, args.force_refresh
     )
 
     if not data_counts:
