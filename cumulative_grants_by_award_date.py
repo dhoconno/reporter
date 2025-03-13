@@ -422,6 +422,48 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
         tickvals=tick_vals,
         range=[0, len(full_x)-1]  # Force display of the entire x-axis range
     )
+    
+    # Add annotation for most recent Sunday
+    today = datetime.date.today()
+    # Find the most recent Sunday (go back until we find a Sunday)
+    most_recent_sunday = today
+    while most_recent_sunday.weekday() != 6:  # 6 = Sunday
+        most_recent_sunday = most_recent_sunday - datetime.timedelta(days=1)
+    
+    # Convert to day of year
+    sunday_day_of_year = most_recent_sunday.timetuple().tm_yday
+    
+    # Find the corresponding x-axis position (index in the date array)
+    sunday_x_index = sunday_day_of_year - 1  # Adjust for zero-indexing
+    
+    if sunday_x_index < len(full_x):
+        # Get the highest y-value across all years for positioning the arrow
+        max_y_value = 0
+        for year in cum_data:
+            _, y_values = cum_data[year]
+            if len(y_values) > sunday_x_index:
+                max_y_value = max(max_y_value, y_values[sunday_x_index])
+        
+        # Add the annotation
+        fig.add_annotation(
+            x=full_x[sunday_x_index],
+            y=max_y_value * 1.05,  # Place arrow slightly above the highest line
+            text="Latest<br>RePORTER<br>update",
+            showarrow=True,
+            arrowhead=1,
+            arrowsize=1.5,
+            arrowwidth=2,
+            arrowcolor="#000000",
+            ax=0,
+            ay=-40,
+            font=dict(size=12, color="#000000"),
+            bgcolor="#FFFFFF",
+            bordercolor="#000000",
+            borderwidth=1,
+            borderpad=4,
+            opacity=0.9
+        )
+    
     fig.update_layout(
         title="Cumulative NIH Awards (YTD) by Award Notice Date",
         xaxis_title="Date (Month-Day)",
@@ -473,6 +515,48 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
         tickvals=tick_vals,
         range=[0, len(full_x)-1]  # Force display of the entire x-axis range
     )
+    
+    # Add annotation for most recent Sunday
+    today = datetime.date.today()
+    # Find the most recent Sunday (go back until we find a Sunday)
+    most_recent_sunday = today
+    while most_recent_sunday.weekday() != 6:  # 6 = Sunday
+        most_recent_sunday = most_recent_sunday - datetime.timedelta(days=1)
+    
+    # Convert to day of year
+    sunday_day_of_year = most_recent_sunday.timetuple().tm_yday
+    
+    # Find the corresponding x-axis position (index in the date array)
+    sunday_x_index = sunday_day_of_year - 1  # Adjust for zero-indexing
+    
+    if sunday_x_index < len(full_x):
+        # Get the highest y-value across all years for positioning the arrow
+        max_y_value = 0
+        for year in cum_data:
+            _, y_values = cum_data[year]
+            if len(y_values) > sunday_x_index:
+                max_y_value = max(max_y_value, y_values[sunday_x_index])
+        
+        # Add the annotation
+        fig.add_annotation(
+            x=full_x[sunday_x_index],
+            y=max_y_value * 1.05,  # Place arrow slightly above the highest line
+            text="Latest<br>RePORTER<br>update",
+            showarrow=True,
+            arrowhead=1,
+            arrowsize=1.5,
+            arrowwidth=2,
+            arrowcolor="#000000",
+            ax=0,
+            ay=-40,
+            font=dict(size=12, color="#000000"),
+            bgcolor="#FFFFFF",
+            bordercolor="#000000",
+            borderwidth=1,
+            borderpad=4,
+            opacity=0.9
+        )
+    
     fig.update_layout(
         title="Cumulative NIH Award Amounts (YTD) by Award Notice Date",
         xaxis_title="Date (Month-Day)",
