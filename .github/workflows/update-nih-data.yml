@@ -22,7 +22,7 @@ jobs:
           pip install requests plotly numpy kaleido bs4 pandas zstandard
       - name: Run update script
         run: |
-          python cumulative_grants_by_award_date.py
+          python cumulative_grants_by_award_date.py --force-refresh
       - name: Run federal register script
         run: |
           python cumulative_fr_announcements.py
