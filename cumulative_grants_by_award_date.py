@@ -212,9 +212,6 @@ def fetch_all_grants_by_month(start_year, current_year, cutoff_date, force_refre
                 except Exception as e:
                     print(f"Warning: Could not parse award_notice_date '{award_date_str}': {e}")
                     continue
-                # Only include awards on or before the cutoff_date, unless include_all_recent is True
-                if not include_all_recent and (dt.month, dt.day) > (cutoff_date.month, cutoff_date.day):
-                    continue
                 
                 # Add to all_award_date_grants - THIS LINE WAS MISSING
                 all_award_date_grants[year].append(grant)
@@ -310,15 +307,6 @@ def create_cumulative_counts(data_counts, cutoff_day):
     print(f"Creating cumulative counts with cutoff day {cutoff_day}")
     result = {}
     
-    # Debug: Check for March 7-8 data
-    march7_day = datetime.date(2025, 3, 7).timetuple().tm_yday
-    march8_day = datetime.date(2025, 3, 8).timetuple().tm_yday
-    if 2025 in data_counts:
-        march7_count = sum(1 for day in data_counts[2025] if day == march7_day)
-        march8_count = sum(1 for day in data_counts[2025] if day == march8_day)
-        print(f"DEBUG: March 7, 2025 (day {march7_day}): {march7_count} grants in data_counts")
-        print(f"DEBUG: March 8, 2025 (day {march8_day}): {march8_count} grants in data_counts")
-    
     # Check if any year's data exceeds the cutoff day
     max_day = cutoff_day
     for year, days in data_counts.items():
@@ -334,11 +322,12 @@ def create_cumulative_counts(data_counts, cutoff_day):
     else:
         max_day = cutoff_day
     
-    # Generate date strings for x-axis
+    # Generate date strings for x-axis - USE CURRENT YEAR INSTEAD OF HARDCODED 2023
+    current_year = datetime.date.today().year
     date_strs = []
     for day in range(1, max_day + 1):
-        # Use a non-leap year (e.g., 2023) to get consistent day of year conversions
-        date = datetime.date(2023, 1, 1) + datetime.timedelta(days=day-1)
+        # Use current year to get correct day of year conversions
+        date = datetime.date(current_year, 1, 1) + datetime.timedelta(days=day-1)
         date_str = date.strftime("%b %d")
         date_strs.append(date_str)
     
