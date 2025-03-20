@@ -125,6 +125,56 @@ class FederalRegisterCache:
         except Exception as e:
             print(f"Error saving cache for {year}-{month:02d}: {e}")
 
+def create_ic_plots_dir():
+    """Create directory for institute-specific plots if it doesn't exist."""
+    ic_plots_dir = Path("ic_plots")
+    ic_plots_dir.mkdir(exist_ok=True)
+    print(f"Ensuring IC plots directory exists: {ic_plots_dir}")
+    return ic_plots_dir
+
+def plot_ic_data(meetings_by_year, current_year, cutoff_day):
+    """Generate separate plots for each institute in the federal register data."""
+    print("\nGenerating per-institute FR plots...")
+    ic_plots_dir = Path("ic_plots")
+    ic_plots_dir.mkdir(exist_ok=True)
+    
+    # Get all institutes across all years
+    all_institutes = set()
+    for year, meetings in meetings_by_year.items():
+        for meeting in meetings:
+            institute = meeting.get("institute")
+            if institute and institute != "Unknown":
+                all_institutes.add(institute)
+    
+    print(f"Found {len(all_institutes)} institutes for FR plotting")
+    
+    # Create colors for previous years
+    non_current_years = [y for y in meetings_by_year.keys() if y != current_year]
+    colors = {}
+    total = len(non_current_years)
+    for i, year in enumerate(sorted(non_current_years)):
+        colors[year] = get_pastel_color(i, total if total > 0 else 1)
+    colors[current_year] = "#FF0000"
+    
+    # For each institute, create a separate plot
+    for institute in sorted(all_institutes):
+        print(f"Creating plot for {institute}...")
+        
+        # Filter meetings for this institute
+        institute_meetings_by_year = {}
+        
+        for year, meetings in meetings_by_year.items():
+            institute_meetings = [m for m in meetings if m.get("institute") == institute]
+            if institute_meetings:
+                institute_meetings_by_year[year] = institute_meetings
+        
+        # Only create plot if we have data
+        if institute_meetings_by_year:
+            cum_data = create_cumulative_counts(institute_meetings_by_year, cutoff_day)
+            output_filename = f"ic_plots/nih_fr_meetings_{institute}"
+            plot_cumulative_data(cum_data, current_year, colors=colors, 
+                                output_filename=output_filename)
+
 def get_pastel_color(i, total):
     """Generate a pastel color using HLS conversion."""
     hue = i / total
@@ -505,6 +555,143 @@ def display_meetings_table(meetings_by_year, current_year, n=10):
     print(f"{len(df)} meetings for {current_year}. Showing first {min(n, len(df))} entries.")
     return df.head(n)
 
+def update_readme():
+    """
+    Update README.md with links to all available plots, organized by institute.
+    Each institute gets one line with links to all its available plot types.
+    Only shows actual institutes, filtering out typos.
+    """
+    print("\nUpdating README.md with links to all plots...")
+    
+    # Create the plots directory if it doesn't exist
+    ic_plots_dir = create_ic_plots_dir()
+    
+    # Scan for all available HTML plot files
+    plot_files = list(ic_plots_dir.glob("*.html"))
+    
+    # Comprehensive list of official NIH ICs with full names
+    ic_names = {
+        "NCI": "National Cancer Institute",
+        "NHLBI": "National Heart, Lung, and Blood Institute",
+        "NIAID": "National Institute of Allergy and Infectious Diseases",
+        "NIGMS": "National Institute of General Medical Sciences",
+        "NIMH": "National Institute of Mental Health",
+        "NINDS": "National Institute of Neurological Disorders and Stroke",
+        "NIA": "National Institute on Aging",
+        "NIDDK": "National Institute of Diabetes and Digestive and Kidney Diseases",
+        "NICHD": "Eunice Kennedy Shriver National Institute of Child Health and Human Development",
+        "NEI": "National Eye Institute",
+        "NIDCR": "National Institute of Dental and Craniofacial Research",
+        "NIEHS": "National Institute of Environmental Health Sciences",
+        "NIAMS": "National Institute of Arthritis and Musculoskeletal and Skin Diseases",
+        "NINR": "National Institute of Nursing Research",
+        "NHGRI": "National Human Genome Research Institute",
+        "NIDA": "National Institute on Drug Abuse",
+        "NIAAA": "National Institute on Alcohol Abuse and Alcoholism",
+        "NIBIB": "National Institute of Biomedical Imaging and Bioengineering",
+        "NIMHD": "National Institute on Minority Health and Health Disparities",
+        "NCATS": "National Center for Advancing Translational Sciences",
+        "FIC": "Fogarty International Center",
+        "NLM": "National Library of Medicine",
+        "CC": "NIH Clinical Center",
+        "CIT": "Center for Information Technology",
+        "CSR": "Center for Scientific Review",
+        "OD": "Office of the Director"
+    }
+    
+    # Organize plots by institute
+    institute_plots = {}  # ic_code -> {awards: file, amounts: file, meetings: file}
+    
+    for plot_file in plot_files:
+        filename = plot_file.name
+        ic_code = None
+        plot_type = None
+        
+        # Extract IC code and plot type from filename
+        if filename.startswith("nih_awards_") and not filename.startswith("nih_awards_amounts_"):
+            ic_code = filename.replace("nih_awards_", "").replace(".html", "")
+            plot_type = "awards"
+        elif filename.startswith("nih_award_amounts_"):
+            ic_code = filename.replace("nih_award_amounts_", "").replace(".html", "")
+            plot_type = "amounts"
+        elif filename.startswith("nih_fr_meetings_"):
+            ic_code = filename.replace("nih_fr_meetings_", "").replace(".html", "")
+            plot_type = "meetings"
+        
+        # Only include official institutes (skip typos)
+        if ic_code in ic_names:
+            if ic_code not in institute_plots:
+                institute_plots[ic_code] = {}
+            institute_plots[ic_code][plot_type] = plot_file
+    
+    # Create the README section
+    readme_section = """
+## Institute-Specific Plots
+
+The following NIH Institutes and Centers have individual plots available. Click on any link to view the corresponding interactive visualization.
+"""
+    
+    # Add table header
+    readme_section += "\n| Institute | Available Plots |\n"
+    readme_section += "| --- | --- |\n"
+    
+    # Sort institutes by name
+    sorted_ics = sorted(institute_plots.keys(), key=lambda ic: ic_names.get(ic, ic))
+    
+    for ic_code in sorted_ics:
+        plots = institute_plots[ic_code]
+        name = ic_names.get(ic_code, ic_code)
+        
+        # Build links
+        links = []
+        if "awards" in plots:
+            links.append(f"[awards](ic_plots/nih_awards_{ic_code}.html)")
+        else:
+            links.append("<span style='color:gray'>awards</span>")
+            
+        if "amounts" in plots:
+            links.append(f"[award amounts](ic_plots/nih_award_amounts_{ic_code}.html)")
+        else:
+            links.append("<span style='color:gray'>award amounts</span>")
+            
+        if "meetings" in plots:
+            links.append(f"[meeting notices](ic_plots/nih_fr_meetings_{ic_code}.html)")
+        else:
+            links.append("<span style='color:gray'>meeting notices</span>")
+        
+        # Add to table
+        readme_section += f"| {name} | {' \| '.join(links)} |\n"
+    
+    readme_section += f"\n*Data last updated: {datetime.date.today().strftime('%B %d, %Y')}*"
+    
+    # Read current README
+    try:
+        with open("README.md", "r") as f:
+            current_readme = f.read()
+        
+        import re
+        
+        # Check if the section already exists and replace it, or add it
+        if "## Institute-Specific Plots" in current_readme:
+            # Replace existing section
+            pattern = r"## Institute-Specific Plots.*?(?=##|\Z)"
+            new_readme = re.sub(pattern, readme_section + "\n\n", current_readme, flags=re.DOTALL)
+        else:
+            # Add before the last section or at the end
+            if "## Acknowledgements" in current_readme:
+                new_readme = current_readme.replace("## Acknowledgements", f"{readme_section}\n\n## Acknowledgements")
+            else:
+                new_readme = current_readme + "\n\n" + readme_section
+        
+        # Write updated README
+        with open("README.md", "w") as f:
+            f.write(new_readme)
+            
+        print(f"README.md updated with links to plots for {len(institute_plots)} official institutes")
+            
+    except Exception as e:
+        print(f"Error updating README: {e}")
+
 def run_analysis(start_year=2016, end_year=None, use_cached=True, small_test=False):
     """
     Run the full analysis pipeline.
@@ -548,8 +735,19 @@ def run_analysis(start_year=2016, end_year=None, use_cached=True, small_test=Fal
         colors[year] = get_pastel_color(i, total if total > 0 else 1)
     colors[current_year] = "#FF0000"
     fig = plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=colors, output_filename="nih_fr_meetings")
+
     df = display_meetings_table(meetings_by_year, current_year, n=15)
     export_meetings_to_csv(meetings_by_year, filename="nih_fr_meetings_all.csv")
+
+    # Generate per-IC plots
+    plot_ic_data(meetings_by_year, current_year, cutoff_day)
+    
+    df = display_meetings_table(meetings_by_year, current_year, n=15)
+    export_meetings_to_csv(meetings_by_year, filename="nih_fr_meetings_all.csv")
+    
+    # Update README with links to all available plots (including those created by the grants script)
+    update_readme()
+
     try:
         xml_cache_count = len(list(cache.xml_cache_dir.glob("*.xml")))
         raw_cache_count = len(list(cache.raw_cache_dir.glob("*.txt")))

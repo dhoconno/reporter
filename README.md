@@ -49,6 +49,50 @@ The NIH grant award visualization script retrieves funding data directly from th
 
 The Federal Register meeting analysis script systematically extracts and visualizes "Notice of Closed Meeting" announcements published by NIH institutes. The methodology involves querying the Federal Register's API for NIH documents containing specific title patterns related to closed meetings, processing publications from the start of each calendar year through the current date. The script downloads and parses each document's content using available XML, raw text, or HTML formats, applying regular expression patterns to extract meeting details including committee names, dates, and associated institutes. A comprehensive caching system captures both search results and document content to improve efficiency and reduce server load. The cumulative visualization plots the running total of closed meeting announcements by publication date for multiple years, with the current year highlighted in red and previous years in pastel colors. Unlike the NIH grant award script which uses weekly cutoffs, this analysis includes data through the current day to reflect the Federal Register's daily update schedule. The finished visualization maintains consistent dimensions (1200x800 pixels) and resolution with the grant award plots for visual coherence. All extracted meeting data is compiled into a single CSV file containing publication dates, committee names, meeting dates, and institute information, then compressed using zstandard compression to optimize storage while preserving all details necessary for reproduction or further analysis.
 
+
+
+## Institute-Specific Plots
+
+The following NIH Institutes and Centers have individual plots available. Click on any link to view the corresponding interactive visualization.
+
+| Institute | Available Plots |
+| --- | --- |
+| Eunice Kennedy Shriver National Institute of Child Health and Human Development | [awards](ic_plots/nih_awards_NICHD.html) \| [award amounts](ic_plots/nih_award_amounts_NICHD.html) \| <span style='color:gray'>meeting notices</span> |
+| Fogarty International Center | [awards](ic_plots/nih_awards_FIC.html) \| [award amounts](ic_plots/nih_award_amounts_FIC.html) \| <span style='color:gray'>meeting notices</span> |
+| National Cancer Institute | [awards](ic_plots/nih_awards_NCI.html) \| [award amounts](ic_plots/nih_award_amounts_NCI.html) \| <span style='color:gray'>meeting notices</span> |
+| National Center for Advancing Translational Sciences | [awards](ic_plots/nih_awards_NCATS.html) \| [award amounts](ic_plots/nih_award_amounts_NCATS.html) \| <span style='color:gray'>meeting notices</span> |
+| National Eye Institute | [awards](ic_plots/nih_awards_NEI.html) \| [award amounts](ic_plots/nih_award_amounts_NEI.html) \| <span style='color:gray'>meeting notices</span> |
+| National Heart, Lung, and Blood Institute | [awards](ic_plots/nih_awards_NHLBI.html) \| [award amounts](ic_plots/nih_award_amounts_NHLBI.html) \| <span style='color:gray'>meeting notices</span> |
+| National Human Genome Research Institute | [awards](ic_plots/nih_awards_NHGRI.html) \| [award amounts](ic_plots/nih_award_amounts_NHGRI.html) \| <span style='color:gray'>meeting notices</span> |
+| National Institute of Allergy and Infectious Diseases | [awards](ic_plots/nih_awards_NIAID.html) \| [award amounts](ic_plots/nih_award_amounts_NIAID.html) \| [meeting notices](ic_plots/nih_fr_meetings_NIAID.html) |
+| National Institute of Arthritis and Musculoskeletal and Skin Diseases | [awards](ic_plots/nih_awards_NIAMS.html) \| [award amounts](ic_plots/nih_award_amounts_NIAMS.html) \| <span style='color:gray'>meeting notices</span> |
+| National Institute of Biomedical Imaging and Bioengineering | [awards](ic_plots/nih_awards_NIBIB.html) \| [award amounts](ic_plots/nih_award_amounts_NIBIB.html) \| [meeting notices](ic_plots/nih_fr_meetings_NIBIB.html) |
+| National Institute of Dental and Craniofacial Research | [awards](ic_plots/nih_awards_NIDCR.html) \| [award amounts](ic_plots/nih_award_amounts_NIDCR.html) \| [meeting notices](ic_plots/nih_fr_meetings_NIDCR.html) |
+| National Institute of Diabetes and Digestive and Kidney Diseases | [awards](ic_plots/nih_awards_NIDDK.html) \| [award amounts](ic_plots/nih_award_amounts_NIDDK.html) \| <span style='color:gray'>meeting notices</span> |
+| National Institute of Environmental Health Sciences | [awards](ic_plots/nih_awards_NIEHS.html) \| [award amounts](ic_plots/nih_award_amounts_NIEHS.html) \| [meeting notices](ic_plots/nih_fr_meetings_NIEHS.html) |
+| National Institute of General Medical Sciences | [awards](ic_plots/nih_awards_NIGMS.html) \| [award amounts](ic_plots/nih_award_amounts_NIGMS.html) \| [meeting notices](ic_plots/nih_fr_meetings_NIGMS.html) |
+| National Institute of Mental Health | [awards](ic_plots/nih_awards_NIMH.html) \| [award amounts](ic_plots/nih_award_amounts_NIMH.html) \| [meeting notices](ic_plots/nih_fr_meetings_NIMH.html) |
+| National Institute of Neurological Disorders and Stroke | [awards](ic_plots/nih_awards_NINDS.html) \| [award amounts](ic_plots/nih_award_amounts_NINDS.html) \| [meeting notices](ic_plots/nih_fr_meetings_NINDS.html) |
+| National Institute of Nursing Research | [awards](ic_plots/nih_awards_NINR.html) \| [award amounts](ic_plots/nih_award_amounts_NINR.html) \| [meeting notices](ic_plots/nih_fr_meetings_NINR.html) |
+| National Institute on Aging | [awards](ic_plots/nih_awards_NIA.html) \| [award amounts](ic_plots/nih_award_amounts_NIA.html) \| [meeting notices](ic_plots/nih_fr_meetings_NIA.html) |
+| National Institute on Alcohol Abuse and Alcoholism | [awards](ic_plots/nih_awards_NIAAA.html) \| [award amounts](ic_plots/nih_award_amounts_NIAAA.html) \| [meeting notices](ic_plots/nih_fr_meetings_NIAAA.html) |
+| National Institute on Drug Abuse | [awards](ic_plots/nih_awards_NIDA.html) \| [award amounts](ic_plots/nih_award_amounts_NIDA.html) \| [meeting notices](ic_plots/nih_fr_meetings_NIDA.html) |
+| National Institute on Minority Health and Health Disparities | [awards](ic_plots/nih_awards_NIMHD.html) \| [award amounts](ic_plots/nih_award_amounts_NIMHD.html) \| <span style='color:gray'>meeting notices</span> |
+| National Library of Medicine | [awards](ic_plots/nih_awards_NLM.html) \| [award amounts](ic_plots/nih_award_amounts_NLM.html) \| <span style='color:gray'>meeting notices</span> |
+| Office of the Director | [awards](ic_plots/nih_awards_OD.html) \| [award amounts](ic_plots/nih_award_amounts_OD.html) \| <span style='color:gray'>meeting notices</span> |
+
+*Data last updated: March 20, 2025*
+
+### Federal Register Meetings by Institute
+- [NIA - National Institute on Aging](ic_plots/nih_fr_meetings_NIA.html)
+- [NIAAA - NIAAA](ic_plots/nih_fr_meetings_NIAAA.html)
+- [NIAAID - NIAAID](ic_plots/nih_fr_meetings_NIAAID.html)
+- [NIAAMSD - NIAAMSD](ic_plots/nih_fr_meetings_NIAAMSD.html)
+- [NIAID - National Institute of Allergy and Infectious Diseases](ic_plots/nih_fr_meetings_NIAID.html)
+- [View all 19 institutes...](ic_plots/)
+
+*Data last updated: March 20, 2025*
+
 ## Acknowledgements
 - ChatGPT o3-mini-high and Claude Sonnet assisted with deciphering the RePORTER API format and preparing the plots and GitHub Actions.
 - Claude Sonnet 3.7 wrote the code for plotting insets, which is much fancier than I know how to do myself
