@@ -660,7 +660,7 @@ The following NIH Institutes and Centers have individual plots available. Click 
             links.append("<span style='color:gray'>meeting notices</span>")
         
         # Add to table
-        readme_section += f"| {name} | {' \| '.join(links)} |\n"
+        readme_section += f"| {name} | {' \\| '.join(links)} |\n"
     
     readme_section += f"\n*Data last updated: {datetime.date.today().strftime('%B %d, %Y')}*"
     
