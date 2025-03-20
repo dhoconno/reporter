@@ -645,22 +645,23 @@ The following NIH Institutes and Centers have individual plots available. Click 
         # Build links
         links = []
         if "awards" in plots:
-            links.append(f"[awards](ic_plots/nih_awards_{ic_code}.html)")
+            links.append(f"[awards](./ic_plots/nih_awards_{ic_code}.html)")
         else:
             links.append("<span style='color:gray'>awards</span>")
             
         if "amounts" in plots:
-            links.append(f"[award amounts](ic_plots/nih_award_amounts_{ic_code}.html)")
+            links.append(f"[award amounts](./ic_plots/nih_award_amounts_{ic_code}.html)")
         else:
             links.append("<span style='color:gray'>award amounts</span>")
             
         if "meetings" in plots:
-            links.append(f"[meeting notices](ic_plots/nih_fr_meetings_{ic_code}.html)")
+            links.append(f"[meeting notices](./ic_plots/nih_fr_meetings_{ic_code}.html)")
         else:
             links.append("<span style='color:gray'>meeting notices</span>")
         
-        # Add to table
-        readme_section += f"| {name} | {' \\| '.join(links)} |\n"
+        # Add to table - FIX: Use a string literal for the separator instead of including it in the f-string
+        separator = " | "
+        readme_section += f"| {name} | {separator.join(links)} |\n"
     
     readme_section += f"\n*Data last updated: {datetime.date.today().strftime('%B %d, %Y')}*"
     
