@@ -67,6 +67,73 @@ class NIHReporterCache:
             json.dump(data, f)
 
 
+def create_ic_plots_dir():
+    """Create directory for institute-specific plots if it doesn't exist."""
+    ic_plots_dir = Path("ic_plots")
+    ic_plots_dir.mkdir(exist_ok=True)
+    print(f"Ensuring IC plots directory exists: {ic_plots_dir}")
+    return ic_plots_dir
+
+def plot_ic_data(data_counts, data_amounts, ic_data, current_ics, current_year, cutoff_day):
+    """Generate institute-specific plots for each IC."""
+    print("\nGenerating per-IC plots...")
+    ic_plots_dir = create_ic_plots_dir()
+    
+    # Get all ICs across all years
+    all_ics = set()
+    for year in ic_data:
+        for day_data in ic_data[year].values():
+            all_ics.update(day_data.get("counts", {}).keys())
+    
+    print(f"Found {len(all_ics)} institutes/centers for plotting")
+    
+    # Create colors for years
+    non_current_years = [y for y in data_counts.keys() if y != current_year]
+    colors = {}
+    total = len(non_current_years)
+    for i, year in enumerate(sorted(non_current_years)):
+        colors[year] = get_pastel_color(i, total if total > 0 else 1)
+    
+    # For each IC, create separate plots
+    for ic in sorted(all_ics):
+        print(f"Creating plots for {ic}...")
+        
+        # Extract data for this IC
+        ic_data_counts = {}
+        ic_data_amounts = {}
+        
+        for year in ic_data:
+            ic_data_counts[year] = []
+            ic_data_amounts[year] = []
+            
+            for day, day_data in ic_data[year].items():
+                # Get count for this IC on this day
+                count = day_data.get("counts", {}).get(ic, 0)
+                # Add day to counts list multiple times based on count
+                for _ in range(count):
+                    ic_data_counts[year].append(day)
+                
+                # Get amount for this IC on this day
+                amount = day_data.get("amounts", {}).get(ic, 0)
+                if amount > 0:
+                    ic_data_amounts[year].append((day, amount))
+        
+        # Generate cumulative data for this IC
+        cum_counts = create_cumulative_counts(ic_data_counts, cutoff_day)
+        cum_amounts = create_cumulative_amounts(ic_data_amounts, cutoff_day)
+        
+        # Only create plots if we have data
+        if any(len(counts) > 0 for counts in ic_data_counts.values()):
+            # Plot count data
+            output_filename = f"ic_plots/nih_awards_{ic}"
+            plot_cumulative_data(cum_counts, ic_data, {ic}, current_year, 
+                                colors=colors, output_filename=output_filename)
+            
+            # Plot amount data
+            output_filename = f"ic_plots/nih_award_amounts_{ic}"
+            plot_cumulative_amounts(cum_amounts, ic_data, {ic}, current_year,
+                                   colors=colors, output_filename=output_filename)
+
 def get_pastel_color(i, total):
     """Generate a pastel color using HLS conversion."""
     hue = i / total
@@ -572,8 +639,8 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
 
 def save_grants_list(all_award_date_grants, output_filename="nih_awards_all"):
     """
-    Create a CSV containing a list of all grants (one row per grant) with two columns:
-    award_date and grant_number. Then compress the CSV using zstd.
+    Create a CSV containing a list of all grants with award_date, grant_number, and ic.
+    Then compress the CSV using zstd.
     """
     import pandas as pd
     import zstandard as zstd
@@ -583,14 +650,24 @@ def save_grants_list(all_award_date_grants, output_filename="nih_awards_all"):
         for grant in grants:
             award_date = grant.get("award_notice_date", "")
             grant_number = grant.get("project_num", "")
-            # Format award_date to YYYY-MM-DD if possible.
+            
+            # Extract IC from admin info
+            ic_info = grant.get("agency_ic_admin", {})
+            ic = ic_info.get("abbreviation", "") if isinstance(ic_info, dict) else ""
+            
+            # Format award_date to YYYY-MM-DD if possible
             if award_date:
                 try:
                     dt = datetime.datetime.strptime(award_date, "%Y-%m-%dT%H:%M:%SZ")
                     award_date = dt.strftime("%Y-%m-%d")
                 except Exception:
                     pass
-            records.append({"award_date": award_date, "grant_number": grant_number})
+                    
+            records.append({
+                "award_date": award_date, 
+                "grant_number": grant_number, 
+                "ic": ic
+            })
     
     # Sort the records by award_date
     df = pd.DataFrame(records)
@@ -920,6 +997,16 @@ def main():
         validation_info=validation_info,
     )
 
+    # Create per-IC plots
+    plot_ic_data(
+        data_counts, 
+        data_amounts,
+        ic_data,
+        current_ics,
+        current_year, 
+        cutoff_day
+    )
+    
     print("Saving grants list (award_date and grant_number) and compressing...")
     save_grants_list(all_award_date_grants, output_filename="nih_awards_all")
 
