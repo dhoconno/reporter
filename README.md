@@ -38,6 +38,7 @@ Inspired by [this analysis in the NYT](https://www.nytimes.com/2025/02/14/health
 - I'm spot checking the results but there is no guarantee of accuracy.
 - I added a CSV output that shows the underlying data used for the RePORTER analyses.
 - Award amounts are not adjusted for inflation
+- I added Institute-specific plots. If you see any issues with the underlying parsing _please_ let me know.
 
 ## Institute-Specific Plots
 
