@@ -135,16 +135,33 @@ def create_ic_plots_dir():
 def plot_ic_data(meetings_by_year, current_year, cutoff_day):
     """Generate separate plots for each institute in the federal register data."""
     print("\nGenerating per-institute FR plots...")
-    ic_plots_dir = Path("ic_plots")
-    ic_plots_dir.mkdir(exist_ok=True)
+    ic_plots_dir = create_ic_plots_dir()
     
     # Get all institutes across all years
     all_institutes = set()
+    
+    # Create a separate category for CSR meetings (those with institute="NIH")
+    csr_meetings_by_year = {}
+    
+    # First pass - extract CSR meetings and collect institute codes
     for year, meetings in meetings_by_year.items():
+        csr_year_meetings = []
+        
         for meeting in meetings:
             institute = meeting.get("institute")
-            if institute and institute != "Unknown":
+            if institute == "NIH":
+                # This is a CSR meeting
+                meeting_copy = meeting.copy()
+                meeting_copy["institute"] = "CSR"  # Rename to CSR for clarity
+                csr_year_meetings.append(meeting_copy)
+            elif institute and institute != "Unknown":
                 all_institutes.add(institute)
+                
+        if csr_year_meetings:
+            csr_meetings_by_year[year] = csr_year_meetings
+            
+    # Add CSR to the list of institutes to plot
+    all_institutes.add("CSR")
     
     print(f"Found {len(all_institutes)} institutes for FR plotting")
     
@@ -156,8 +173,19 @@ def plot_ic_data(meetings_by_year, current_year, cutoff_day):
         colors[year] = get_pastel_color(i, total if total > 0 else 1)
     colors[current_year] = "#FF0000"
     
+    # Plot CSR meetings explicitly
+    if csr_meetings_by_year:
+        cum_data = create_cumulative_counts(csr_meetings_by_year, cutoff_day)
+        output_filename = f"ic_plots/nih_fr_meetings_CSR"
+        plot_cumulative_data(cum_data, current_year, colors=colors, 
+                             output_filename=output_filename)
+    
     # For each institute, create a separate plot
     for institute in sorted(all_institutes):
+        if institute == "CSR":
+            # Already handled above
+            continue
+            
         print(f"Creating plot for {institute}...")
         
         # Filter meetings for this institute
@@ -316,19 +344,71 @@ def extract_meeting_data(document, cache=None):
     print(f"Text preview: {text_content[:preview_length]}...")
     pub_date = document.get("publication_date") or "Unknown"
     doc_title = document.get("title", "Unknown Title")
-    institute = "NIH"
-    institute_pattern = r'^(National Institute[^;]+);'
-    institute_match = re.search(institute_pattern, doc_title)
-    if institute_match:
-        full_institute_name = institute_match.group(1).strip()
-        acronym_pattern = r'\(([A-Z]+)\)'
-        acronym_match = re.search(acronym_pattern, full_institute_name)
-        if acronym_match:
-            institute = acronym_match.group(1)
-        else:
-            words = [word for word in full_institute_name.split() if word[0].isupper()]
-            if words:
-                institute = ''.join(word[0] for word in words)
+    
+    # Improved institute extraction - look anywhere in title, not just at start
+    institute = "NIH"  # Default value
+    
+    # Map full institute names to their acronyms
+    institute_mapping = {
+        "National Cancer Institute": "NCI",
+        "National Heart, Lung, and Blood Institute": "NHLBI",
+        "National Institute of Allergy and Infectious Diseases": "NIAID",
+        "National Institute of General Medical Sciences": "NIGMS",
+        "National Institute of Mental Health": "NIMH",
+        "National Institute of Neurological Disorders and Stroke": "NINDS",
+        "National Institute on Aging": "NIA",
+        "National Institute of Diabetes and Digestive and Kidney Diseases": "NIDDK",
+        "Eunice Kennedy Shriver National Institute of Child Health and Human Development": "NICHD",
+        "National Eye Institute": "NEI",
+        "National Institute of Dental and Craniofacial Research": "NIDCR",
+        "National Institute of Environmental Health Sciences": "NIEHS",
+        "National Institute of Arthritis and Musculoskeletal and Skin Diseases": "NIAMS",
+        "National Institute of Nursing Research": "NINR",
+        "National Human Genome Research Institute": "NHGRI",
+        "National Institute on Drug Abuse": "NIDA",
+        "National Institute on Alcohol Abuse and Alcoholism": "NIAAA",
+        "National Institute of Biomedical Imaging and Bioengineering": "NIBIB",
+        "National Institute on Minority Health and Health Disparities": "NIMHD",
+        "National Center for Advancing Translational Sciences": "NCATS",
+        "Fogarty International Center": "FIC",
+        "National Library of Medicine": "NLM",
+        "National Center for Complementary and Integrative Health": "NCCIH",
+    }
+    
+    # Look for any institute name ANYWHERE in the title (not just at the beginning)
+    for full_name, acronym in institute_mapping.items():
+        if full_name in doc_title:
+            institute = acronym
+            break
+    
+    # If no match, try the old regex pattern but without the ^ anchor
+    if institute == "NIH":
+        institute_pattern = r'(National Institute[^;]+);'
+        institute_match = re.search(institute_pattern, doc_title)
+        if institute_match:
+            full_institute_name = institute_match.group(1).strip()
+            acronym_pattern = r'\(([A-Z]+)\)'
+            acronym_match = re.search(acronym_pattern, full_institute_name)
+            if acronym_match:
+                institute = acronym_match.group(1)
+            else:
+                words = [word for word in full_institute_name.split() if word[0].isupper()]
+                if words:
+                    institute = ''.join(word[0] for word in words)
+    
+    # Handle CSR specifically
+    if "Center for Scientific Review" in doc_title:
+        institute = "CSR"
+    
+    # Normalize institute code if needed
+    institute_normalization = {
+        "NIDDKD": "NIDDK",  # Correct common typos
+        "NIAAID": "NIAID",
+    }
+    
+    if institute in institute_normalization:
+        institute = institute_normalization[institute]
+    
     agencies = document.get("agencies", [])
     for agency in agencies:
         if isinstance(agency, dict) and "acronym" in agency and agency["acronym"] != "NIH":
