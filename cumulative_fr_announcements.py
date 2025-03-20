@@ -560,6 +560,7 @@ def update_readme():
     Update README.md with links to all available plots, organized by institute.
     Each institute gets one line with links to all its available plot types.
     Only shows actual institutes, filtering out typos.
+    Uses GitHub Pages URLs for the links.
     """
     print("\nUpdating README.md with links to all plots...")
     
@@ -638,28 +639,31 @@ The following NIH Institutes and Centers have individual plots available. Click 
     # Sort institutes by name
     sorted_ics = sorted(institute_plots.keys(), key=lambda ic: ic_names.get(ic, ic))
     
+    # GitHub Pages base URL
+    gh_pages_base = "https://dhoconno.github.io/reporter"
+    
     for ic_code in sorted_ics:
         plots = institute_plots[ic_code]
         name = ic_names.get(ic_code, ic_code)
         
-        # Build links
+        # Build links with GitHub Pages URLs
         links = []
         if "awards" in plots:
-            links.append(f"[awards](./ic_plots/nih_awards_{ic_code}.html)")
+            links.append(f"[awards]({gh_pages_base}/ic_plots/nih_awards_{ic_code}.html)")
         else:
             links.append("<span style='color:gray'>awards</span>")
             
         if "amounts" in plots:
-            links.append(f"[award amounts](./ic_plots/nih_award_amounts_{ic_code}.html)")
+            links.append(f"[award amounts]({gh_pages_base}/ic_plots/nih_award_amounts_{ic_code}.html)")
         else:
             links.append("<span style='color:gray'>award amounts</span>")
             
         if "meetings" in plots:
-            links.append(f"[meeting notices](./ic_plots/nih_fr_meetings_{ic_code}.html)")
+            links.append(f"[meeting notices]({gh_pages_base}/ic_plots/nih_fr_meetings_{ic_code}.html)")
         else:
             links.append("<span style='color:gray'>meeting notices</span>")
         
-        # Add to table - FIX: Use a string literal for the separator instead of including it in the f-string
+        # Add to table
         separator = " | "
         readme_section += f"| {name} | {separator.join(links)} |\n"
     
@@ -688,11 +692,11 @@ The following NIH Institutes and Centers have individual plots available. Click 
         with open("README.md", "w") as f:
             f.write(new_readme)
             
-        print(f"README.md updated with links to plots for {len(institute_plots)} official institutes")
+        print(f"README.md updated with GitHub Pages links for {len(institute_plots)} official institutes")
             
     except Exception as e:
         print(f"Error updating README: {e}")
-
+        
 def run_analysis(start_year=2016, end_year=None, use_cached=True, small_test=False):
     """
     Run the full analysis pipeline.
