@@ -639,14 +639,14 @@ The following NIH Institutes and Centers have individual plots available. Click 
     # Sort institutes by name
     sorted_ics = sorted(institute_plots.keys(), key=lambda ic: ic_names.get(ic, ic))
     
-    # GitHub Pages base URL
+    # IMPORTANT FIX: Absolute GitHub Pages URL with https://
     gh_pages_base = "https://dhoconno.github.io/reporter"
     
     for ic_code in sorted_ics:
         plots = institute_plots[ic_code]
         name = ic_names.get(ic_code, ic_code)
         
-        # Build links with GitHub Pages URLs
+        # Build links with absolute GitHub Pages URLs
         links = []
         if "awards" in plots:
             links.append(f"[awards]({gh_pages_base}/ic_plots/nih_awards_{ic_code}.html)")
@@ -676,15 +676,19 @@ The following NIH Institutes and Centers have individual plots available. Click 
         
         import re
         
-        # Check if the section already exists and replace it, or add it
+        # IMPORTANT FIX: Look for existing section OR methodology section
         if "## Institute-Specific Plots" in current_readme:
             # Replace existing section
             pattern = r"## Institute-Specific Plots.*?(?=##|\Z)"
             new_readme = re.sub(pattern, readme_section + "\n\n", current_readme, flags=re.DOTALL)
         else:
-            # Add before the last section or at the end
-            if "## Acknowledgements" in current_readme:
+            # Look for methodology section to insert before
+            if "## Methodology" in current_readme:
+                new_readme = current_readme.replace("## Methodology", f"{readme_section}\n\n## Methodology")
+            # If no methodology, look for acknowledgements
+            elif "## Acknowledgements" in current_readme:
                 new_readme = current_readme.replace("## Acknowledgements", f"{readme_section}\n\n## Acknowledgements")
+            # If neither exists, just append
             else:
                 new_readme = current_readme + "\n\n" + readme_section
         
@@ -696,7 +700,7 @@ The following NIH Institutes and Centers have individual plots available. Click 
             
     except Exception as e:
         print(f"Error updating README: {e}")
-        
+
 def run_analysis(start_year=2016, end_year=None, use_cached=True, small_test=False):
     """
     Run the full analysis pipeline.
