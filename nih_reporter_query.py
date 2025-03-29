@@ -65,7 +65,7 @@ def get_nih_reporter_data(project_num):
 
 def main():
     # Target award number
-    award_number = "1C06OD034040-01"
+    award_number = "1C06OD030152-01"
     
     # Get the data
     result = get_nih_reporter_data(award_number)
