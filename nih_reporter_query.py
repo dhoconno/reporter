@@ -17,25 +17,6 @@ def get_nih_reporter_data(project_num):
         "criteria": {
             "project_nums": [project_num]
         },
-        "include_fields": [
-            "ProjectNum",
-            "ProjectTitle",
-            "AbstractText",
-            "ProjectStartDate",
-            "ProjectEndDate",
-            "TotalCost",
-            "AwardAmount",
-            "PrincipalInvestigators",
-            "Organization",
-            "ProjectTerms",
-            "ApplId",
-            "AgencyICs",
-            "FundingMechs",
-            "Foa",
-            "CoreProjectNums",
-            "Terms",
-            "AwardNotices"
-        ],
         "offset": 0,
         "limit": 1,
         "sort_field": "project_start_date",

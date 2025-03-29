@@ -1,0 +1,138 @@
+{
+  "meta": {
+    "search_id": "KhWG2uQzqEKln7EgZxZuHQ",
+    "total": 1,
+    "offset": 0,
+    "limit": 1,
+    "sort_field": "project_start_date",
+    "sort_order": "desc",
+    "sorted_by_relevance": true,
+    "properties": {
+      "URL": "https:/reporter.nih.gov/search/KhWG2uQzqEKln7EgZxZuHQ/projects"
+    }
+  },
+  "results": [
+    {
+      "appl_id": 10129786,
+      "subproject_id": null,
+      "fiscal_year": 2020,
+      "project_num": "1C06OD030152-01",
+      "project_serial_num": "OD030152",
+      "organization": {
+        "org_name": "COLUMBIA UNIVERSITY HEALTH SCIENCES",
+        "city": null,
+        "country": null,
+        "org_city": "NEW YORK",
+        "org_country": "UNITED STATES",
+        "org_state": "NY",
+        "org_state_name": null,
+        "dept_type": "INTERNAL MEDICINE/MEDICINE",
+        "fips_country_code": null,
+        "org_duns": [
+          "621889815"
+        ],
+        "org_ueis": [
+          "QHF5ZZ114M72"
+        ],
+        "primary_duns": "621889815",
+        "primary_uei": "QHF5ZZ114M72",
+        "org_fips": "US",
+        "org_ipf_code": "1833205",
+        "org_zipcode": "100323725",
+        "external_org_id": 1833205
+      },
+      "award_type": "1",
+      "activity_code": "C06",
+      "award_amount": 8000000,
+      "is_active": false,
+      "project_num_split": {
+        "appl_type_code": "1",
+        "activity_code": "C06",
+        "ic_code": "OD",
+        "serial_num": "030152",
+        "support_year": "01",
+        "full_support_year": "01",
+        "suffix_code": ""
+      },
+      "principal_investigators": [
+        {
+          "profile_id": 6205023,
+          "first_name": "Muredach",
+          "middle_name": "P",
+          "last_name": "Reilly",
+          "is_contact_pi": true,
+          "full_name": "Muredach P Reilly",
+          "title": "PROFESSOR OF MEDICINE"
+        }
+      ],
+      "contact_pi_name": "REILLY, MUREDACH P",
+      "program_officers": [
+        {
+          "first_name": "YONG",
+          "middle_name": "",
+          "last_name": "Chen",
+          "full_name": "YONG  Chen"
+        }
+      ],
+      "agency_ic_admin": {
+        "code": "OD",
+        "abbreviation": "OD",
+        "name": "NIH Office of the Director"
+      },
+      "agency_ic_fundings": [
+        {
+          "fy": 2020,
+          "code": "OD",
+          "name": "NIH Office of the Director",
+          "abbreviation": "OD",
+          "total_cost": 8000000.0,
+          "direct_cost_ic": 8000000.0,
+          "indirect_cost_ic": 0.0
+        }
+      ],
+      "cong_dist": "NY-13",
+      "spending_categories": null,
+      "project_start_date": "2020-09-21T12:09:00Z",
+      "project_end_date": "2025-03-12T12:03:00Z",
+      "organization_type": {
+        "name": "SCHOOLS OF MEDICINE",
+        "code": "10",
+        "is_other": false
+      },
+      "geo_lat_lon": {
+        "lon": -73.9414,
+        "lat": 40.8415
+      },
+      "opportunity_number": "PAR-20-086",
+      "full_study_section": {
+        "srg_code": "STOD",
+        "srg_flex": null,
+        "sra_designator_code": null,
+        "sra_flex_code": null,
+        "group_code": null,
+        "name": "Scientific and Technical Review Board on Biomedical and Behavioral Research Facilities[STOD]"
+      },
+      "award_notice_date": "2020-09-19T12:09:00Z",
+      "is_new": false,
+      "mechanism_code_dc": "CO",
+      "core_project_num": "C06OD030152",
+      "terms": "<Aging><Alzheimer's Disease><AD dementia><Alzheimer><Alzheimer Type Dementia><Alzheimer disease><Alzheimer sclerosis><Alzheimer syndrome><Alzheimer's><Alzheimer's disease dementia><Alzheimers Dementia><Alzheimers disease><Primary Senile Degenerative Dementia><dementia of the Alzheimer type><primary degenerative dementia><senile dementia of the Alzheimer type><Biotechnology><Biotech><Malignant Neoplasms><Cancers><Malignant Tumor><malignancy><neoplasm/cancer><Cardiovascular Diseases><cardiovascular disorder><cold temperature><low temperature><Engineering><Freezing><Graft Rejection><Transplant Rejection><Transplantation Rejection><Health><Human><Modern Man><Human Activities><Immunity><Equipment and supply inventories><Inventory><Laboratories><Longevity><Length of Life><life span><lifespan><United States National Institutes of Health><NIH><National Institutes of Health><nervous system disorder><Nervous System Diseases><Neurologic Disorders><Neurological Disorders><neurological disease><Patients><Research><Research Personnel><Investigators><Researchers><Research Support><Temperature><Toxic Environmental Substances><Environmental Toxin><Toxic Environmental Agents><environmental toxicant><Universities><Treatment Effectiveness><Clinical><Ensure><Susceptibility><Predisposition><Discipline><Sample Size><Funding><fluid><liquid><Liquid substance><Genetic><Exposure to><Deposit><Deposition><Research Specimen><Specimen><mechanical><Mechanics><System><Medical center><Participant><research study><Sampling><Grant Proposals><Applications Grants><Clinical Data><biorepository><biobank><Secure><precision-based medicine><precision medicine><Precision Medicine Initiative><Infrastructure>",
+      "pref_terms": "Aging;Alzheimer&apos;s Disease;Applications Grants;Biotechnology;Cardiovascular Diseases;Clinical;Clinical Data;Deposition;Discipline;Engineering;Ensure;Equipment and supply inventories;Exposure to;Freezing;Funding;Genetic;Graft Rejection;Health;Human;Human Activities;Immunity;Infrastructure;Laboratories;Liquid substance;Longevity;Malignant Neoplasms;Mechanics;Medical center;Participant;Patients;Precision Medicine Initiative;Predisposition;Research;Research Personnel;Research Support;Sample Size;Sampling;Secure;Specimen;System;Temperature;Toxic Environmental Substances;Treatment Effectiveness;United States National Institutes of Health;Universities;biobank;cold temperature;nervous system disorder;precision medicine;research study",
+      "abstract_text": "PROJECT SUMMARY\nThis institutional grant proposal for Columbia University Irving Medical Center (CUIMC) aims to build a\ncentralized biobanking facility that consolidates processing and storage activities for human biospecimens\nobtained from participants in research studies and clinical patients across the CUIMC campus. The use of such\na biorepository to collect, manage and dispense human samples and clinical data will lead to more robust\nresearch efforts and an efficient use of research dollars. The main purpose of this proposal is to construct the\nappropriate infrastructure to support the installation of up to two automated ultra-low temperature freezer\nsystems that can be used to store over 9 million biospecimens. The centralized freezer system will replace the\nuse of aging -80 C freezers that are dispersed across campus, allowing for greater space and energy efficiency,\naligning with CUIMC sustainability and environmental initiatives. Engineering and mechanical redundancies will\nbe incorporated that ensure biosamples can be securely stored at a constant temperature for the 20+ year\nlifetime of the facility. As part of this proposal, CUIMC will install one freezer system immediately with the ability\nto add an additional freezer system to support CUIMC\u2019s biobanking efforts as they continue to grow. The facility\nwill also contain laboratory space to support the rapid processing of fluid biosamples that will be deposited into\nthe biobank. This centralized processing will ensure that specimens entered into the bank are high quality and\nuniform, and can be accurately inventoried. Overall, the biobanking facility will provide biospecimens for use in\nresearch studies conducted across biomedical disciplines. Biosamples that will be banked in the facility are\ncritical to support research into the basis of Alzheimer\u2019s and other neurological disease, human immunity and\ntransplant rejection, and the health effects of exposure to environmental toxins. Aligning well with Columbia\u2019s\nlong-term Precision Medicine Initiative, these biosamples will enable precision medicine studies to identify the\nunderlying genetic basis for susceptibility and effectiveness of treatments for cardiovascular diseases, cancer,\nand a number of other maladies. The large number of human samples stored in this biobank will provide NIH-\nfunded researchers with indispensable raw materials and the necessary large sample sizes to advance\nbiotechnology and human health, ensuring the biobank will remain useful far beyond the lifespan of currently-\nfunded research.",
+      "project_title": "Creation of an Institutional Biobanking Facility",
+      "phr_text": null,
+      "spending_categories_desc": null,
+      "agency_code": "NIH",
+      "covid_response": null,
+      "arra_funded": "N",
+      "budget_start": "2020-09-21T12:09:00Z",
+      "budget_end": "2025-03-12T12:03:00Z",
+      "cfda_code": "352",
+      "funding_mechanism": "Construction Grants",
+      "direct_cost_amt": 8000000,
+      "indirect_cost_amt": 0,
+      "project_detail_url": "https://reporter.nih.gov/project-details/10129786",
+      "date_added": "2020-09-26T07:09:48Z"
+    }
+  ]
+}

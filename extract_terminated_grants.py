@@ -87,7 +87,7 @@ def extract_data_from_pdf(pdf_path):
     df = clean_dataframe(df)
     return df
 
-def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_grants_reporter_cache.json", limit=None):
+def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_cache/terminated_grants_reporter_cache.json", limit=None):
     """
     Fetch grant details from NIH RePORTER API one by one with caching
     
@@ -104,6 +104,12 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_gra
         "accept": "application/json",
         "Content-Type": "application/json"
     }
+    
+    # Create cache directory if it doesn't exist
+    cache_dir = os.path.dirname(cache_file)
+    if not os.path.exists(cache_dir) and cache_dir:
+        os.makedirs(cache_dir)
+        print(f"Created cache directory: {cache_dir}")
     
     # Load cache if it exists
     cache = {}
@@ -137,13 +143,8 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_gra
         payload = {
             "criteria": {
                 "project_nums": [project_num]
-            },
-            "include_fields": [
-                "ProjectNum",
-                "PrincipalInvestigators",
-                "Organization",
-                "Terms"  # Changed from ProjectTerms to Terms to match API response
-            ]
+            }
+            # No include_fields to get ALL available fields
         }
         
         try:
@@ -155,18 +156,21 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_gra
                 
                 # Process API response
                 if data.get('results') and len(data['results']) > 0:
+                    # Store the complete result
+                    full_result = data['results'][0]
+                    
+                    # Create structured result with only the fields we need
                     result_data = {
                         "project_num": project_num,
                         "organization": {},
                         "principal_investigators": [],
-                        "terms": ""
+                        "terms": "",
+                        "agency_ic_fundings": []
                     }
                     
-                    result = data['results'][0]
-                    
                     # Extract organization data
-                    if 'organization' in result:
-                        org = result['organization']
+                    if 'organization' in full_result:
+                        org = full_result['organization']
                         result_data["organization"] = {
                             "org_city": org.get('org_city', ''),
                             "org_state": org.get('org_state', ''),
@@ -174,27 +178,32 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_gra
                         }
                     
                     # Extract PI data
-                    if 'principal_investigators' in result:
-                        for pi in result['principal_investigators']:
+                    if 'principal_investigators' in full_result:
+                        for pi in full_result['principal_investigators']:
                             if 'full_name' in pi:
                                 result_data["principal_investigators"].append({
                                     "full_name": pi['full_name']
                                 })
                     
-                    # Extract terms (store raw format in cache)
-                    # Print the keys to debug what fields are actually available
-                    print(f"  Available result keys: {list(result.keys())}")
-                    result_data["terms"] = result.get('terms', '')
+                    # Extract terms
+                    result_data["terms"] = full_result.get('terms', '')
                     
-                    # Debug output to verify terms
-                    if result_data["terms"]:
-                        print(f"  Found {len(result_data['terms'])} chars of term data")
-                    else:
-                        print("  No terms found in response")
+                    # Extract funding institutes
+                    result_data["agency_ic_fundings"] = full_result.get('agency_ic_fundings', [])
                     
-                    # Save to cache and results
-                    cache[project_num] = result_data
-                    results.append(result_data)
+                    # Save complete result to cache
+                    cache[project_num] = full_result
+                    
+                    # Use processed data for current operation
+                    processed_result = {
+                        "project_num": project_num,
+                        "organization": result_data["organization"],
+                        "principal_investigators": result_data["principal_investigators"],
+                        "terms": result_data["terms"],
+                        "agency_ic_fundings": result_data["agency_ic_fundings"]
+                    }
+                    results.append(processed_result)
+                    
                     print(f"  Data found for {project_num}")
                 else:
                     print(f"  No data found for {project_num}")
@@ -266,16 +275,40 @@ def enrich_dataframe_with_reporter_data(df, limit=None):
     
     for result in results:
         project_number = result.get('project_num', '')
-        org = result.get('organization', {})
-        pis = result.get('principal_investigators', [])
         
-        # Get PI names as semicolon-separated string
+        # Extract organization data
+        org = result.get('organization', {})
+        
+        # Extract PI data
+        pis = result.get('principal_investigators', [])
         pi_names = [pi.get('full_name', '') for pi in pis if pi.get('full_name')]
         pi_names_str = '; '.join(pi_names)
         
-        # Get terms as semicolon-separated string
+        # Extract terms
         raw_terms = result.get('terms', '')
         parsed_terms = parse_project_terms(raw_terms)
+        
+        # Extract funding institutes
+        funding_institutes = []
+        if isinstance(result, dict):
+            # If result is from full API response
+            if 'agency_ic_fundings' in result:
+                fundings = result.get('agency_ic_fundings', [])
+                for funding in fundings:
+                    if isinstance(funding, dict):
+                        name = funding.get('name', '')
+                        abbreviation = funding.get('abbreviation', '')
+                        if name and abbreviation:
+                            funding_institutes.append(f"{abbreviation} - {name}")
+            # If we're using a previously cached full result
+            elif isinstance(result.get('agency_ic_fundings'), list):
+                for funding in result['agency_ic_fundings']:
+                    name = funding.get('name', '')
+                    abbreviation = funding.get('abbreviation', '')
+                    if name and abbreviation:
+                        funding_institutes.append(f"{abbreviation} - {name}")
+        
+        funding_institutes_str = '; '.join(funding_institutes)
         
         if project_number:
             reporter_data.append({
@@ -284,7 +317,8 @@ def enrich_dataframe_with_reporter_data(df, limit=None):
                 'Organization_State': org.get('org_state', ''),
                 'Organization_Country': org.get('org_country', ''),
                 'PI_Names': pi_names_str,
-                'Project_Terms': parsed_terms
+                'Project_Terms': parsed_terms,
+                'Funding_Institutes': funding_institutes_str
             })
     
     reporter_df = pd.DataFrame(reporter_data)
@@ -323,7 +357,9 @@ def main():
 
         # Enrich with NIH RePORTER data - start with just 10 entries
         print("\nFetching additional data from NIH RePORTER...")
-        df = enrich_dataframe_with_reporter_data(df, limit=10)
+        df = enrich_dataframe_with_reporter_data(df, limit=10) #testing with 10 entries
+        # Uncomment the following line to process all entries
+        # df = enrich_dataframe_with_reporter_data(df)
         
         # Display basic information about the data
         print("\nDataFrame Info:")

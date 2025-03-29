@@ -1,0 +1,1148 @@
+{
+  "1C06OD030152-01": {
+    "appl_id": 10129786,
+    "subproject_id": null,
+    "fiscal_year": 2020,
+    "project_num": "1C06OD030152-01",
+    "project_serial_num": "OD030152",
+    "organization": {
+      "org_name": "COLUMBIA UNIVERSITY HEALTH SCIENCES",
+      "city": null,
+      "country": null,
+      "org_city": "NEW YORK",
+      "org_country": "UNITED STATES",
+      "org_state": "NY",
+      "org_state_name": null,
+      "dept_type": "INTERNAL MEDICINE/MEDICINE",
+      "fips_country_code": null,
+      "org_duns": [
+        "621889815"
+      ],
+      "org_ueis": [
+        "QHF5ZZ114M72"
+      ],
+      "primary_duns": "621889815",
+      "primary_uei": "QHF5ZZ114M72",
+      "org_fips": "US",
+      "org_ipf_code": "1833205",
+      "org_zipcode": "100323725",
+      "external_org_id": 1833205
+    },
+    "award_type": "1",
+    "activity_code": "C06",
+    "award_amount": 8000000,
+    "is_active": false,
+    "project_num_split": {
+      "appl_type_code": "1",
+      "activity_code": "C06",
+      "ic_code": "OD",
+      "serial_num": "030152",
+      "support_year": "01",
+      "full_support_year": "01",
+      "suffix_code": ""
+    },
+    "principal_investigators": [
+      {
+        "profile_id": 6205023,
+        "first_name": "Muredach",
+        "middle_name": "P",
+        "last_name": "Reilly",
+        "is_contact_pi": true,
+        "full_name": "Muredach P Reilly",
+        "title": "PROFESSOR OF MEDICINE"
+      }
+    ],
+    "contact_pi_name": "REILLY, MUREDACH P",
+    "program_officers": [
+      {
+        "first_name": "YONG",
+        "middle_name": "",
+        "last_name": "Chen",
+        "full_name": "YONG  Chen"
+      }
+    ],
+    "agency_ic_admin": {
+      "code": "OD",
+      "abbreviation": "OD",
+      "name": "NIH Office of the Director"
+    },
+    "agency_ic_fundings": [
+      {
+        "fy": 2020,
+        "code": "OD",
+        "name": "NIH Office of the Director",
+        "abbreviation": "OD",
+        "total_cost": 8000000.0,
+        "direct_cost_ic": 8000000.0,
+        "indirect_cost_ic": 0.0
+      }
+    ],
+    "cong_dist": "NY-13",
+    "spending_categories": null,
+    "project_start_date": "2020-09-21T12:09:00Z",
+    "project_end_date": "2025-03-12T12:03:00Z",
+    "organization_type": {
+      "name": "SCHOOLS OF MEDICINE",
+      "code": "10",
+      "is_other": false
+    },
+    "geo_lat_lon": {
+      "lon": -73.9414,
+      "lat": 40.8415
+    },
+    "opportunity_number": "PAR-20-086",
+    "full_study_section": {
+      "srg_code": "STOD",
+      "srg_flex": null,
+      "sra_designator_code": null,
+      "sra_flex_code": null,
+      "group_code": null,
+      "name": "Scientific and Technical Review Board on Biomedical and Behavioral Research Facilities[STOD]"
+    },
+    "award_notice_date": "2020-09-19T12:09:00Z",
+    "is_new": false,
+    "mechanism_code_dc": "CO",
+    "core_project_num": "C06OD030152",
+    "terms": "<Aging><Alzheimer's Disease><AD dementia><Alzheimer><Alzheimer Type Dementia><Alzheimer disease><Alzheimer sclerosis><Alzheimer syndrome><Alzheimer's><Alzheimer's disease dementia><Alzheimers Dementia><Alzheimers disease><Primary Senile Degenerative Dementia><dementia of the Alzheimer type><primary degenerative dementia><senile dementia of the Alzheimer type><Biotechnology><Biotech><Malignant Neoplasms><Cancers><Malignant Tumor><malignancy><neoplasm/cancer><Cardiovascular Diseases><cardiovascular disorder><cold temperature><low temperature><Engineering><Freezing><Graft Rejection><Transplant Rejection><Transplantation Rejection><Health><Human><Modern Man><Human Activities><Immunity><Equipment and supply inventories><Inventory><Laboratories><Longevity><Length of Life><life span><lifespan><United States National Institutes of Health><NIH><National Institutes of Health><nervous system disorder><Nervous System Diseases><Neurologic Disorders><Neurological Disorders><neurological disease><Patients><Research><Research Personnel><Investigators><Researchers><Research Support><Temperature><Toxic Environmental Substances><Environmental Toxin><Toxic Environmental Agents><environmental toxicant><Universities><Treatment Effectiveness><Clinical><Ensure><Susceptibility><Predisposition><Discipline><Sample Size><Funding><fluid><liquid><Liquid substance><Genetic><Exposure to><Deposit><Deposition><Research Specimen><Specimen><mechanical><Mechanics><System><Medical center><Participant><research study><Sampling><Grant Proposals><Applications Grants><Clinical Data><biorepository><biobank><Secure><precision-based medicine><precision medicine><Precision Medicine Initiative><Infrastructure>",
+    "pref_terms": "Aging;Alzheimer&apos;s Disease;Applications Grants;Biotechnology;Cardiovascular Diseases;Clinical;Clinical Data;Deposition;Discipline;Engineering;Ensure;Equipment and supply inventories;Exposure to;Freezing;Funding;Genetic;Graft Rejection;Health;Human;Human Activities;Immunity;Infrastructure;Laboratories;Liquid substance;Longevity;Malignant Neoplasms;Mechanics;Medical center;Participant;Patients;Precision Medicine Initiative;Predisposition;Research;Research Personnel;Research Support;Sample Size;Sampling;Secure;Specimen;System;Temperature;Toxic Environmental Substances;Treatment Effectiveness;United States National Institutes of Health;Universities;biobank;cold temperature;nervous system disorder;precision medicine;research study",
+    "abstract_text": "PROJECT SUMMARY\nThis institutional grant proposal for Columbia University Irving Medical Center (CUIMC) aims to build a\ncentralized biobanking facility that consolidates processing and storage activities for human biospecimens\nobtained from participants in research studies and clinical patients across the CUIMC campus. The use of such\na biorepository to collect, manage and dispense human samples and clinical data will lead to more robust\nresearch efforts and an efficient use of research dollars. The main purpose of this proposal is to construct the\nappropriate infrastructure to support the installation of up to two automated ultra-low temperature freezer\nsystems that can be used to store over 9 million biospecimens. The centralized freezer system will replace the\nuse of aging -80 C freezers that are dispersed across campus, allowing for greater space and energy efficiency,\naligning with CUIMC sustainability and environmental initiatives. Engineering and mechanical redundancies will\nbe incorporated that ensure biosamples can be securely stored at a constant temperature for the 20+ year\nlifetime of the facility. As part of this proposal, CUIMC will install one freezer system immediately with the ability\nto add an additional freezer system to support CUIMC\u2019s biobanking efforts as they continue to grow. The facility\nwill also contain laboratory space to support the rapid processing of fluid biosamples that will be deposited into\nthe biobank. This centralized processing will ensure that specimens entered into the bank are high quality and\nuniform, and can be accurately inventoried. Overall, the biobanking facility will provide biospecimens for use in\nresearch studies conducted across biomedical disciplines. Biosamples that will be banked in the facility are\ncritical to support research into the basis of Alzheimer\u2019s and other neurological disease, human immunity and\ntransplant rejection, and the health effects of exposure to environmental toxins. Aligning well with Columbia\u2019s\nlong-term Precision Medicine Initiative, these biosamples will enable precision medicine studies to identify the\nunderlying genetic basis for susceptibility and effectiveness of treatments for cardiovascular diseases, cancer,\nand a number of other maladies. The large number of human samples stored in this biobank will provide NIH-\nfunded researchers with indispensable raw materials and the necessary large sample sizes to advance\nbiotechnology and human health, ensuring the biobank will remain useful far beyond the lifespan of currently-\nfunded research.",
+    "project_title": "Creation of an Institutional Biobanking Facility",
+    "phr_text": null,
+    "spending_categories_desc": null,
+    "agency_code": "NIH",
+    "covid_response": null,
+    "arra_funded": "N",
+    "budget_start": "2020-09-21T12:09:00Z",
+    "budget_end": "2025-03-12T12:03:00Z",
+    "cfda_code": "352",
+    "funding_mechanism": "Construction Grants",
+    "direct_cost_amt": 8000000,
+    "indirect_cost_amt": 0,
+    "project_detail_url": "https://reporter.nih.gov/project-details/10129786",
+    "date_added": "2020-09-26T07:09:48Z"
+  },
+  "1C06OD034040-01": {
+    "appl_id": 10547892,
+    "subproject_id": null,
+    "fiscal_year": 2022,
+    "project_num": "1C06OD034040-01",
+    "project_serial_num": "OD034040",
+    "organization": {
+      "org_name": "WHITMAN-WALKER INSTITUTE, INC.",
+      "city": null,
+      "country": null,
+      "org_city": "WASHINGTON",
+      "org_country": "UNITED STATES",
+      "org_state": "DC",
+      "org_state_name": null,
+      "dept_type": null,
+      "fips_country_code": null,
+      "org_duns": [
+        "081174129"
+      ],
+      "org_ueis": [
+        "DJNTE364LJJ7"
+      ],
+      "primary_duns": "081174129",
+      "primary_uei": "DJNTE364LJJ7",
+      "org_fips": "US",
+      "org_ipf_code": "10058876",
+      "org_zipcode": "200325956",
+      "external_org_id": 10058876
+    },
+    "award_type": "1",
+    "activity_code": "C06",
+    "award_amount": 2000000,
+    "is_active": false,
+    "project_num_split": {
+      "appl_type_code": "1",
+      "activity_code": "C06",
+      "ic_code": "OD",
+      "serial_num": "034040",
+      "support_year": "01",
+      "full_support_year": "01",
+      "suffix_code": ""
+    },
+    "principal_investigators": [
+      {
+        "profile_id": 10767419,
+        "first_name": "H. Jonathon",
+        "middle_name": "",
+        "last_name": "Rendina",
+        "is_contact_pi": true,
+        "full_name": "H. Jonathon  Rendina",
+        "title": ""
+      }
+    ],
+    "contact_pi_name": "RENDINA, H. JONATHON ",
+    "program_officers": [
+      {
+        "first_name": "Xiang-Ning",
+        "middle_name": "",
+        "last_name": "Li",
+        "full_name": "Xiang-Ning  Li"
+      }
+    ],
+    "agency_ic_admin": {
+      "code": "OD",
+      "abbreviation": "OD",
+      "name": "NIH Office of the Director"
+    },
+    "agency_ic_fundings": [
+      {
+        "fy": 2022,
+        "code": "OD",
+        "name": "NIH Office of the Director",
+        "abbreviation": "OD",
+        "total_cost": 2000000.0,
+        "direct_cost_ic": 2000000.0,
+        "indirect_cost_ic": 0.0
+      }
+    ],
+    "cong_dist": "DC-00",
+    "spending_categories": [
+      284
+    ],
+    "project_start_date": "2022-09-16T12:09:00Z",
+    "project_end_date": "2025-03-21T12:03:00Z",
+    "organization_type": {
+      "name": "Other Domestic Non-Profits",
+      "code": "NP",
+      "is_other": false
+    },
+    "geo_lat_lon": {
+      "lon": -77.031423,
+      "lat": 38.9127
+    },
+    "opportunity_number": "PAR-21-238",
+    "full_study_section": {
+      "srg_code": "STOD",
+      "srg_flex": null,
+      "sra_designator_code": null,
+      "sra_flex_code": null,
+      "group_code": null,
+      "name": "Scientific and Technical Review Board on Biomedical and Behavioral Research Facilities[STOD]"
+    },
+    "award_notice_date": "2022-09-16T12:09:00Z",
+    "is_new": false,
+    "mechanism_code_dc": "CO",
+    "core_project_num": "C06OD034040",
+    "terms": "<Acquired Immunodeficiency Syndrome><AIDS><Acquired Immune Deficiency><Acquired Immune Deficiency Syndrome><Acquired Immuno-Deficiency Syndrome><Acquired Immunologic Deficiency Syndrome><Award><Clinical Research><Clinical Study><Communities><comorbidity><co-morbid><co-morbidity><Epidemic><Goals><HIV><AIDS Virus><Acquired Immune Deficiency Syndrome Virus><Acquired Immunodeficiency Syndrome Virus><Human Immunodeficiency Viruses><LAV-HTLV-III><Lymphadenopathy-Associated Virus><Virus-HIV><Mentorship><Neighborhoods><Pharmacies><Pharmacy facility><Public Health><Research><Investigators><Researchers><Research Personnel><Science><Translations><Universities><Walkers><Washington><Work><Healthcare><health care><base><Policies><Funding><Collaborations><programs><Investigation><Protocol><Protocols documentation><Country><sq. ft><square foot><social space><research facility><sterile><Sterility><Prevention><behavioral health><Institution><ward><Sum><Translational Research><Translational Science><translation research><socioeconomics><socio-economic><socio-economically><socioeconomically><efficacy research><next generation><Clinical Trials Unit><health inequalities><Health Inequity><Inequalities in Health><Inequities in Health><public health research><co-infection><coinfection><racial disparity><disparities in race><race disparity><racial inequality><racial inequity><racially unequal><community center><training opportunity><clinical center><underserved community><under served community><Home><marginalized community><community marginalization>",
+    "pref_terms": "Acquired Immunodeficiency Syndrome;Award;Clinical Research;Clinical Trials Unit;Collaborations;Communities;Country;Epidemic;Funding;Goals;HIV;Healthcare;Home;Institution;Investigation;Mentorship;Neighborhoods;Pharmacy facility;Policies;Prevention;Protocols documentation;Public Health;Research;Research Personnel;Science;Sterility;Sum;Translational Research;Translations;Universities;Walkers;Washington;Work;base;behavioral health;clinical center;co-infection;community center;comorbidity;efficacy research;health inequalities;marginalized community;next generation;programs;public health research;racial disparity;research facility;social space;socioeconomics;square foot;training opportunity;underserved community;ward",
+    "abstract_text": "Project Summary/Abstract\nWards 7 and 8 in Washington, DC are home to some of the nation\u2019s most stark racial inequities in health and\nsocioeconomic indicators, with residents of these wards being underserved in healthcare and\nunderrepresented public health research. Among these health inequities is a significantly higher burden of HIV,\nyet none of the major HIV-related research facilities in DC are located within these wards. Two central hubs for\nHIV research within DC\u2014the DC Center for AIDS Research and the DC Clinical Trials Unit\u2014both operate\nprimarily out of facilities in Ward 2, and the efficacy of this research would be enhanced by stronger\nrepresentation of marginalized communities in protocols to optimize the impact of this work on the\nneighborhoods in DC that are the hardest hit by HIV, its co-morbidities/co-infections, and other co-occurring\nhealth inequities. Thus, the goal of the proposed HIV research facilities award is to fund the build-out of a new\nstate-of-the-art, community-centered clinical and translational HIV research facility located within the new\nflagship Whitman-Walker building currently being constructed in DC\u2019s Ward 8, to be used jointly by HIV\ninvestigators at both Whitman-Walker and George Washington University (GWU). The proposed facility would\nadd 10,300 square feet of dedicated research space, including a state-of-the-art research lab and a research\npharmacy with capacity for sterile compounding of investigational products, more than doubling the available\nspace for research in this building and serving as the primary collaborative hub for HIV-focused research in\nSoutheast DC. Doing so will significantly: (1) increase the overall volume of research able to be conducted; (2)\nenhance the collaboration of Whitman-Walker and GWU investigators, bolstering the strategic integration of\nboth research programs; (3) expand the scope and technical capabilities of the work that is possible not only\nfor both institutions but also within these specific neighborhoods of DC; (4) indirectly expand the available\nspace for social/behavioral and public health research as well by relocating all clinical and translational\nresearch to the new facility; (5) provide local communities with greater access to and representation in cutting-\nedge HIV science and new opportunities to help inform these collaborative research agendas; (6) facilitate\ngreater translation and dissemination of breakthroughs in HIV science within local and national policy contexts\nthat will benefit both local DC communities and communities across the country; and (7) promote new\nopportunities for training and mentorship. In sum, the proposed project will have a multiplicative impact on both\nlocal and national HIV research through this unique plan to increase the size and scope of facilities available\nand co-locate two of DC\u2019s top HIV research institutions to leverage existing partnerships and forge new,\ncommunity-centered collaborative research agendas. In doing so, the award will bring cutting-edge\nbreakthroughs in HIV treatment and prevention science directly to underserved communities most impacted by\nthe HIV epidemic in DC and has significant potential for public health impact for decades to come.",
+    "project_title": "Developing a Community-Based Facility to Support Next Generation Biomedical HIV Research",
+    "phr_text": null,
+    "spending_categories_desc": "HIV/AIDS",
+    "agency_code": "NIH",
+    "covid_response": null,
+    "arra_funded": "N",
+    "budget_start": "2022-09-16T12:09:00Z",
+    "budget_end": "2025-03-21T12:03:00Z",
+    "cfda_code": "352",
+    "funding_mechanism": "Construction Grants",
+    "direct_cost_amt": 2000000,
+    "indirect_cost_amt": 0,
+    "project_detail_url": "https://reporter.nih.gov/project-details/10547892",
+    "date_added": "2022-09-17T04:09:14Z"
+  },
+  "1C06OD034042-01": {
+    "appl_id": 10547968,
+    "subproject_id": null,
+    "fiscal_year": 2022,
+    "project_num": "1C06OD034042-01",
+    "project_serial_num": "OD034042",
+    "organization": {
+      "org_name": "MEHARRY MEDICAL COLLEGE",
+      "city": null,
+      "country": null,
+      "org_city": "NASHVILLE",
+      "org_country": "UNITED STATES",
+      "org_state": "TN",
+      "org_state_name": null,
+      "dept_type": "INTERNAL MEDICINE/MEDICINE",
+      "fips_country_code": null,
+      "org_duns": [
+        "041438185"
+      ],
+      "org_ueis": [
+        "DLTJBDQBGBC9"
+      ],
+      "primary_duns": "041438185",
+      "primary_uei": "DLTJBDQBGBC9",
+      "org_fips": "US",
+      "org_ipf_code": "5050201",
+      "org_zipcode": "372083501",
+      "external_org_id": 5050201
+    },
+    "award_type": "1",
+    "activity_code": "C06",
+    "award_amount": 2000000,
+    "is_active": false,
+    "project_num_split": {
+      "appl_type_code": "1",
+      "activity_code": "C06",
+      "ic_code": "OD",
+      "serial_num": "034042",
+      "support_year": "01",
+      "full_support_year": "01",
+      "suffix_code": ""
+    },
+    "principal_investigators": [
+      {
+        "profile_id": 8802658,
+        "first_name": "Vladimir",
+        "middle_name": "",
+        "last_name": "Berthaud",
+        "is_contact_pi": true,
+        "full_name": "Vladimir  Berthaud",
+        "title": "DIRECTOR, DIVISION OF INFECTIOUS DISEASE"
+      }
+    ],
+    "contact_pi_name": "BERTHAUD, VLADIMIR ",
+    "program_officers": [
+      {
+        "first_name": "YONG",
+        "middle_name": "",
+        "last_name": "Chen",
+        "full_name": "YONG  Chen"
+      }
+    ],
+    "agency_ic_admin": {
+      "code": "OD",
+      "abbreviation": "OD",
+      "name": "NIH Office of the Director"
+    },
+    "agency_ic_fundings": [
+      {
+        "fy": 2022,
+        "code": "OD",
+        "name": "NIH Office of the Director",
+        "abbreviation": "OD",
+        "total_cost": 2000000.0,
+        "direct_cost_ic": 2000000.0,
+        "indirect_cost_ic": 0.0
+      }
+    ],
+    "cong_dist": "TN-07",
+    "spending_categories": [
+      284
+    ],
+    "project_start_date": "2022-09-16T12:09:00Z",
+    "project_end_date": "2025-03-21T12:03:00Z",
+    "organization_type": {
+      "name": "SCHOOLS OF MEDICINE",
+      "code": "10",
+      "is_other": false
+    },
+    "geo_lat_lon": {
+      "lon": -86.806149,
+      "lat": 36.166904
+    },
+    "opportunity_number": "PAR-21-238",
+    "full_study_section": {
+      "srg_code": "STOD",
+      "srg_flex": null,
+      "sra_designator_code": null,
+      "sra_flex_code": null,
+      "group_code": null,
+      "name": "Scientific and Technical Review Board on Biomedical and Behavioral Research Facilities[STOD]"
+    },
+    "award_notice_date": "2022-09-16T12:09:00Z",
+    "is_new": false,
+    "mechanism_code_dc": "CO",
+    "core_project_num": "C06OD034042",
+    "terms": "<Academic Medical Centers><University Medical Centers><Acquired Immunodeficiency Syndrome><AIDS><Acquired Immune Deficiency><Acquired Immune Deficiency Syndrome><Acquired Immuno-Deficiency Syndrome><Acquired Immunologic Deficiency Syndrome><Adult><21+ years old><Adult Human><adulthood><Black race><Black><Charge><Clinical Research><Clinical Study><Clinical Trials><Communities><Environment><Faculty><Floor><Goals><Grant><Health><HIV><AIDS Virus><Acquired Immune Deficiency Syndrome Virus><Acquired Immunodeficiency Syndrome Virus><Human Immunodeficiency Viruses><LAV-HTLV-III><Lymphadenopathy-Associated Virus><Virus-HIV><Laboratories><Minority Groups><Minority People><Minority Population><Minority individual><Mission><Modernization><NIH><National Institutes of Health><United States National Institutes of Health><Physicians><Play><Privatization><Research><Investigators><Researchers><Research Personnel><social role><Role><medical college><school of medicine><medical schools><Students><Tennessee><Testing><County><Site><Area><Training><pediatric><Childhood><Collaborations><programs><Clinic><physical separation><laboratory facility><biomedical scientist><Wellness Center><Basic Research><Basic Science><AIDS/HIV><HIV/AIDS><HIV/AIDS problem><AIDS/HIV problem><Address><Health Sciences><Research Training><Translational Research><Translational Science><translation research><Underrepresented Minority><Underrepresented Ethnic Minority><under-representation of minorities><under-represented minority><underrepresentation of minorities><Development><developmental><Health Professional><Health Care Professional><Healthcare professional><Underserved Population><under served group><under served people><under served population><underserved group><underserved people><health inequalities><Health Inequity><Inequalities in Health><Inequities in Health><operation><minority scientist><minority communities><COVID-19 vaccine><2019-nCoV vaccine><COVID19 vaccine><SARS-CoV-2 vaccine><SARS-CoV2 vaccine><SARS-coronavirus-2 vaccine><Severe Acute Respiratory Syndrome CoV 2 vaccine><Severe acute respiratory syndrome coronavirus 2 vaccine><corona virus disease 2019 vaccine><coronavirus disease 2019 vaccine><coronavirus disease-19 vaccine><vaccine against 2019-nCov><vaccine against SARS-CoV-2><vaccine against SARS-CoV2><vaccine against SARS-coronavirus-2><vaccine against Severe Acute Respiratory Syndrome CoV 2><vaccine against Severe acute respiratory syndrome coronavirus 2><vaccine for novel coronavirus><COVID-19 pandemic><COVID crisis><COVID epidemic><COVID pandemic><COVID-19 crisis><COVID-19 epidemic><COVID-19 global health crisis><COVID-19 global pandemic><COVID-19 health crisis><COVID-19 public health crisis><COVID19 crisis><COVID19 epidemic><COVID19 global health crisis><COVID19 global pandemic><COVID19 health crisis><COVID19 pandemic><COVID19 public health crisis><SARS-CoV-2 epidemic><SARS-CoV-2 global health crisis><SARS-CoV-2 global pandemic><SARS-CoV-2 pandemic><SARS-CoV2 epidemic><SARS-CoV2 pandemic><SARS-coronavirus-2 epidemic><SARS-coronavirus-2 pandemic><Severe Acute Respiratory Syndrome CoV 2 epidemic><Severe Acute Respiratory Syndrome CoV 2 pandemic><Severe acute respiratory syndrome coronavirus 2 epidemic><Severe acute respiratory syndrome coronavirus 2 pandemic><corona virus disease 2019 epidemic><corona virus disease 2019 pandemic><coronavirus disease 2019 crisis><coronavirus disease 2019 epidemic><coronavirus disease 2019 global health crisis><coronavirus disease 2019 global pandemic><coronavirus disease 2019 health crisis><coronavirus disease 2019 pandemic><coronavirus disease 2019 public health crisis><coronavirus disease crisis><coronavirus disease epidemic><coronavirus disease pandemic><coronavirus disease-19 global pandemic><coronavirus disease-19 pandemic><severe acute respiratory syndrome coronavirus 2 global health crisis><severe acute respiratory syndrome coronavirus 2 global pandemic><Black, Indigenous, People of Color><BIPOC><Health Disparities Research><Health disparities related research>",
+    "pref_terms": "AIDS/HIV problem;Academic Medical Centers;Acquired Immunodeficiency Syndrome;Address;Adult;Area;Basic Science;Black race;Black, Indigenous, People of Color;COVID-19 pandemic;COVID-19 vaccine;Charge;Childhood;Clinic;Clinical Research;Clinical Trials;Collaborations;Communities;County;Development;Environment;Faculty;Floor;Goals;Grant;HIV;Health;Health Disparities Research;Health Professional;Health Sciences;Laboratories;Minority Groups;Mission;Modernization;Physicians;Play;Privatization;Research;Research Personnel;Research Training;Role;Site;Students;Tennessee;Testing;Training;Translational Research;Underrepresented Minority;Underserved Population;United States National Institutes of Health;Wellness Center;biomedical scientist;health inequalities;laboratory facility;medical schools;minority communities;minority scientist;operation;physical separation;programs",
+    "abstract_text": "Project Summary\n The goal of the proposed HIV/AIDS Research and Training Facility grant is to renovate and develop the\na cutting-edge and modern HIV research space at the Meharry Medical College (MMC). Meharry is one of the\nnation's oldest and largest private, historically Black academic health sciences centers. Since 1876, Meharry has\nbeen dedicated in educating healthcare professionals and biomedical scientists with a singular mission of\naddressing health inequities of underserved populations. For instance, MMC is playing a vital role in combatting\nthe COVID-19 pandemic by spearheading the operations of the testing sites in Nashville and Davidson County\nin Tennessee (TN). MMC also conducted the adult and pediatric clinical trials of COVID-19 vaccines in minority\npopulations. Importantly, the Meharry Center for AIDS Health Disparities Research (CAHDR), established in\n2005 through NIH support, has been a leader in HIV/AIDS research and training of minority scientists, physicians,\nstudents, fellows and trainees. The scientific focus of the CAHDR is to identify, understand, and eliminate factors\nresponsible for the profoundly disproportionate burden of HIV/AIDS among minority populations. The Center is\ncharged to reduce the burden of AIDS in local minority communities through basic, clinical, and translational\nresearch. The HIV/AIDS-focused research environment at MMC has also been facilitated by the Meharry AIDS\nCenter of Excellence clinic at the Meharry Community Wellness Center (MCWC). Both the CAHDR and MCWC\nare part of the TN Center for AIDS Research (TN-CFAR), a multi-institutional collaborative center involving\nVanderbilt University Medical Center (VUMC), MMC, the TN Department of Health and Nashville CARES.\nAdditionally, our HIV/AIDS research and training environment is also enriched by our long-standing partnership\nwith VUMC through the Meharry Vanderbilt Alliance (MVA). Therefore, the proposed HIV/AIDS Research and\nTraining Facility will allow us to further leverage our existing partnerships to emerge as a global leader in\nHIV/AIDS health disparities research and training. Currently, there are only four laboratories that are physically\nlocated within the CAHDR and several other HIV/AIDS investigators are housed in other buildings. This physical\nseparation between our HIV/AIDS investigators poses barriers for interaction, training, access, and collaboration.\nFurthermore, our current lack of modern and cutting-edge laboratory space and facility severely impedes our\nability to attract new faculty to the CAHDR. To address these gaps, this proposal outlines the development of\ncutting-edge HIV/AIDS laboratory facility adjacent to the CAHDR that will include space for four to six new\ninvestigators in an open lab space format. Together, this renovation proposal will provide unprecedented\nopportunity to bring all Meharry HIV/AIDS researchers to the CAHDR Floor and expand our HIV/AIDS research\nprogram into cutting-edge new areas. Most importantly, a modern and cutting-edge HIV research space will\nallow us to prepare and increase the number of underrepresented minority (URM) and Black, Indigenous, and\nPeople of Color (BIPOC) researchers participating in HIV-focused research.",
+    "project_title": "Meharry HIV/AIDS Research and Training Facility",
+    "phr_text": null,
+    "spending_categories_desc": "HIV/AIDS",
+    "agency_code": "NIH",
+    "covid_response": null,
+    "arra_funded": "N",
+    "budget_start": "2022-09-16T12:09:00Z",
+    "budget_end": "2025-03-21T12:03:00Z",
+    "cfda_code": "352",
+    "funding_mechanism": "Construction Grants",
+    "direct_cost_amt": 2000000,
+    "indirect_cost_amt": 0,
+    "project_detail_url": "https://reporter.nih.gov/project-details/10547968",
+    "date_added": "2022-09-17T04:09:14Z"
+  },
+  "1DP2DA058436-01": {
+    "appl_id": 10683578,
+    "subproject_id": null,
+    "fiscal_year": 2023,
+    "project_num": "1DP2DA058436-01",
+    "project_serial_num": "DA058436",
+    "organization": {
+      "org_name": "UNIVERSITY OF CENTRAL FLORIDA",
+      "city": null,
+      "country": null,
+      "org_city": "ORLANDO",
+      "org_country": "UNITED STATES",
+      "org_state": "FL",
+      "org_state_name": null,
+      "dept_type": "PUBLIC HEALTH & PREV MEDICINE",
+      "fips_country_code": null,
+      "org_duns": [
+        "150805653"
+      ],
+      "org_ueis": [
+        "RD7MXJV7DKT9"
+      ],
+      "primary_duns": "150805653",
+      "primary_uei": "RD7MXJV7DKT9",
+      "org_fips": "US",
+      "org_ipf_code": "513805",
+      "org_zipcode": "328263231",
+      "external_org_id": 513805
+    },
+    "award_type": "1",
+    "activity_code": "DP2",
+    "award_amount": 2280000,
+    "is_active": false,
+    "project_num_split": {
+      "appl_type_code": "1",
+      "activity_code": "DP2",
+      "ic_code": "DA",
+      "serial_num": "058436",
+      "support_year": "01",
+      "full_support_year": "01",
+      "suffix_code": ""
+    },
+    "principal_investigators": [
+      {
+        "profile_id": 11368028,
+        "first_name": "Elena",
+        "middle_name": "",
+        "last_name": "Cyrus",
+        "is_contact_pi": true,
+        "full_name": "Elena  Cyrus",
+        "title": "ASSISTANT PROF."
+      }
+    ],
+    "contact_pi_name": "CYRUS, ELENA ",
+    "program_officers": [
+      {
+        "first_name": "Richard",
+        "middle_name": "A",
+        "last_name": "Jenkins",
+        "full_name": "Richard A Jenkins"
+      }
+    ],
+    "agency_ic_admin": {
+      "code": "DA",
+      "abbreviation": "NIDA",
+      "name": "National Institute on Drug Abuse"
+    },
+    "agency_ic_fundings": [
+      {
+        "fy": 2023,
+        "code": "DA",
+        "name": "National Institute on Drug Abuse",
+        "abbreviation": "NIDA",
+        "total_cost": 2280000.0,
+        "direct_cost_ic": 1500000.0,
+        "indirect_cost_ic": 780000.0
+      }
+    ],
+    "cong_dist": "FL-10",
+    "spending_categories": [
+      89,
+      176,
+      180,
+      4998,
+      240,
+      284,
+      5546,
+      5599,
+      338,
+      701,
+      780,
+      4793,
+      817,
+      3724
+    ],
+    "project_start_date": "2023-06-15T12:06:00Z",
+    "project_end_date": "2025-03-14T12:03:00Z",
+    "organization_type": {
+      "name": "SCHOOLS OF MEDICINE",
+      "code": "10",
+      "is_other": false
+    },
+    "geo_lat_lon": {
+      "lon": -81.197266,
+      "lat": 28.601027
+    },
+    "opportunity_number": "PAR-20-224",
+    "full_study_section": {
+      "srg_code": "ZDA1",
+      "srg_flex": null,
+      "sra_designator_code": "SKP",
+      "sra_flex_code": "D",
+      "group_code": "J2",
+      "name": "Special Emphasis Panel[ZDA1 SKP-D (J2)]"
+    },
+    "award_notice_date": "2023-06-09T12:06:00Z",
+    "is_new": false,
+    "mechanism_code_dc": "RP",
+    "core_project_num": "DP2DA058436",
+    "terms": "<AIDS><Acquired Immune Deficiency><Acquired Immune Deficiency Syndrome><Acquired Immuno-Deficiency Syndrome><Acquired Immunologic Deficiency Syndrome><Acquired Immunodeficiency Syndrome><Budgets><Counseling><Economics><economic><Education><Educational aspects><Epidemic><Exhibits><Goals><Health><Recording of previous events><History><histories><HIV><AIDS Virus><Acquired Immune Deficiency Syndrome Virus><Acquired Immunodeficiency Syndrome Virus><Human Immunodeficiency Viruses><LAV-HTLV-III><Lymphadenopathy-Associated Virus><Virus-HIV><Incidence><Lead><Pb element><heavy metal Pb><heavy metal lead><Methods><Perception><Poverty><Impoverished><Productivity><Public Health><Research><Substance Use Disorder><substance use and disorder><Testing><Waiting Lists><waitlist><Socio-economic status><socio-economic position><socioeconomic position><Socioeconomic Status><Caring><improved><Link><Evaluation><Training><satisfaction><Policies><Research Priority><programs><psychosocial><Services><transgender><trans*><experience><skills><novel><Participant><social><Statistical Methods><statistic methods><Sampling><Intervention><Intervention Strategies><interventional strategy><Address><National Institute of Drug Abuse><NIDA><National Institute on Drug Abuse><Randomized><randomisation><randomization><randomly assigned><Epidemiologist><transmission process><Transmission><Development><developmental><health economics><Outcome><Population><implementation science><high risk><community setting><standard of care><SBIRT><screening, brief intervention, and referral to treatment><screening, brief intervention, referral, and treatment><trans-women><transwoman><transwomen><transgender women><substance misuse><PrEP><pre-exposure prophylaxis><barrier to health care><barrier to healthcare><barrier to treatment><obstacle to care><obstacle to healthcare><barrier to care><intervention arm><treatment arm><social cohesion><RE-AIM><reach, efficacy, adoption, implementation, and maintenance><Reach, Effectiveness, Adoption, Implementation, and Maintenance><implementation intervention><implementation outcomes><Economically Deprived><economically disadvantaged><economic disparity><substance using><substance use><community engaged research><marginalization><structural determinants><structural factors>",
+    "pref_terms": "Acquired Immunodeficiency Syndrome;Address;Budgets;Caring;Counseling;Development;Economics;Education;Epidemic;Epidemiologist;Evaluation;Exhibits;Goals;HIV;Health;Incidence;Intervention;Lead;Link;Methods;National Institute of Drug Abuse;Outcome;Participant;Perception;Policies;Population;Poverty;Productivity;Public Health;Randomized;Reach, Effectiveness, Adoption, Implementation, and Maintenance;Recording of previous events;Research;Research Priority;Sampling;Services;Socioeconomic Status;Statistical Methods;Substance Use Disorder;Testing;Training;Waiting Lists;barrier to care;community engaged research;community setting;economic disparity;experience;health economics;high risk;implementation intervention;implementation outcomes;implementation science;improved;marginalization;novel;pre-exposure prophylaxis;programs;psychosocial;satisfaction;screening, brief intervention, referral, and treatment;skills;social;social cohesion;standard of care;structural determinants;substance misuse;substance use;transgender;transgender women;transmission process;treatment arm",
+    "abstract_text": "Background: Transgender women commonly live in poverty and have among the highest risk for substance\nuse and HIV transmission, yet existing programs fail to address how structural factors such as socio-economic\nstatus and social marginalization are significant barriers to care and survival. The study objective is to evaluate\nthe effect of a novel intervention called \u2018ENTRUST\u2019 (economic navigation and strengthening to realize\nunrestricted services for transgender women) that will combine group-based financial skill-building training with\nadapted screening, brief intervention and referral to treatment (SBIRT) counseling. Study aims are:\nAim 1: To develop and pretest ENTRUST, an HIV status-neutral intervention consisting of group-based financial\nskill-building training with adapted SBIRT to increase social cohesion and financial skills (e.g., budgeting,\nfinancial goals setting) among transgender women, and facilitate linkage to substance use and HIV care/PrEP.\nThe ADAPT-ITT framework will be used to create ENTRUST and pretest it in a sample of n=10\nAim 2: To conduct a pilot RCT among (n=80) transgender women to evaluate acceptability, feasibility, and\npreliminary efficacy of ENTRUST on a) linkage to substance use and HIV care/PrEP; b) economic strengthening\nand social cohesion. Participants will be randomized to the ENTRUST intervention arm (adapted SBIRT +\neconomic navigation and strengthening) or the standard of care (adapted SBIRT) wait-listed control. To assess\nsocial cohesion, as well as other outcomes associated with linking to substance use and HIV care/PrEP and\neconomic strengthening, Photovoice will be used to document and exhibit participant\u2019s experiences.\nAim 3: To examine the implementation of ENTRUST in group settings as guided by the Reach, Effectiveness,\nAdoption, Implementation, and Maintenance (RE-AIM) framework. Sequential, explanatory mixed methods will\nbe used to evaluate participant\u2019s perspectives on key implementation outcomes of acceptability, feasibility, and\nsatisfaction and their interventional experiences, and, perceptions of programmatic sustainability.\n PI Cyrus, a trained social epidemiologist with a history of community engaged research, will lead a team of\nexperts on health economics, microfinance, and sustainable economic interventions; implementation science\nand RCT evaluation; intervention implementation in group/community settings; development and implementation\nof substance use and HIV interventions in transgender populations; and advanced statistical methods.\n Significance: ENTRUST has the potential to shift regional and national policy by providing evidence of trans\nwomen\u2019s needs and sustainable and practical approaches that can improve their overall health and productivity.\nIn alignment with NIDA and Office of SGM research priorities, the proposed study will overcome structural and\npsychosocial barriers to facilitate trans women linking to substance use and HIV care/PrEP to reduce substance\nmisuse and HIV incidence. The study adheres to the national HIV public health targets set forth by the 2019\npresidential directives of Ending the HIV Epidemic (EHE) and the Office of AIDS Research priorities.",
+    "project_title": "ENTRUST - economic navigation and strengthening to realize unrestricted services for transgender women",
+    "phr_text": "Narrative\nTransgender women in FL can be economically disadvantaged and at highest risk for substance use disorders\nand HIV transmission yet remain underrepresented in research; and existing programs fail to address structural\nbarriers to care such as socio-economic status and social marginalization. For this study, acceptability, feasibility,\nand preliminary efficacy of ENTRUST (economic navigation and strengthening to realize unrestricted\nservices for transgender women) will be assessed. ENTRUST will provide transgender women with group-\nbased financial education while receiving tailored SBIRT counseling to aid with linking to existing substance use\nand HIV care/PrEP.",
+    "spending_categories_desc": "Behavioral and Social Science; Clinical Research; Clinical Trials and Supportive Activities; Dissemination and Implementation Research; Drug Abuse (NIDA only); HIV/AIDS; Health Disparities Research; Health Disparities and Racial or Ethnic Minority Health Research; Infectious Diseases; Prevention; Screening and Brief Intervention for Substance Misuse; Social Determinants of Health; Substance Misuse; Women's Health",
+    "agency_code": "NIH",
+    "covid_response": null,
+    "arra_funded": "N",
+    "budget_start": "2023-06-15T12:06:00Z",
+    "budget_end": "2025-03-14T12:03:00Z",
+    "cfda_code": "279",
+    "funding_mechanism": "Non-SBIR/STTR",
+    "direct_cost_amt": 1500000,
+    "indirect_cost_amt": 780000,
+    "project_detail_url": "https://reporter.nih.gov/project-details/10683578",
+    "date_added": "2023-06-17T04:06:39Z"
+  },
+  "1DP2MH132938-01": {
+    "appl_id": 10472101,
+    "subproject_id": null,
+    "fiscal_year": 2022,
+    "project_num": "1DP2MH132938-01",
+    "project_serial_num": "MH132938",
+    "organization": {
+      "org_name": "UNIVERSITY OF FLORIDA",
+      "city": null,
+      "country": null,
+      "org_city": "GAINESVILLE",
+      "org_country": "UNITED STATES",
+      "org_state": "FL",
+      "org_state_name": null,
+      "dept_type": "OTHER HEALTH PROFESSIONS",
+      "fips_country_code": null,
+      "org_duns": [
+        "969663814"
+      ],
+      "org_ueis": [
+        "NNFQH1JAPEP3"
+      ],
+      "primary_duns": "969663814",
+      "primary_uei": "NNFQH1JAPEP3",
+      "org_fips": "US",
+      "org_ipf_code": "513806",
+      "org_zipcode": "326115500",
+      "external_org_id": 513806
+    },
+    "award_type": "1",
+    "activity_code": "DP2",
+    "award_amount": 1372500,
+    "is_active": true,
+    "project_num_split": {
+      "appl_type_code": "1",
+      "activity_code": "DP2",
+      "ic_code": "MH",
+      "serial_num": "132938",
+      "support_year": "01",
+      "full_support_year": "01",
+      "suffix_code": ""
+    },
+    "principal_investigators": [
+      {
+        "profile_id": 14880855,
+        "first_name": "Rebecca",
+        "middle_name": "L",
+        "last_name": "Pearl",
+        "is_contact_pi": true,
+        "full_name": "Rebecca L Pearl",
+        "title": "ASSISTANT PROFESSOR"
+      }
+    ],
+    "contact_pi_name": "PEARL, REBECCA L",
+    "program_officers": [
+      {
+        "first_name": "Alexander",
+        "middle_name": "M",
+        "last_name": "Talkovsky",
+        "full_name": "Alexander M Talkovsky"
+      }
+    ],
+    "agency_ic_admin": {
+      "code": "MH",
+      "abbreviation": "NIMH",
+      "name": "National Institute of Mental Health"
+    },
+    "agency_ic_fundings": [
+      {
+        "fy": 2022,
+        "code": "OD",
+        "name": "NIH Office of the Director",
+        "abbreviation": "OD",
+        "total_cost": 1372500.0,
+        "direct_cost_ic": 900000.0,
+        "indirect_cost_ic": 472500.0
+      }
+    ],
+    "cong_dist": "FL-03",
+    "spending_categories": [
+      89,
+      176,
+      180,
+      3641,
+      443,
+      3584,
+      4793
+    ],
+    "project_start_date": "2022-09-01T12:09:00Z",
+    "project_end_date": "2025-08-31T12:08:00Z",
+    "organization_type": {
+      "name": "SCHOOLS OF PUBLIC HEALTH",
+      "code": "10",
+      "is_other": false
+    },
+    "geo_lat_lon": {
+      "lon": -82.349637,
+      "lat": 29.643443
+    },
+    "opportunity_number": "RFA-RM-21-016",
+    "full_study_section": {
+      "srg_code": "ZRG1",
+      "srg_flex": null,
+      "sra_designator_code": "CVRS",
+      "sra_flex_code": "B",
+      "group_code": "70",
+      "name": "Special Emphasis Panel[ZRG1 CVRS-B (70)]"
+    },
+    "award_notice_date": "2022-08-24T12:08:00Z",
+    "is_new": false,
+    "mechanism_code_dc": "RP",
+    "core_project_num": "DP2MH132938",
+    "terms": "<Affect><Behavior><Malignant Neoplasms><Cancers><Malignant Tumor><malignancy><neoplasm/cancer><Control Groups><Counseling><Diabetes Mellitus><diabetes><Discrimination><Cognitive Discrimination><Disease><Disorder><Foundations><Health><HIV><AIDS Virus><Acquired Immune Deficiency Syndrome Virus><Acquired Immunodeficiency Syndrome Virus><Human Immunodeficiency Viruses><LAV-HTLV-III><Lymphadenopathy-Associated Virus><Virus-HIV><Judgment><Lead><Pb element><heavy metal Pb><heavy metal lead><men><men's><Mental Health><Mental Hygiene><Psychological Health><Methods><adiposity><corpulence><Obesity><Patients><QOL><Quality of life><Research><Self-Help Groups><self help organization><Support Groups><Cutaneous Disorder><Dermatoses><Skin Diseases><Skin Diseases and Manifestations><cutaneous disease><dermal disease><dermal disorder><skin disorder><Stress><Testing><Waiting Lists><waitlist><Woman><Measures><chronic pain><base><improved><Procedures><Physiological><Physiologic><psychologic><psychological><insight><Individual><group counseling><randomized control trial><Randomized Controlled Trials><Disorder Management><Disease Management><physical health><physical conditioning><experience><trait><novel><Participant><Self-Report><Patient Self-Report><Reporting><stigma><social stigma><Intervention Strategies><interventional strategy><Intervention><Dehumanization><Address><burden of illness><burden of disease><disease burden><years of life lost to disability><years of life lost to disease><health related quality of life><maltreatment><mistreatment><Impairment><therapy design><intervention design><treatment design><therapy development><develop therapy><intervention development><treatment development><peer support><health care settings><healthcare settings><internalized stigma><self-stigma>",
+    "pref_terms": "Address;Affect;Behavior;Control Groups;Counseling;Dehumanization;Diabetes Mellitus;Discrimination;Disease;Disease Management;Foundations;HIV;Health;Impairment;Individual;Intervention;Judgment;Lead;Malignant Neoplasms;Measures;Mental Health;Methods;Obesity;Participant;Patient Self-Report;Patients;Physiological;Procedures;Quality of life;Randomized Controlled Trials;Reporting;Research;Stress;Support Groups;Testing;Waiting Lists;Woman;base;burden of illness;chronic pain;experience;group counseling;health care settings;health related quality of life;improved;insight;internalized stigma;maltreatment;men;novel;peer support;physical conditioning;psychologic;skin disorder;social stigma;therapy design;therapy development;trait",
+    "abstract_text": "PROJECT SUMMARY/ABSTRACT\n Stigma adversely affects mental and physical health. Societal devaluation or mistreatment from others\ncan lead to internalization of stigma (i.e., self-stigma) among individuals with marginalized identities or traits.\nInternalized stigma is robustly associated with impaired mental health and health-related quality of life\n(HRQOL), often to a stronger degree than are interpersonal experiences of stigma (e.g., discrimination).\nExperts have suggested that peer support or psychological counseling may help to reduce internalized stigma\nand its associated health impacts, although very few studies have investigated such interventions.\n Health-related stigma is an umbrella term that encompasses negative judgment, blame, avoidance,\nrejection, disparagement, discrimination, or dehumanization of individuals due to a health condition or disease.\nSuch health conditions may be visible (such as obesity, skin diseases, or cancers that result in disfigurement),\nor concealable (such as HIV, diabetes, or chronic pain). Patients who internalize health-related stigma report\navoidance of health care settings and disengagement from disease management behaviors, in addition to\nshowing signs of physiological stress. Thus, health-related stigma compounds disease burden and threatens\nHRQOL beyond the direct effects of the health conditions themselves. Prior research on health-related stigma\nhas been siloed, such that studies investigate one type of stigma, its effects, and possible solutions in isolation\nfrom stigma due to other health conditions. Consistent evidence of stigma\u2019s harms on mental and physical\nhealth across health conditions, and shared theoretical foundations for intervention development, indicate the\nneed for a unifying approach. An intervention that reduces internalized stigma among individuals with varying\nhealth conditions would have broad impact and would shift the paradigm of how stigma is currently addressed.\n The current project seeks to determine the effects of a novel, transdiagnostic, group-based counseling\nintervention designed to help patients cope with and to reduce the internalization of health-related stigma. An\nintervention and a self-report measure that were previously developed to address only one form of health-\nrelated stigma will be adapted to generalize to patients of other health conditions. After piloting, a randomized\ncontrolled trial will be conducted to test the effects of the group-based counseling intervention on internalized\nstigma, mental health, and HRQOL. The counseling condition (which also includes peer support) will be\ncompared to a general peer support group and a waitlist control group. Participants will be 195 men and\nwomen who report high levels of internalized stigma due to their health condition. All study procedures will be\nconducted online, including assessments and treatment. Participants in the counseling and peer support\ngroups will receive 12 weekly group sessions, followed by 2 every-other-week and 2 monthly sessions, for a\ntotal of 26 weeks. Findings from this study will provide new insights into the most effective and efficient method\nfor reducing internalized stigma, and improving HRQOL, in patients with a wide array of health conditions.",
+    "project_title": "Transdiagnostic Intervention to Reduce Internalized Health-Related Stigma",
+    "phr_text": "PROJECT NARRATIVE\nSocial stigma due to health conditions increases disease burden and adversely impacts health. The\ninternalization of health-related stigma (i.e., self-stigma) is associated with impaired mental health and quality\nof life, yet little is known about how to reduce internalized stigma. The current project will test the effects of a\nnovel, transdiagnostic, group counseling intervention, and of general peer support, to determine the optimal\nmethod for helping patients cope with health-related stigma, reducing its internalization, and, ultimately,\nenhancing patient quality of life.",
+    "spending_categories_desc": "Behavioral and Social Science; Clinical Research; Clinical Trials and Supportive Activities; Health Disparities; Mental Health; Minority Health; Social Determinants of Health",
+    "agency_code": "NIH",
+    "covid_response": null,
+    "arra_funded": "N",
+    "budget_start": "2022-09-01T12:09:00Z",
+    "budget_end": "2025-08-31T12:08:00Z",
+    "cfda_code": "242",
+    "funding_mechanism": "Non-SBIR/STTR",
+    "direct_cost_amt": 900000,
+    "indirect_cost_amt": 472500,
+    "project_detail_url": "https://reporter.nih.gov/project-details/10472101",
+    "date_added": "2022-09-03T04:09:46Z"
+  },
+  "1DP2MH132941-01": {
+    "appl_id": 10473113,
+    "subproject_id": null,
+    "fiscal_year": 2022,
+    "project_num": "1DP2MH132941-01",
+    "project_serial_num": "MH132941",
+    "organization": {
+      "org_name": "HARVARD UNIVERSITY",
+      "city": null,
+      "country": null,
+      "org_city": "CAMBRIDGE",
+      "org_country": "UNITED STATES",
+      "org_state": "MA",
+      "org_state_name": null,
+      "dept_type": "SOCIAL SCIENCES",
+      "fips_country_code": null,
+      "org_duns": [
+        "082359691"
+      ],
+      "org_ueis": [
+        "LN53LCFJFL45"
+      ],
+      "primary_duns": "082359691",
+      "primary_uei": "LN53LCFJFL45",
+      "org_fips": "US",
+      "org_ipf_code": "3212901",
+      "org_zipcode": "021385369",
+      "external_org_id": 3212901
+    },
+    "award_type": "1",
+    "activity_code": "DP2",
+    "award_amount": 1521000,
+    "is_active": false,
+    "project_num_split": {
+      "appl_type_code": "1",
+      "activity_code": "DP2",
+      "ic_code": "MH",
+      "serial_num": "132941",
+      "support_year": "01",
+      "full_support_year": "01",
+      "suffix_code": ""
+    },
+    "principal_investigators": [
+      {
+        "profile_id": 14383625,
+        "first_name": "Ellis",
+        "middle_name": "",
+        "last_name": "Monk",
+        "is_contact_pi": true,
+        "full_name": "Ellis  Monk",
+        "title": "ASSOCIATE PROFESSOR"
+      }
+    ],
+    "contact_pi_name": "MONK, ELLIS ",
+    "program_officers": [
+      {
+        "first_name": "Alexander",
+        "middle_name": "M",
+        "last_name": "Talkovsky",
+        "full_name": "Alexander M Talkovsky"
+      }
+    ],
+    "agency_ic_admin": {
+      "code": "MH",
+      "abbreviation": "NIMH",
+      "name": "National Institute of Mental Health"
+    },
+    "agency_ic_fundings": [
+      {
+        "fy": 2022,
+        "code": "MH",
+        "name": "National Institute of Mental Health",
+        "abbreviation": "NIMH",
+        "total_cost": 1521000.0,
+        "direct_cost_ic": 900000.0,
+        "indirect_cost_ic": 621000.0
+      }
+    ],
+    "cong_dist": "MA-05",
+    "spending_categories": [
+      81,
+      89,
+      176,
+      4835,
+      5011,
+      3641,
+      4372,
+      443,
+      3584,
+      4793,
+      3724
+    ],
+    "project_start_date": "2022-09-01T12:09:00Z",
+    "project_end_date": "2025-03-14T12:03:00Z",
+    "organization_type": {
+      "name": "SCHOOLS OF ARTS AND SCIENCES",
+      "code": "10",
+      "is_other": false
+    },
+    "geo_lat_lon": {
+      "lon": -71.11193,
+      "lat": 42.369697
+    },
+    "opportunity_number": "RFA-RM-21-016",
+    "full_study_section": {
+      "srg_code": "ZRG1",
+      "srg_flex": null,
+      "sra_designator_code": "CVRS",
+      "sra_flex_code": "B",
+      "group_code": "70",
+      "name": "Special Emphasis Panel[ZRG1 CVRS-B (70)]"
+    },
+    "award_notice_date": "2022-08-22T12:08:00Z",
+    "is_new": false,
+    "mechanism_code_dc": "RP",
+    "core_project_num": "DP2MH132941",
+    "terms": "<Affect><Age><ages><Bangladesh><Black race><Black><Health><Heterogeneity><Lead><Pb element><heavy metal Pb><heavy metal lead><Life Expectancy><male><men><men's><Methodology><Morbidity - disease rate><Morbidity><mortality><NIH><National Institutes of Health><United States National Institutes of Health><New York City><optical><Optics><O element><O2 element><Oxygen><Patients><Hypophysis><Hypophysis Cerebri><Pituitary><Pituitary Nervous System><Pituitary Gland><Pulse Oximetry><healthcare quality><health care quality><Racial Group><Racial Stocks><Race><Research><Science><Survey Instrument><Surveys><Medical Technology><Time><Woman><Work><Measures><Criminal Justice><Socioeconomic Status><Socio-economic status><socio-economic position><socioeconomic position><Youth><Youth 10-21><Caring><Social Impacts><improved><Medical><Ensure><Inequality><disease onset><disorder onset><Onset of illness><Collaborations><Diagnostic Method><Diagnostic Technique><Diagnostic Procedure><Source><disease severity><Severity of illness><age group><skin color><novel><economic impact><Categories><Sampling><socially stressed><social stress><Intervention Strategies><interventional strategy><Intervention><Skin><disparity in health><health disparity><pandemic disease><pandemic><Pathway interactions><pathway><early onset><minority health><design><designing><Minority><Outcome><racial and ethnic><ethnoracial><longitudinal analysis><COVID-19><COVID19><CV-19><CV19><corona virus disease 2019><coronavirus disease 2019><coronavirus disease-19><coronavirus infectious disease-19><COVID-19 pandemic><COVID crisis><COVID epidemic><COVID pandemic><COVID-19 crisis><COVID-19 epidemic><COVID-19 global health crisis><COVID-19 global pandemic><COVID-19 health crisis><COVID-19 public health crisis><COVID19 crisis><COVID19 epidemic><COVID19 global health crisis><COVID19 global pandemic><COVID19 health crisis><COVID19 pandemic><COVID19 public health crisis><SARS-CoV-2 epidemic><SARS-CoV-2 global health crisis><SARS-CoV-2 global pandemic><SARS-CoV-2 pandemic><SARS-CoV2 epidemic><SARS-CoV2 pandemic><SARS-coronavirus-2 epidemic><SARS-coronavirus-2 pandemic><Severe Acute Respiratory Syndrome CoV 2 epidemic><Severe Acute Respiratory Syndrome CoV 2 pandemic><Severe acute respiratory syndrome coronavirus 2 epidemic><Severe acute respiratory syndrome coronavirus 2 pandemic><corona virus disease 2019 epidemic><corona virus disease 2019 pandemic><coronavirus disease 2019 crisis><coronavirus disease 2019 epidemic><coronavirus disease 2019 global health crisis><coronavirus disease 2019 global pandemic><coronavirus disease 2019 health crisis><coronavirus disease 2019 pandemic><coronavirus disease 2019 public health crisis><coronavirus disease crisis><coronavirus disease epidemic><coronavirus disease pandemic><coronavirus disease-19 global pandemic><coronavirus disease-19 pandemic><severe acute respiratory syndrome coronavirus 2 global health crisis><severe acute respiratory syndrome coronavirus 2 global pandemic><coronavirus disease><COVID><CoV disease><corona virus disease><COVID-19 mortality><COVID-19 associated death><COVID-19 associated fatality><COVID-19 associated mortality><COVID-19 death><COVID-19 fatality><COVID-19 induced death><COVID-19 induced fatality><COVID-19 induced mortality><COVID-19 related death><COVID-19 related fatality><COVID-19 related mortality><COVID19 associated death><COVID19 associated fatality><COVID19 associated mortality><COVID19 death><COVID19 fatality><COVID19 induced death><COVID19 induced fatality><COVID19 induced mortality><COVID19 mortality><COVID19 related death><COVID19 related fatality><COVID19 related mortality><SARS-CoV-2 associated death><SARS-CoV-2 associated fatality><SARS-CoV-2 associated mortality><SARS-CoV-2 death><SARS-CoV-2 fatality><SARS-CoV-2 induced death><SARS-CoV-2 induced fatality><SARS-CoV-2 induced mortality><SARS-CoV-2 mortality><SARS-CoV-2 related death><SARS-CoV-2 related fatality><SARS-CoV-2 related mortality><coronavirus disease 2019 associated death><coronavirus disease 2019 associated fatality><coronavirus disease 2019 associated mortality><coronavirus disease 2019 death><coronavirus disease 2019 fatality><coronavirus disease 2019 induced death><coronavirus disease 2019 induced fatality><coronavirus disease 2019 induced mortality><coronavirus disease 2019 mortality><coronavirus disease 2019 related death><coronavirus disease 2019 related fatality><coronavirus disease 2019 related mortality><coronavirus disease-19 mortality><death due to COVID-19><death due to COVID19><death due to SARS-CoV-2><death due to coronavirus disease 2019><death due to severe acute respiratory syndrome coronavirus 2><death in COVID><death in COVID-19><death in SARS-CoV-2><death in coronavirus disease><death in coronavirus disease 2019><death in severe acute respiratory syndrome coronavirus 2><fatality due to COVID-19><fatality due to COVID19><fatality due to SARS-CoV-2><fatality due to coronavirus disease 2019><fatality due to severe acute respiratory syndrome coronavirus 2><mortality due to COVID-19><mortality due to COVID19><mortality due to SARS-CoV-2><mortality due to coronavirus disease 2019><mortality due to severe acute respiratory syndrome coronavirus 2><severe acute respiratory syndrome coronavirus 2 associated death><severe acute respiratory syndrome coronavirus 2 associated fatality><severe acute respiratory syndrome coronavirus 2 associated mortality><severe acute respiratory syndrome coronavirus 2 death><severe acute respiratory syndrome coronavirus 2 fatality><severe acute respiratory syndrome coronavirus 2 induced death><severe acute respiratory syndrome coronavirus 2 induced fatality><severe acute respiratory syndrome coronavirus 2 induced mortality><severe acute respiratory syndrome coronavirus 2 mortality><severe acute respiratory syndrome coronavirus 2 related death><severe acute respiratory syndrome coronavirus 2 related fatality><severe acute respiratory syndrome coronavirus 2 related mortality><black men><black male><algorithmic bias><Black Populations><Black group><Black individual><Black people><Blacks><African American population><African American group><African American individual><African American people><African Americans><minority health disparity>",
+    "pref_terms": "Affect;African American population;Age;Bangladesh;Black Populations;Black race;COVID-19;COVID-19 mortality;COVID-19 pandemic;Caring;Categories;Collaborations;Criminal Justice;Diagnostic Procedure;Ensure;Health;Heterogeneity;Inequality;Intervention;Lead;Life Expectancy;Measures;Medical;Medical Technology;Methodology;Minority;Morbidity - disease rate;New York City;Onset of illness;Optics;Outcome;Oxygen;Pathway interactions;Patients;Pituitary Gland;Pulse Oximetry;Race;Research;Sampling;Science;Severity of illness;Skin;Social Impacts;Socioeconomic Status;Source;Surveys;Time;United States National Institutes of Health;Woman;Work;Youth;age group;algorithmic bias;black men;coronavirus disease;design;early onset;economic impact;health care quality;health disparity;improved;longitudinal analysis;male;men;minority health;minority health disparity;mortality;novel;pandemic disease;racial and ethnic;skin color;social stress",
+    "abstract_text": "Project Summary\nIn 1980 Black male youths in Harlem, New York City were estimated to being less likely to\nsurvive to the age of 65 than male youths in Bangladesh. Mortality rates in 1980 were\nestimated to be roughly 6 times greater among Black Harlem men and women than White men\nand women in the same age groups. Research has shown that these profound disparities \u2013\noften understood to the be result of social stress and other factors that produce earlier onset\nof disease, greater disease severity, and poorer quality healthcare to deal with morbidity \u2013\nremain considerable. The COVID-19 pandemic has not only wiped away any forward progress\nin these disparities but has actually seemed to cause larger ethnoracial health disparities.\nEstimates show that COVID-19 will reduce US life expectancy in 2020 by a full year for Whites\nand the reductions for African Americans will be 3-4 times this. Additionally, this reduction in life\nexpectancy will likely persist beyond 2020 because of continued COVID-19 mortality and long-\nterm health, social, and economic impacts of the pandemic. Understanding minority health and\nhealth disparities has long been a core priority of the NIH. Among the key strategies for\nadvancing the science of minority health and health disparities are: 1) comprehensively\nmeasuring how social stress, which affects health by causing dysregulation of the Hypothalamo-\nPituitary-Adrenocortical axis (HPA axis), 2) rigorous methodological approaches that enable\ncausal inference approaches (e.g. longitudinal analyses), and 3) improving patient-clinician\nrelations and diagnostic procedures for equitable care across ethnoracial categories.\nAccordingly, this project considers two pathways through which skin tone may affect minority\nhealth: social stress and differential quality of healthcare related to algorithmic biases built into\nmedical technology \u2013 pulse oximetry. Pulse oximetry, in particular, is especially critical during\nthe age of COVID where overestimating the oxygen saturation of minorities may lead to them\nnot receiving treatment even though they need medical intervention. The former pathway will\nbe investigated through a longitudinal, nationally representative survey of African Americans\n(with sub-sample of Whites) with a host of measures of heretofore unexamined sources of\nsocial stress. The latter pathway will be investigated in collaboration with experts in optics who I\nwill work with to assess algorithmic biases in pulse oximetry and, ultimately, design solutions to\nensure that pulse oximetry works equally well across the skin color continuum.",
+    "project_title": "The Optics of Health: Race Skin Tone Minority Health and Health Disparities in the U.S.",
+    "phr_text": "Project Narrative\nResearch on ethnoracial health disparities tends to compare between ethnoracial\ncategories (e.g. Blacks and Whites) while ignoring heterogeneity in socioeconomic\nstatus and health within ethnoracial categories. Studies show, however, that there is\nconsiderable heterogeneity in socioeconomic status and health among African\nAmericans \u2013 in fact, in some cases there is as much inequality in socioeconomic status,\ncriminal justice outcomes, and health within the Black population along the skin tone\ncontinuum as there is between African Americans and Whites as a whole. This proposal\ndetails two parallel projects designed to examine this intraracial heterogeneity in health\namong African Americans along the skin tone continuum: 1) a novel, longitudinal,\nnationally representative survey of African Americans and 2) a cutting-edge project\naimed at assessing and fixing skin tone-related algorithmic biases in pulse oximetry.",
+    "spending_categories_desc": "Basic Behavioral and Social Science; Behavioral and Social Science; Clinical Research; Coronaviruses; Coronaviruses Disparities and At-Risk Populations; Health Disparities; Machine Learning and Artificial Intelligence; Mental Health; Minority Health; Social Determinants of Health; Women's Health",
+    "agency_code": "NIH",
+    "covid_response": null,
+    "arra_funded": "N",
+    "budget_start": "2022-09-01T12:09:00Z",
+    "budget_end": "2025-03-14T12:03:00Z",
+    "cfda_code": "242",
+    "funding_mechanism": "Non-SBIR/STTR",
+    "direct_cost_amt": 900000,
+    "indirect_cost_amt": 621000,
+    "project_detail_url": "https://reporter.nih.gov/project-details/10473113",
+    "date_added": "2022-09-03T04:09:46Z"
+  },
+  "1DP5OD037400-01": {
+    "appl_id": 10923510,
+    "subproject_id": null,
+    "fiscal_year": 2024,
+    "project_num": "1DP5OD037400-01",
+    "project_serial_num": "OD037400",
+    "organization": {
+      "org_name": "COLUMBIA UNIVERSITY HEALTH SCIENCES",
+      "city": null,
+      "country": null,
+      "org_city": "NEW YORK",
+      "org_country": "UNITED STATES",
+      "org_state": "NY",
+      "org_state_name": null,
+      "dept_type": "INTERNAL MEDICINE/MEDICINE",
+      "fips_country_code": null,
+      "org_duns": [
+        "621889815"
+      ],
+      "org_ueis": [
+        "QHF5ZZ114M72"
+      ],
+      "primary_duns": "621889815",
+      "primary_uei": "QHF5ZZ114M72",
+      "org_fips": "US",
+      "org_ipf_code": "1833205",
+      "org_zipcode": "100323725",
+      "external_org_id": 1833205
+    },
+    "award_type": "1",
+    "activity_code": "DP5",
+    "award_amount": 411250,
+    "is_active": false,
+    "project_num_split": {
+      "appl_type_code": "1",
+      "activity_code": "DP5",
+      "ic_code": "OD",
+      "serial_num": "037400",
+      "support_year": "01",
+      "full_support_year": "01",
+      "suffix_code": ""
+    },
+    "principal_investigators": [
+      {
+        "profile_id": 78943744,
+        "first_name": "Kelton",
+        "middle_name": "",
+        "last_name": "Minor",
+        "is_contact_pi": true,
+        "full_name": "Kelton  Minor",
+        "title": ""
+      }
+    ],
+    "contact_pi_name": "MINOR, KELTON ",
+    "program_officers": [
+      {
+        "first_name": "Becky",
+        "middle_name": "",
+        "last_name": "Miller",
+        "full_name": "Becky  Miller"
+      }
+    ],
+    "agency_ic_admin": {
+      "code": "OD",
+      "abbreviation": "OD",
+      "name": "NIH Office of the Director"
+    },
+    "agency_ic_fundings": [
+      {
+        "fy": 2024,
+        "code": "DE",
+        "name": "National Institute of Dental and Craniofacial Research",
+        "abbreviation": "NIDCR",
+        "total_cost": 1.0,
+        "direct_cost_ic": 1.0,
+        "indirect_cost_ic": 0.0
+      },
+      {
+        "fy": 2024,
+        "code": "OD",
+        "name": "NIH Office of the Director",
+        "abbreviation": "OD",
+        "total_cost": 411249.0,
+        "direct_cost_ic": 249999.0,
+        "indirect_cost_ic": 161250.0
+      }
+    ],
+    "cong_dist": "NY-13",
+    "spending_categories": null,
+    "project_start_date": "2024-09-18T12:09:00Z",
+    "project_end_date": "2025-03-14T12:03:00Z",
+    "organization_type": {
+      "name": "SCHOOLS OF MEDICINE",
+      "code": "10",
+      "is_other": false
+    },
+    "geo_lat_lon": {
+      "lon": -73.9414,
+      "lat": 40.8415
+    },
+    "opportunity_number": "RFA-RM-23-007",
+    "full_study_section": {
+      "srg_code": "ZRG1",
+      "srg_flex": null,
+      "sra_designator_code": "HSS",
+      "sra_flex_code": "E",
+      "group_code": "70",
+      "name": "Special Emphasis Panel[ZRG1 HSS-E (70)]"
+    },
+    "award_notice_date": "2024-09-18T12:09:00Z",
+    "is_new": false,
+    "mechanism_code_dc": "RP",
+    "core_project_num": "DP5OD037400",
+    "terms": "<Accelerometer><Acclimatization><Accounting><Address><Alcohol Drinking><Alcohol consumption><Award><BRFSS><Behavior><Behavior Risk Factor Surveillance System><Behavior assessment><Behavioral><Behavioral Medicine><Behavioral Risk Factor Surveillance System><Behavioral Sciences><CO2><Carbon><Carbon Dioxide><Carbonic Anhydride><Cardiovascular><Cardiovascular Body System><Cardiovascular Organ System><Cardiovascular system><Cell Phone><Cellular Phone><Cellular Telephone><Climate><Collaborations><Cost-Benefit Analysis><Costs and Benefits><County><Coupled><Data><Data Analyses><Data Analysis><Data Science><Data Set><Development><ED visit><ER visit><ETOH level><Earth><Emergency care visit><Emergency department visit><Emergency hospital visit><Emergency room visit><Environmental Science><EtOH drinking><EtOH use><Exposure to><Funding><Future><Future Generations><Health><Health Policy><Health Promotion><Health behavior><Healthcare><Heart Vascular><Hospital Admission><Hospitalization><Hospitals><Hour><Household><Human><Humanities><Individual><Institution><Investigators><Journals><Lead><Link><Magazine><Medical><Medicine><Meteorological Climate><Methodology><Mobile Phones><Modeling><Modern Man><NASA><NIH><National Aeronautics and Space Administration><National Institutes of Health><Outcome><Output><Patient Self-Report><Pb element><Peer Review><Physical activity><Planet Earth><Policies><Policy Maker><Population><Position><Positioning Attribute><Productivity><Public Health><Publications><Qualifying><Research><Research Personnel><Researchers><Resolution><Respondent><Salutogenesis><Science><Scientific Publication><Sedentary behavior><Sedentary life-style><Self-Report><Series><Sleep><Societies><Strategic Planning><Substance Use Disorder><Survey Instrument><Surveys><Temperature><Time><Training><United States National Aeronautics and Space Administration><United States National Institutes of Health><Universities><Update><Weather><Wrist><accelerometry><actigraph><actigraphy><activity monitor><activity tracker><alcohol ingestion><alcohol intake><alcohol level><alcohol measurement><alcohol product use><alcohol use><alcoholic beverage consumption><alcoholic drink intake><assess effectiveness><behavior outcome><behavior response><behavioral assessment><behavioral health><behavioral outcome><behavioral response><blind><career><career development><circulatory system><classroom environment><climate and health><climate change><climate health><climate policy><climate region><climate zone><climate-related health><climatic><climatic changes><college atmosphere><collegial atmosphere><collegiate atmosphere><consumption measures><cost><cost benefit economics><cost benefit effectiveness><daily functioning><data interpretation><determine effectiveness><developmental><disease prevention><disorder prevention><education atmosphere><educational atmosphere><educational environment><effectiveness assessment><effectiveness evaluation><ethanol consumption><ethanol drinking><ethanol ingestion><ethanol intake><ethanol measurement><ethanol product use><ethanol use><ethyl alcohol measurements><evaluate effectiveness><examine effectiveness><exposed human population><flexibility><flexible><global climate change><global health><global temperature><greenhouse gases><health care><health care management><health care policy><health management><health related behavior><healthcare management><healthcare policy><heavy metal Pb><heavy metal lead><human exposure><iPhone><improved><innovate><innovation><innovative><intellectual atmosphere><learning atmosphere><learning environment><life span><lifespan><meteorological data><novel><professor><programs><promoting health><recruit><resolutions><response><scaffold><scaffolding><school atmosphere><school climate><sedentary lifestyle><smart phone><smartphone><social><societal costs><spatiotemporal><stressor><substance use><substance use and disorder><substance using><tenure process><tenure track><time use><training atmosphere><university atmosphere><weather data>",
+    "pref_terms": "Accelerometer;Acclimatization;Accounting;Address;Alcohol consumption;Award;Behavior;Behavior assessment;Behavioral;Behavioral Medicine;Behavioral Risk Factor Surveillance System;Behavioral Sciences;Carbon;Carbon Dioxide;Cardiovascular system;Cellular Phone;Climate;Collaborations;Cost-Benefit Analysis;Costs and Benefits;County;Coupled;Data;Data Analyses;Data Science;Data Set;Development;Emergency department visit;Environmental Science;Exposure to;Funding;Future;Future Generations;Health;Health Policy;Health Promotion;Health behavior;Healthcare;Hospitalization;Hospitals;Hour;Household;Human;Humanities;Individual;Institution;Journals;Lead;Link;Medical;Medicine;Methodology;Modeling;Outcome;Output;Patient Self-Report;Peer Review;Physical activity;Planet Earth;Policies;Policy Maker;Population;Positioning Attribute;Productivity;Public Health;Publications;Qualifying;Research;Research Personnel;Resolution;Respondent;Science;Series;Sleep;Societies;Strategic Planning;Substance Use Disorder;Surveys;Temperature;Time;Training;United States National Aeronautics and Space Administration;United States National Institutes of Health;Universities;Update;Weather;Wrist;actigraphy;alcohol measurement;behavioral health;behavioral outcome;behavioral response;blind;career;career development;climate change;climate policy;climate zone;climate-related health;consumption measures;cost;daily functioning;disorder prevention;educational atmosphere;effectiveness evaluation;exposed human population;flexibility;global health;global temperature;greenhouse gases;health management;improved;innovation;life span;meteorological data;novel;professor;programs;recruit;response;scaffold;sedentary lifestyle;social;societal costs;spatiotemporal;stressor;substance use;tenure track;time use",
+    "abstract_text": "PROJECT SUMMARY\nThe objective of this project is to generate the first empirical estimate of the behavioral cost of carbon \u2013 the\nhuman health-related behavioral impacts imposed by incremental increases in greenhouse gas (GHG)\nemissions. The societal behavioral costs and benefits of climate stressors caused by GHG emissions remain\nunknown in the US and globally. This missing behavioral component of the social cost of carbon (SCC) may\nblind both climate and health policy responses to the true scope of consequences from climate change.\nThis project will evaluate three hypothesized behavioral costs of carbon. This proposal aims to 1) estimate the\nfirst US domestic substance use cost of carbon by linking alcohol consumption observations and substance use\npanel data with high resolution meteorological data (i.e. weather and climate observations) across the US; 2)\nevaluate the US and global sleep cost of carbon by applying multi-stage multivariate time-series fixed effects\nmodels to estimate associations between local meteorological conditions and both self-reported and\nactigraphy-recorded sleep outcomes; 3) assess the preliminary physical activity cost of carbon and estimate\nlocal climate-behavioral impact projections \u2013 statistically accounting for acclimatization \u2013 for every county in\nthe US and every region worldwide. In Aim 1, the US substance use cost of carbon will be derived from\nestimating climate \u2013 substance use response functions for daily household alcohol consumption measured by\nthe nationally representative Nielsen-IQ Consumer Panel (NIQCP), self-reported individual substance use\nregistered by the Behavioral Risk Factor Surveillance System (BRFSS), and zip code-level counts of all\nsubstance use disorder emergency department visits (HCUP SEDD) and hospitalizations (HCUP SID) in a\ndataset that includes 95% of US hospital discharges. In Aim 2, US and global estimates of the sleep cost of\ncarbon will be derived from ambient temperature\u2013sleep response estimates using nationally representative US\ntime use survey data (ATUS) and globally extensive actigraphy data (GSSPAD). In Aim 3, nationally\nrepresentative physical activity survey data (BRFSS) and two large-scale wrist actigraphy and\nsmartphone-based accelerometry datasets from prior research will be linked with global reanalysis (ECMWF\nERA5) meteorological data to estimate climate \u2013 physical activity response curves which are then coupled with\nclimate model output produced by NASA Earth Exchange (NEX) to inform both the US and global physical\nactivity cost of carbon. This independent research agenda will inform the world's first behavioral cost of carbon\n(BCC). The BCC will allow healthcare stakeholders and policymakers to anticipate and mitigate the future\nbehavioral costs of societal emissions decisions. The proposed research directly responds to the NIH Strategic\nPlan's 2021-2025 \u201cdisease prevention and health promotion\u201d objective, aligns with the crosscutting themes by\n\u201caddressing public health challenges across the lifespan\u201d and \u201cpromoting collaborative science,\u201d while also\nbuilding cutting-edge spatial data science capacity at the nexus of climate change and behavioral medicine.",
+    "project_title": "The Behavioral Cost of Carbon",
+    "phr_text": "PROJECT NARRATIVE\nThe downstream behavioral impacts of carbon dioxide (CO2) emissions remain unknown in the US and\nglobally, so they are not yet included in the US federal \u201csocial cost of carbon,\u201d a metric used to quantify the\nhuman damages associated with a one-ton increase in greenhouse gas emissions. This proposed project\nevaluates the hypothesized behavioral costs of carbon for substance use, sleep outcomes, and physical activity.\nCharacterizing how observed changes in climate, caused by each additional unit of greenhouse gas emissions\ntoday, impact future human health behaviors can have major implications for climate and health policies,\nwhich currently do not consider the behavioral costs of societies' emissions choices.",
+    "spending_categories_desc": null,
+    "agency_code": "NIH",
+    "covid_response": null,
+    "arra_funded": "N",
+    "budget_start": "2024-09-18T12:09:00Z",
+    "budget_end": "2025-03-14T12:03:00Z",
+    "cfda_code": "310",
+    "funding_mechanism": "Non-SBIR/STTR",
+    "direct_cost_amt": 250000,
+    "indirect_cost_amt": 161250,
+    "project_detail_url": "https://reporter.nih.gov/project-details/10923510",
+    "date_added": "2024-09-21T04:09:10Z"
+  },
+  "1F31AA031420-01A1": {
+    "appl_id": 10988917,
+    "subproject_id": null,
+    "fiscal_year": 2024,
+    "project_num": "1F31AA031420-01A1",
+    "project_serial_num": "AA031420",
+    "organization": {
+      "org_name": "UNIVERSITY OF TENNESSEE KNOXVILLE",
+      "city": null,
+      "country": null,
+      "org_city": "KNOXVILLE",
+      "org_country": "UNITED STATES",
+      "org_state": "TN",
+      "org_state_name": null,
+      "dept_type": "PSYCHOLOGY",
+      "fips_country_code": null,
+      "org_duns": [
+        "003387891"
+      ],
+      "org_ueis": [
+        "FN2YCS2YAUW3"
+      ],
+      "primary_duns": "003387891",
+      "primary_uei": "FN2YCS2YAUW3",
+      "org_fips": "US",
+      "org_ipf_code": "578304",
+      "org_zipcode": "379192333",
+      "external_org_id": 578304
+    },
+    "award_type": "1",
+    "activity_code": "F31",
+    "award_amount": 48974,
+    "is_active": false,
+    "project_num_split": {
+      "appl_type_code": "1",
+      "activity_code": "F31",
+      "ic_code": "AA",
+      "serial_num": "031420",
+      "support_year": "01",
+      "full_support_year": "01A1",
+      "suffix_code": "A1"
+    },
+    "principal_investigators": [
+      {
+        "profile_id": 78561240,
+        "first_name": "Evan",
+        "middle_name": "Jacob",
+        "last_name": "Basting",
+        "is_contact_pi": true,
+        "full_name": "Evan Jacob Basting",
+        "title": ""
+      }
+    ],
+    "contact_pi_name": "BASTING, EVAN JACOB",
+    "program_officers": [
+      {
+        "first_name": "Bradley",
+        "middle_name": "Townsend",
+        "last_name": "Kerridge",
+        "full_name": "Bradley Townsend Kerridge"
+      }
+    ],
+    "agency_ic_admin": {
+      "code": "AA",
+      "abbreviation": "NIAAA",
+      "name": "National Institute on Alcohol Abuse and Alcoholism"
+    },
+    "agency_ic_fundings": [
+      {
+        "fy": 2024,
+        "code": "AA",
+        "name": "National Institute on Alcohol Abuse and Alcoholism",
+        "abbreviation": "NIAAA",
+        "total_cost": 48974.0,
+        "direct_cost_ic": 48974.0,
+        "indirect_cost_ic": 0.0
+      }
+    ],
+    "cong_dist": "TN-02",
+    "spending_categories": null,
+    "project_start_date": "2024-08-01T12:08:00Z",
+    "project_end_date": "2025-03-18T12:03:00Z",
+    "organization_type": {
+      "name": "SCHOOLS OF ARTS AND SCIENCES",
+      "code": "10",
+      "is_other": false
+    },
+    "geo_lat_lon": {
+      "lon": -83.93035,
+      "lat": 35.954943
+    },
+    "opportunity_number": "PA-23-272",
+    "full_study_section": {
+      "srg_code": "ZAA1",
+      "srg_flex": null,
+      "sra_designator_code": "GG",
+      "sra_flex_code": null,
+      "group_code": "32",
+      "name": "Special Emphasis Panel[ZAA1 GG (32)]"
+    },
+    "award_notice_date": "2024-07-11T12:07:00Z",
+    "is_new": false,
+    "mechanism_code_dc": "TR",
+    "core_project_num": "F31AA031420",
+    "terms": "<21+ years old><Address><Adult><Adult Human><Alcohol Chemical Class><Alcohol Drinking><Alcohol consumption><Alcohols><Attitude><Bi-sexual><Birth><Bisexual><Child Abuse and Neglect><Childhood maltreatment><Cognitive Discrimination><Consumption><Development><Discrimination><Distress><Ecological momentary assessment><Economics><Emotional><EtOH drinking><EtOH use><Event><Exposure to><Fellowship><Female><Gays><Goals><Health Inequity><Heterosexuals><History><Hour><Individual><Inequalities in Health><Inequities in Health><Intervention><Intervention Strategies><Investigation><Investigators><LGBTQ><Lesbian><Lesbian Gay Bi-sexual Transgender Queer><Lesbian Gay Bisexual Transgender Queer><Life><Life Experience><Life Stress><Modeling><PTSD><Parturition><Persons><Post-Traumatic Neuroses><Post-Traumatic Stress Disorders><Posttraumatic Neuroses><Prevalence><Prevention><Prevention program><Prospective Studies><Public Health><Recording of previous events><Reporting><Research><Research Personnel><Research Support><Researchers><Risk><Risk Factors><Self Medication><Symptoms><Training><Trauma><Violence><Vulnerable Populations><adult youth><adulthood><alcohol abuse therapy><alcohol abuse treatment><alcohol ingestion><alcohol intake><alcohol intervention><alcohol misuse><alcohol misuse prevention><alcohol prevention><alcohol product use><alcohol risk><alcohol treatment><alcohol use><alcohol use prevention><alcoholic beverage consumption><alcoholic drink intake><assigned female at birth><assigned female gender at birth><assigned female sex at birth><assigned male at birth><assigned male gender at birth><assigned male sex at birth><binge alcohol consumption><binge drinking><biological adaptation to stress><child maltreatment><college student><coping><design><designing><deter alcohol use><developmental><drinking><economic><episodic drinking><ethanol consumption><ethanol drinking><ethanol ingestion><ethanol intake><ethanol misuse><ethanol product use><ethanol use><experience><exposure to trauma><health inequalities><histories><innovate><innovation><innovative><internalized stigma><intervention program><interventional strategy><male><minority stress><minority stresses><minority stressor><negative affect><negative affectivity><pansexual><post-trauma stress disorder><posttrauma stress disorder><prevent><prevent alcohol><prevent alcohol misuse><prevent alcohol use><preventing><preventing alcohol><programs><queer><reaction; crisis><reduced alcohol use><self-stigma><sex identity><sexual identity><sexual minority><sexual minority group><sexual minority individual><sexual minority people><sexual minority population><sexual minority stress><skills><social><social stigma><stigma><stress among minorities><stress in minorities><stress response><stress to minorities><stress; reaction><stressor><theories><trait><trauma exposure><traumatic neurosis><traumatic stress><unhealthy alcohol use><university student><violent><violent behavior><vulnerable group><vulnerable individual><vulnerable people><young adult><young adult alcohol consumption><young adult alcohol use><young adulthood>",
+    "pref_terms": "Address;Adult;Alcohol consumption;Alcohols;Attitude;Birth;Bisexual;Child Abuse and Neglect;Consumption;Development;Discrimination;Distress;Ecological momentary assessment;Economics;Emotional;Event;Exposure to;Fellowship;Female;Gays;Goals;Heterosexuals;Hour;Individual;Intervention;Investigation;Lesbian;Lesbian Gay Bisexual Transgender Queer;Life;Life Experience;Life Stress;Modeling;Persons;Post-Traumatic Stress Disorders;Prevalence;Prevention;Prevention program;Prospective Studies;Public Health;Recording of previous events;Reporting;Research;Research Personnel;Research Support;Risk;Risk Factors;Self Medication;Symptoms;Training;Trauma;Violence;Vulnerable Populations;alcohol abuse therapy;alcohol intervention;alcohol misuse;alcohol misuse prevention;alcohol prevention;alcohol risk;assigned female at birth;assigned male at birth;binge drinking;biological adaptation to stress;coping;design;deter alcohol use;drinking;experience;health inequalities;innovation;internalized stigma;intervention program;male;minority stress;minority stressor;negative affect;pansexual;prevent;programs;queer;reduced alcohol use;sexual identity;sexual minority;sexual minority group;sexual minority stress;skills;social;social stigma;stressor;theories;trait;trauma exposure;traumatic stress;university student;young adult;young adult alcohol use",
+    "abstract_text": "Project Summary/Abstract\n Alcohol use is a prevalent problem among bi+ (bisexual, pansexual, queer) college students. Bi+ col-\nlege students report disproportionately high rates of drinking and heavy episodic drinking (HED; i.e., consum-\ning 5+ drinks among people assigned male at birth, consuming 4+ drinks among people assigned female at\nbirth in 2 hours) relative to monosexual college students. Rates of trauma exposure and post-traumatic stress\ndisorder (PTSD) symptoms are also often highest among bi+ individuals. Bi+ people endure unique sexual mi-\nnority stressors, including binegative discrimination from gay/lesbian and heterosexual individuals (enacted\nstigma) and internalized binegativity (internalized stigma). Individuals with trauma histories may be vulnerable\nto heightened stress responses to minority stressors and experiencing enacted stigma can provoke and exac-\nerbate PTSD symptoms. Prior research supports the relationship between PTSD symptoms and alcohol use\nand between sexual minority stress and alcohol use; however, there is limited understanding into whether\nthese factors synergistically increase the risk for alcohol use among bi+ young adults. Minority stress theory\n(MST) suggests that health inequity among sexual minority individuals can be partially attributed to general life\nstressors and sexual identity-related stressors, including enacted stigma and internalized stigma. The self-\nmedication model suggests that individuals with PTSD symptoms are more likely to drink alcohol to manage\ndistress. An integrated MST and self-medication model would suggest that the risk of alcohol use may be high-\nest among those who experience co-occurring PTSD symptoms and minority stress. Additionally, risk for drink-\ning following enacted stigma may be especially high among bi+ individuals with elevated internalized stigma.\nThe overall objective of the proposed study is to elucidate the proximal associations between enacted stigma,\nPTSD symptoms, and alcohol use among trauma-exposed bi+ college students. The study will identify the in-\nteracting effects between daily enacted stigma and daily PTSD symptoms as well as between trait internalized\nstigma and daily enacted stigma utilizing an ecological momentary assessment (EMA) design. No prior re-\nsearch has examined the relationship between bi+ college students\u2019 minority stress, PTSD symptoms, and al-\ncohol use and whether these risk factors interact to predict increased drinking. Guided by MST and the self-\nmedication model, the proposed study will advance the understanding and prevention of alcohol misuse. The\nspecific aims of this proposed study are to: (1) evaluate whether PTSD symptoms and enacted stigma tempo-\nrally relate to alcohol use (any, HED, and number of drinks) and (2) evaluate whether PTSD symptoms and\ntrait internalized stigma moderate the temporal association between enacted stigma and drinking. The pro-\nposed study will examine these factors in 60 bi+ college students with trauma histories utilizing an innovative\nEMA design. The proposed study is significant because it will identify specific risk factors to address in the pre-\nvention and intervention of alcohol use among bi+ college students.",
+    "project_title": "Examining Proximal Associations between Minority Stress, PTSD Symptoms, and Alcohol Use among Bi+ College Students with Trauma Histories",
+    "phr_text": "Project Narrative\n This project will examine the impact of sexual minority stress and post-traumatic stress disorder\nsymptoms on alcohol use using an innovative ecological momentary assessment design. The proposed\ninvestigation will carry implications for the reduction of alcohol use, including heavy episodic drinking, by\nproviding information on critical risk factors among bi+ college students. Thus, the proposed research is\nrelevant to the prevention and treatment of alcohol use.",
+    "spending_categories_desc": null,
+    "agency_code": "NIH",
+    "covid_response": null,
+    "arra_funded": "N",
+    "budget_start": "2024-08-01T12:08:00Z",
+    "budget_end": "2025-03-18T12:03:00Z",
+    "cfda_code": "273",
+    "funding_mechanism": "Training, Individual",
+    "direct_cost_amt": 48974,
+    "indirect_cost_amt": 0,
+    "project_detail_url": "https://reporter.nih.gov/project-details/10988917",
+    "date_added": "2024-08-03T04:08:44Z"
+  },
+  "1F31AA031605-01": {
+    "appl_id": 10899314,
+    "subproject_id": null,
+    "fiscal_year": 2024,
+    "project_num": "1F31AA031605-01",
+    "project_serial_num": "AA031605",
+    "organization": {
+      "org_name": "UNIVERSITY OF MEMPHIS",
+      "city": null,
+      "country": null,
+      "org_city": "MEMPHIS",
+      "org_country": "UNITED STATES",
+      "org_state": "TN",
+      "org_state_name": null,
+      "dept_type": "PSYCHOLOGY",
+      "fips_country_code": null,
+      "org_duns": [
+        "055688857"
+      ],
+      "org_ueis": [
+        "F2VSMAKDH8Z7"
+      ],
+      "primary_duns": "055688857",
+      "primary_uei": "F2VSMAKDH8Z7",
+      "org_fips": "US",
+      "org_ipf_code": "1274604",
+      "org_zipcode": "381520001",
+      "external_org_id": 1274604
+    },
+    "award_type": "1",
+    "activity_code": "F31",
+    "award_amount": 40769,
+    "is_active": false,
+    "project_num_split": {
+      "appl_type_code": "1",
+      "activity_code": "F31",
+      "ic_code": "AA",
+      "serial_num": "031605",
+      "support_year": "01",
+      "full_support_year": "01",
+      "suffix_code": ""
+    },
+    "principal_investigators": [
+      {
+        "profile_id": 78476358,
+        "first_name": "Hannah",
+        "middle_name": "Elisabeth",
+        "last_name": "Colgonis",
+        "is_contact_pi": true,
+        "full_name": "Hannah Elisabeth Colgonis",
+        "title": "GRADUATE STUDENT RESEARCH ASSISTANT"
+      }
+    ],
+    "contact_pi_name": "COLGONIS, HANNAH ELISABETH",
+    "program_officers": [
+      {
+        "first_name": "Raye",
+        "middle_name": "Z",
+        "last_name": "Litten",
+        "full_name": "Raye Z Litten"
+      }
+    ],
+    "agency_ic_admin": {
+      "code": "AA",
+      "abbreviation": "NIAAA",
+      "name": "National Institute on Alcohol Abuse and Alcoholism"
+    },
+    "agency_ic_fundings": [
+      {
+        "fy": 2024,
+        "code": "AA",
+        "name": "National Institute on Alcohol Abuse and Alcoholism",
+        "abbreviation": "NIAAA",
+        "total_cost": 40769.0,
+        "direct_cost_ic": 40769.0,
+        "indirect_cost_ic": 0.0
+      }
+    ],
+    "cong_dist": null,
+    "spending_categories": null,
+    "project_start_date": "2024-05-01T12:05:00Z",
+    "project_end_date": "2025-03-18T12:03:00Z",
+    "organization_type": {
+      "name": "SCHOOLS OF ARTS AND SCIENCES",
+      "code": "10",
+      "is_other": false
+    },
+    "geo_lat_lon": {
+      "lon": -89.939705,
+      "lat": 35.120123
+    },
+    "opportunity_number": "PA-21-051",
+    "full_study_section": {
+      "srg_code": "ZAA1",
+      "srg_flex": null,
+      "sra_designator_code": "GG",
+      "sra_flex_code": null,
+      "group_code": "32",
+      "name": "Special Emphasis Panel[ZAA1 GG (32)]"
+    },
+    "award_notice_date": "2024-03-14T12:03:00Z",
+    "is_new": false,
+    "mechanism_code_dc": "TR",
+    "core_project_num": "F31AA031605",
+    "terms": "<21+ years old><Adult Human><adulthood><Adult><Alcohol Drinking><EtOH drinking><EtOH use><alcohol ingestion><alcohol intake><alcohol product use><alcohol use><alcoholic beverage consumption><alcoholic drink intake><ethanol consumption><ethanol drinking><ethanol ingestion><ethanol intake><ethanol product use><ethanol use><Alcohol consumption><ethanol use disorder><alcohol use disorder><Buffers><Communities><Cognitive Discrimination><Discrimination><Dropout><Fellowship><Focus Groups><Future><Goals><Health><Health Care Providers><Healthcare Providers><Healthcare worker><health care personnel><health care worker><health provider><health workforce><healthcare personnel><medical personnel><treatment provider><Health Personnel><Access to Care><access to health services><access to services><access to treatment><accessibility to health services><availability of services><care access><health service access><health services availability><service availability><treatment access><Health Services Accessibility><Life Experience><Literature><Mental Health><Mental Hygiene><Psychological Health><Mentorship><Methods><Methodology><Persons><Recommendation><Research><Stress><Suggestion><Surveys><Survey Instrument><Work><coping strategy><Coping Skills><health care><Healthcare><diverse populations><heterogeneous population><population diversity><Population Heterogeneity><Research Methods><research and methods><Research Methodology><improved><Area><Phase><Training><Individual><Funding><uptake><Research Priority><Knowledge><Techniques><System><Location><physical health><physical conditioning><interest><meetings><meeting><Services><transgender><trans*><preference><experience><skills><Participant><peer><member><help-seeking behavior><help seeking><binge drinking><binge alcohol consumption><episodic drinking><Reporting><social><Sampling><theories><Intervention><Intervention Strategies><interventional strategy><alcohol abuse therapy><alcohol abuse treatment><alcohol treatment><Provider><health disparity><disparity in health><Address><Length><Data><National Research Service Awards><NRSA><Pathway interactions><pathway><alcohol intervention><design><designing><Treatment Efficacy><intervention efficacy><therapeutic efficacy><therapy efficacy><Outcome><alcohol misuse><ethanol misuse><unhealthy alcohol use><Population><aged><prospective><National Institute on Alcohol Abuse and Alcoholism><NIAAA><Trauma><pre-doctoral><pre-doc><predoctoral><skill acquisition><skill development><Evidence based intervention><alcohol research><alcohol related research><ethanol research><evidence base><alcohol consequences><transphobia><transphobic><cisgender><cis-gender><gender diversity><gender diverse><experimental study><experiment><experimental research><experiments><recruit><service providers><Lesbian Gay Bisexual Transgender Queer><LGBTQ><Lesbian Gay Bi-sexual Transgender Queer><distrust><acceptability and feasibility><substance use><substance using><marginalized population><marginalized group><marginalized individual><marginalized people><diversity and inclusion><diversity and inclusivity><minority stress><stress among minorities><stress in minorities><stress to minorities><minority stressor><minority stresses><people of color><group of color><individual of color><person of color><population of color><Disparity><Disparities><resilience factor><resiliency factor><culturally appropriate intervention><culturally adapted intervention><culturally centered intervention><culturally focused intervention><culturally informed intervention><culturally responsive intervention><culturally tailored intervention>",
+    "pref_terms": "Address;Adult;Alcohol consumption;Area;Buffers;Communities;Coping Skills;Data;Discrimination;Disparity;Dropout;Evidence based intervention;Fellowship;Focus Groups;Funding;Future;Goals;Health;Health Personnel;Health Services Accessibility;Healthcare;Individual;Intervention;Knowledge;Length;Lesbian Gay Bisexual Transgender Queer;Life Experience;Literature;Location;Mental Health;Mentorship;Methodology;Methods;National Institute on Alcohol Abuse and Alcoholism;National Research Service Awards;Outcome;Participant;Pathway interactions;Persons;Phase;Population;Population Heterogeneity;Provider;Recommendation;Reporting;Research;Research Methodology;Research Priority;Sampling;Services;Stress;Suggestion;Surveys;System;Techniques;Training;Trauma;Treatment Efficacy;Work;acceptability and feasibility;aged;alcohol abuse therapy;alcohol consequences;alcohol intervention;alcohol misuse;alcohol research;alcohol use disorder;binge drinking;cisgender;culturally appropriate intervention;design;distrust;diversity and inclusion;evidence base;experience;experimental study;gender diversity;health disparity;help-seeking behavior;improved;interest;marginalized population;meetings;member;minority stress;minority stressor;peer;people of color;physical conditioning;pre-doctoral;preference;prospective;recruit;resilience factor;service providers;skill acquisition;skills;social;substance use;theories;transgender;transphobia;uptake",
+    "abstract_text": "7. Project Summary Abstract\n Transgender and gender diverse (TGD) individuals have elevated rates of risky alcohol use and alcohol\nuse disorders compared to their cisgender peers. Despite these disparities, the literature on alcohol use and\ninterventions in these populations remains limited. Recent research indicates that TGD people encounter\ngeneral and transphobia-related barriers to accessing care and systems and providers ill-equipped to help\nthem. However, little is known about alcohol intervention efficacy and engagement in TGD communities as few\nstudies have evaluated or adapted evidence-based interventions with these populations, or examined factors\nthat might influence help-seeking. Research is needed to explore potential adaptations and strategies to\nincrease the appeal and efficacy of interventions and promote help-seeking among TGD populations.\nThe proposed project aims to 1) explore factors that may increase intervention appeal and participation among\nTGD adults reporting risky alcohol use, as defined by NIAAA thresholds, 2) elicit specific suggestions about\npotentially meaningful areas of intervention adaptation (e.g., location, format, length, content, provider) and\nintervention promotion strategies, and 3) explore the acceptability and feasibility of proposed adaptations. The\napplicant proposes to address these aims via a mixed methods study with a sequential explanatory design.\nThe first phase of the study will be a quantitative survey (N = 200) of TGD adults reporting current or lifetime\nrisky alcohol use to elicit preferences around intervention adaptation and intervention promotion strategies.\nThe next phase will entail four focus groups of various stakeholders including TGD individuals, community\nleaders, and service providers to review, discuss, and refine the preferences and suggestions elicited in phase\none with a focus on maximizing acceptability and feasibility.\n During the funding period, the applicant will receive advanced training in mixed methods research\nmethodologies, conducting trauma-informed and intersectional alcohol research with TGD populations,\nevidence-based alcohol interventions, and culturally sensitive intervention adaptation research. The applicant\nwill leverage the skills and expertise gained through this fellowship to address important gaps in the literature\nand further NIAAA\u2019s goals to 1) address health disparities, 2) enhance diversity and inclusion in the alcohol\nresearch enterprise, and 3) improve AUD intervention uptake and efficacy in order to reduce the enormous\nhealth and social consequences of alcohol misuse in the U.S. The proposed project will solicit the\nperspectives, preferences, and expertise of stakeholders (e.g., TGD people with risky alcohol use, LGBTQ+\norganization leaders, alcohol intervention and TGD healthcare providers) to gather data about meaningful\nareas of adaptation for alcohol interventions and intervention promotion strategies as well as the acceptability\nand feasibility of potential adaptations. The knowledge gained from the proposed study will help direct future\nresearch to sensitively adapt and evaluate specific evidence-based alcohol interventions for TGD populations.",
+    "project_title": "A Mixed Methods Study to Enhance Alcohol Treatment Help-seeking and Engagement Among Gender Diverse Adults",
+    "phr_text": "8. Project Narrative\nTransgender and gender diverse (TGD) individuals experience disproportionate rates of trauma and mental\nhealth problems, including risky alcohol use and alcohol use disorders. Relatively little work has been done to\nadapt, evaluate, or implement evidence-based interventions with TGD populations. The proposed mixed\nmethods study will identify key preferences of TGD individuals with risky alcohol use to inform future efforts to\nadapt evidence-based interventions and increase help-seeking and treatment efficacy in this population.",
+    "spending_categories_desc": null,
+    "agency_code": "NIH",
+    "covid_response": null,
+    "arra_funded": "N",
+    "budget_start": "2024-05-01T12:05:00Z",
+    "budget_end": "2025-03-18T12:03:00Z",
+    "cfda_code": "273",
+    "funding_mechanism": "Training, Individual",
+    "direct_cost_amt": 40769,
+    "indirect_cost_amt": 0,
+    "project_detail_url": "https://reporter.nih.gov/project-details/10899314",
+    "date_added": "2024-05-04T04:05:42Z"
+  }
+}
