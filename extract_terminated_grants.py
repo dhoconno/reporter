@@ -317,8 +317,8 @@ def enrich_dataframe_with_reporter_data(df, limit=None):
                 'Organization_State': org.get('org_state', ''),
                 'Organization_Country': org.get('org_country', ''),
                 'PI_Names': pi_names_str,
-                'Project_Terms': parsed_terms,
                 'Funding_Institutes': funding_institutes_str
+                'Project_Terms': parsed_terms,
             })
     
     reporter_df = pd.DataFrame(reporter_data)
@@ -357,9 +357,9 @@ def main():
 
         # Enrich with NIH RePORTER data - start with just 10 entries
         print("\nFetching additional data from NIH RePORTER...")
-        df = enrich_dataframe_with_reporter_data(df, limit=10) #testing with 10 entries
+        # df = enrich_dataframe_with_reporter_data(df, limit=10) #testing with 10 entries
         # Uncomment the following line to process all entries
-        # df = enrich_dataframe_with_reporter_data(df)
+        df = enrich_dataframe_with_reporter_data(df)
         
         # Display basic information about the data
         print("\nDataFrame Info:")
