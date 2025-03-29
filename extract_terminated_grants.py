@@ -84,11 +84,11 @@ def extract_data_from_pdf(pdf_path):
 
 def get_nih_reporter_data_batch(project_numbers):
     """
-    Fetch grant details from NIH RePORTER API in batches with debug logging
+    Fetch grant details from NIH RePORTER API in batches with XML response format
     """
     base_url = "https://api.reporter.nih.gov/v2/projects/search"
     headers = {
-        "accept": "application/json",
+        "accept": "application/xml",  # Request XML instead of JSON
         "Content-Type": "application/json"
     }
     
@@ -105,14 +105,15 @@ def get_nih_reporter_data_batch(project_numbers):
             },
             "include_fields": [
                 "ProjectNum",
-                "ProjectTitle",
+                "ProjectTitle", 
                 "AbstractText",
                 "ProjectStartDate",
                 "ProjectEndDate",
                 "TotalCost",
                 "AwardAmount",
                 "PrincipalInvestigators",
-                "Organization"
+                "Organization",
+                "ProjectTerms"
             ]
         }
         
@@ -124,77 +125,120 @@ def get_nih_reporter_data_batch(project_numbers):
             print(f"Response status code: {response.status_code}")
             
             if response.status_code == 200:
-                data = response.json()
-                print(f"Results found: {len(data.get('results', []))}")
-                print(f"Sample result: {json.dumps(data['results'][0], indent=2) if data.get('results') else 'No results'}")
+                # Save raw XML for inspection (for the first batch only)
+                if i == 0:
+                    with open("reporter_sample_response.xml", "w", encoding="utf-8") as f:
+                        f.write(response.text)
+                    print(f"Sample XML response saved to reporter_sample_response.xml")
                 
-                if data['results']:
-                    results.extend(data['results'])
+                # Parse XML to extract required information
+                try:
+                    import xml.etree.ElementTree as ET
+                    root = ET.fromstring(response.text)
+                    
+                    # Extract results from the XML
+                    result_elements = root.findall(".//result")
+                    print(f"Results found in XML: {len(result_elements)}")
+                    
+                    # Process each result
+                    for result_elem in result_elements:
+                        result_data = {
+                            "project_num": result_elem.find("project_num").text if result_elem.find("project_num") is not None else "",
+                            "organization": {},
+                            "principal_investigators": [],
+                            "terms": result_elem.find("terms").text if result_elem.find("terms") is not None else ""
+                        }
+                        
+                        # Extract organization data
+                        org_elem = result_elem.find("organization")
+                        if org_elem is not None:
+                            result_data["organization"] = {
+                                "org_city": org_elem.find("org_city").text if org_elem.find("org_city") is not None else "",
+                                "org_state": org_elem.find("org_state").text if org_elem.find("org_state") is not None else "",
+                                "org_country": org_elem.find("org_country").text if org_elem.find("org_country") is not None else ""
+                            }
+                        
+                        # Extract PI data
+                        pi_elems = result_elem.findall(".//principal_investigators/principal_investigator")
+                        for pi_elem in pi_elems:
+                            if pi_elem.find("full_name") is not None:
+                                result_data["principal_investigators"].append({
+                                    "full_name": pi_elem.find("full_name").text
+                                })
+                        
+                        results.append(result_data)
+                        
+                    # Print sample result for inspection (first result only)
+                    if results:
+                        print("Sample parsed result structure:")
+                        print(json.dumps(results[0], indent=2))
+                        
+                except Exception as xml_err:
+                    print(f"Error parsing XML: {str(xml_err)}")
+                    # Save problematic XML for debugging
+                    with open("error_xml_response.xml", "w", encoding="utf-8") as f:
+                        f.write(response.text)
+                    print("Problematic XML saved to error_xml_response.xml")
             else:
                 print(f"Error response: {response.text}")
                 
-            time.sleep(1)  # Rate limiting between batches
+            time.sleep(1)
             
         except Exception as e:
             print(f"Error fetching batch: {str(e)}")
             print(f"Full error details: {e.__class__.__name__}")
     
-    print(f"\nTotal results retrieved: {len(results)}")
     return results
 
 def enrich_dataframe_with_reporter_data(df):
     """
     Add NIH RePORTER data to the DataFrame using batch processing with debug output
     """
-    # Get all unique FAINs
-    project_numbers = df['FAIN'].dropna().unique().tolist()
+    project_numbers = df['Award Number'].dropna().unique().tolist()
     print(f"\nAttempting to fetch data for {len(project_numbers)} unique grants...")
-    print(f"First 5 grant numbers: {project_numbers[:5]}")
     
-    # Get all results in batches
     results = get_nih_reporter_data_batch(project_numbers)
     
-    # Debug output for results processing
     print("\nProcessing results into DataFrame...")
     reporter_data = []
+    
+    # First, print a complete sample result to inspect the structure
+    if results:
+        print("\nComplete sample result for field mapping:")
+        print(json.dumps(results[0], indent=2))
+    
     for result in results:
-        project_number = result.get('ProjectNum', '')
+        project_number = result.get('project_num', '')
+        org = result.get('organization', {})
+        pis = result.get('principal_investigators', [])
+        
+        # Get PI names as semicolon-separated string
+        pi_names = [pi.get('full_name', '') for pi in pis if pi.get('full_name')]
+        pi_names_str = '; '.join(pi_names)
+        
+        # Get terms as raw string
+        terms = result.get('terms', '')
+        
         if project_number:
             reporter_data.append({
-                'FAIN': project_number,
-                'Abstract': result.get('AbstractText', ''),
-                'Project_Start_Date': result.get('ProjectStartDate', ''),
-                'Project_End_Date': result.get('ProjectEndDate', ''),
-                'Total_Project_Cost': result.get('TotalCost', ''),
-                'PI_Names': ', '.join([pi.get('FullName', '') for pi in result.get('PrincipalInvestigators', [])])
+                'Award Number': project_number,
+                'Organization_City': org.get('org_city', ''),
+                'Organization_State': org.get('org_state', ''),
+                'Organization_Country': org.get('org_country', ''),
+                'PI_Names': pi_names_str,
+                'Project_Terms': terms
             })
     
     reporter_df = pd.DataFrame(reporter_data)
-    print(f"\nCreated DataFrame with {len(reporter_df)} rows")
     
     if not reporter_df.empty:
-        merged_df = pd.merge(df, reporter_df, on='FAIN', how='left')
-        print(f"Merged DataFrame has {len(merged_df)} rows with {merged_df['Abstract'].notna().sum()} abstracts")
+        print("\nColumns in reporter_df:", reporter_df.columns.tolist())
+        print("\nColumns in original df:", df.columns.tolist())
+        
+        # Use 'Award Number' for joining
+        merged_df = pd.merge(df, reporter_df, on='Award Number', how='left')
         return merged_df
     return df
-
-# Test with the first 3 grants
-def test_reporter_api():
-    test_df = pd.DataFrame({
-        'FAIN': [
-            "1C06OD030152-01",
-            "1C06OD034040-01", 
-            "1C06OD034042-01"
-        ]
-    })
-    
-    print("\nTesting API with 3 sample grants...")
-    enriched_df = enrich_dataframe_with_reporter_data(test_df)
-    print("\nTest results:")
-    print(enriched_df.to_string())
-    
-if __name__ == "__main__":
-    test_reporter_api()
 
 def main():
     # Set up paths
