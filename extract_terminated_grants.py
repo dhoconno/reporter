@@ -82,31 +82,22 @@ def clean_dataframe(df):
 
 def extract_data_from_pdf(pdf_path):
     """Extract tables from PDF into a pandas DataFrame"""
-    # Read all tables from the PDF
     tables = tabula.read_pdf(
         pdf_path,
         pages='all',
         multiple_tables=True,
         pandas_options={'header': None}
     )
-    
-    # Combine all tables into one DataFrame
     df = pd.concat(tables, ignore_index=True)
-    
-    # The first row typically contains headers
-    headers = df.iloc[0]
-    df = df[1:]  # Remove the header row
-    df.columns = headers  # Set the headers
-    
-    # Reset index after removing header row
-    df = df.reset_index(drop=True)
-    
-    # Remove columns that contain only NaN values
+    # Use the first row as headers, then remove it from the DataFrame
+    df.columns = df.iloc[0]
+    df = df.iloc[1:].reset_index(drop=True)
+    # Remove rows where "Awarding Office" equals "Awarding Office" or any column contains "FAIN"
+    df = df[~df.apply(lambda x: x.astype(str).str.contains('FAIN', case=False)).any(axis=1)]
+    # Remove completely empty columns
     df = df.dropna(axis=1, how='all')
-    
     # Clean the DataFrame
     df = clean_dataframe(df)
-    
     return df
 
 def main():
@@ -132,7 +123,7 @@ def main():
         
         # Display first few rows
         print("\nFirst few rows of data:")
-        print(df.head())
+        print(df.head(50))
         
         # Save to CSV with specific formatting
         csv_path = pdf_path.with_suffix('.csv')
