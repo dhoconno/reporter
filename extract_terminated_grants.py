@@ -33,6 +33,9 @@ def clean_dataframe(df):
     
     # Clean column names - remove newlines and extra spaces
     df.columns = [' '.join(str(col).replace('\n', ' ').split()) for col in df.columns]
+
+    # Remove columns with 'nan' as the header name
+    df = df.loc[:, [col for col in df.columns if str(col).lower() != 'nan']]
     
     # Remove empty columns at the end 
     df = df.dropna(axis=1, how='all')
@@ -59,8 +62,8 @@ def clean_dataframe(df):
     if date_col in df.columns:
         df[date_col] = pd.to_datetime(df[date_col], errors='coerce')
     
-    # Add download date column
-    df['Download Date'] = pd.to_datetime(datetime.now().date())
+    # Add download date column at the beginning of the DataFrame
+    df.insert(0, 'Download Date', pd.to_datetime(datetime.now().date()))
     
     return df
 
@@ -84,7 +87,7 @@ def extract_data_from_pdf(pdf_path):
     df = clean_dataframe(df)
     return df
 
-def get_nih_reporter_data_individual(project_numbers, cache_file="reporter_cache.json", limit=None):
+def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_grants_reporter_cache.json", limit=None):
     """
     Fetch grant details from NIH RePORTER API one by one with caching
     
@@ -98,7 +101,7 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="reporter_cache
     """
     base_url = "https://api.reporter.nih.gov/v2/projects/search"
     headers = {
-        "accept": "application/json",  # JSON is easier to work with for caching
+        "accept": "application/json",
         "Content-Type": "application/json"
     }
     
@@ -139,7 +142,7 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="reporter_cache
                 "ProjectNum",
                 "PrincipalInvestigators",
                 "Organization",
-                "ProjectTerms"
+                "Terms"  # Changed from ProjectTerms to Terms to match API response
             ]
         }
         
@@ -178,8 +181,16 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="reporter_cache
                                     "full_name": pi['full_name']
                                 })
                     
-                    # Extract terms
+                    # Extract terms (store raw format in cache)
+                    # Print the keys to debug what fields are actually available
+                    print(f"  Available result keys: {list(result.keys())}")
                     result_data["terms"] = result.get('terms', '')
+                    
+                    # Debug output to verify terms
+                    if result_data["terms"]:
+                        print(f"  Found {len(result_data['terms'])} chars of term data")
+                    else:
+                        print("  No terms found in response")
                     
                     # Save to cache and results
                     cache[project_num] = result_data
@@ -201,6 +212,38 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="reporter_cache
             print(f"  Error processing {project_num}: {str(e)}")
     
     return results
+
+def parse_project_terms(terms_string):
+    """
+    Parse project terms from format <term1><term2><term3> to a semicolon-separated string
+    
+    Args:
+        terms_string: String containing terms in format <term1><term2>...
+    
+    Returns:
+        Semicolon-separated string of terms
+    """
+    if not terms_string or not isinstance(terms_string, str):
+        return ""
+    
+    # Remove the angle brackets and split into individual terms
+    # The format is typically <term1><term2><term3>...
+    terms_list = []
+    
+    # First, check if there are angle brackets
+    if '<' in terms_string and '>' in terms_string:
+        # Split by closing bracket and then remove opening brackets
+        raw_terms = terms_string.split('>')
+        for term in raw_terms:
+            clean_term = term.replace('<', '').strip()
+            if clean_term:  # Only add non-empty terms
+                terms_list.append(clean_term)
+    else:
+        # If no angle brackets, just use the raw string
+        terms_list = [terms_string.strip()]
+    
+    # Join with semicolons
+    return '; '.join(terms_list)
 
 def enrich_dataframe_with_reporter_data(df, limit=None):
     """
@@ -230,8 +273,9 @@ def enrich_dataframe_with_reporter_data(df, limit=None):
         pi_names = [pi.get('full_name', '') for pi in pis if pi.get('full_name')]
         pi_names_str = '; '.join(pi_names)
         
-        # Get terms as raw string
-        terms = result.get('terms', '')
+        # Get terms as semicolon-separated string
+        raw_terms = result.get('terms', '')
+        parsed_terms = parse_project_terms(raw_terms)
         
         if project_number:
             reporter_data.append({
@@ -240,7 +284,7 @@ def enrich_dataframe_with_reporter_data(df, limit=None):
                 'Organization_State': org.get('org_state', ''),
                 'Organization_Country': org.get('org_country', ''),
                 'PI_Names': pi_names_str,
-                'Project_Terms': terms
+                'Project_Terms': parsed_terms
             })
     
     reporter_df = pd.DataFrame(reporter_data)
