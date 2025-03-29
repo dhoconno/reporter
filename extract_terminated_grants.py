@@ -87,13 +87,14 @@ def extract_data_from_pdf(pdf_path):
     df = clean_dataframe(df)
     return df
 
-def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_cache/terminated_grants_reporter_cache.json", limit=None):
+def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_cache/terminated_grants_reporter_cache.json", not_found_cache_file="terminated_cache/not_found_cache.json", limit=None):
     """
     Fetch grant details from NIH RePORTER API one by one with caching
     
     Args:
         project_numbers: List of grant project numbers
         cache_file: Path to the cache file
+        not_found_cache_file: Path to cache file for project numbers not found in RePORTER
         limit: Maximum number of grants to process (None for all)
     
     Returns:
@@ -111,7 +112,7 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_cac
         os.makedirs(cache_dir)
         print(f"Created cache directory: {cache_dir}")
     
-    # Load cache if it exists
+    # Load regular cache if it exists
     cache = {}
     if os.path.exists(cache_file):
         try:
@@ -122,6 +123,17 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_cac
             print(f"Error loading cache: {str(e)}")
             # Continue with empty cache if there's an error
     
+    # Load not-found cache if it exists
+    not_found_cache = []
+    if os.path.exists(not_found_cache_file):
+        try:
+            with open(not_found_cache_file, 'r', encoding='utf-8') as f:
+                not_found_cache = json.load(f)
+            print(f"Loaded {len(not_found_cache)} not-found records from {not_found_cache_file}")
+        except Exception as e:
+            print(f"Error loading not-found cache: {str(e)}")
+            # Continue with empty not-found cache if there's an error
+    
     results = []
     
     # Limit the number of grants if specified
@@ -130,14 +142,24 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_cac
         print(f"Processing only the first {limit} grants for testing")
     
     total = len(project_numbers)
+    not_found_count = 0
+    cached_count = 0
+    api_count = 0
     
     for i, project_num in enumerate(project_numbers):
         print(f"Processing grant {i+1}/{total}: {project_num}")
         
-        # Check cache first
+        # Check if in not-found cache
+        if project_num in not_found_cache:
+            print(f"  Skipping {project_num} (known to not exist in RePORTER)")
+            not_found_count += 1
+            continue
+            
+        # Check regular cache
         if project_num in cache:
             print(f"  Using cached data for {project_num}")
             results.append(cache[project_num])
+            cached_count += 1
             continue
         
         payload = {
@@ -149,6 +171,7 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_cac
         
         try:
             print(f"  Querying API for {project_num}...")
+            api_count += 1
             response = requests.post(base_url, headers=headers, json=payload)
             
             if response.status_code == 200:
@@ -206,7 +229,13 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_cac
                     
                     print(f"  Data found for {project_num}")
                 else:
-                    print(f"  No data found for {project_num}")
+                    print(f"  No data found for {project_num} in RePORTER")
+                    # Add to not-found cache
+                    if project_num not in not_found_cache:
+                        not_found_cache.append(project_num)
+                        # Save not-found cache
+                        with open(not_found_cache_file, 'w', encoding='utf-8') as f:
+                            json.dump(not_found_cache, f)
             else:
                 print(f"  API error: {response.status_code} - {response.text}")
             
@@ -219,6 +248,14 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_cac
             
         except Exception as e:
             print(f"  Error processing {project_num}: {str(e)}")
+    
+    # Print summary statistics
+    print("\nProcessing summary:")
+    print(f"  Total grants checked: {total}")
+    print(f"  Found in cache: {cached_count}")
+    print(f"  Known not in RePORTER: {not_found_count}")
+    print(f"  API calls made: {api_count}")
+    print(f"  Results returned: {len(results)}")
     
     return results
 
@@ -268,7 +305,13 @@ def enrich_dataframe_with_reporter_data(df, limit=None):
     project_numbers = df['Award Number'].dropna().unique().tolist()
     print(f"\nFound {len(project_numbers)} unique grant numbers")
     
-    results = get_nih_reporter_data_individual(project_numbers, limit=limit)
+    # Use both caches (regular and not-found)
+    results = get_nih_reporter_data_individual(
+        project_numbers, 
+        cache_file="terminated_cache/terminated_grants_reporter_cache.json",
+        not_found_cache_file="terminated_cache/not_found_cache.json",
+        limit=limit
+    )
     
     print("\nProcessing results into DataFrame...")
     reporter_data = []
