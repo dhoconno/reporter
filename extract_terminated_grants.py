@@ -5,6 +5,8 @@ from pathlib import Path
 from datetime import datetime
 import time
 import json
+import os
+import xml.etree.ElementTree as ET
 
 def download_pdf(url, output_path):
     """Download PDF file from URL"""
@@ -82,35 +84,59 @@ def extract_data_from_pdf(pdf_path):
     df = clean_dataframe(df)
     return df
 
-def get_nih_reporter_data_batch(project_numbers):
+def get_nih_reporter_data_individual(project_numbers, cache_file="reporter_cache.json", limit=None):
     """
-    Fetch grant details from NIH RePORTER API in batches with XML response format
+    Fetch grant details from NIH RePORTER API one by one with caching
+    
+    Args:
+        project_numbers: List of grant project numbers
+        cache_file: Path to the cache file
+        limit: Maximum number of grants to process (None for all)
+    
+    Returns:
+        List of results with required fields
     """
     base_url = "https://api.reporter.nih.gov/v2/projects/search"
     headers = {
-        "accept": "application/xml",  # Request XML instead of JSON
+        "accept": "application/json",  # JSON is easier to work with for caching
         "Content-Type": "application/json"
     }
     
-    # Split project numbers into chunks of 1000
-    chunk_size = 1000
+    # Load cache if it exists
+    cache = {}
+    if os.path.exists(cache_file):
+        try:
+            with open(cache_file, 'r', encoding='utf-8') as f:
+                cache = json.load(f)
+            print(f"Loaded {len(cache)} cached records from {cache_file}")
+        except Exception as e:
+            print(f"Error loading cache: {str(e)}")
+            # Continue with empty cache if there's an error
+    
     results = []
     
-    for i in range(0, len(project_numbers), chunk_size):
-        chunk = project_numbers[i:i + chunk_size]
+    # Limit the number of grants if specified
+    if limit:
+        project_numbers = project_numbers[:limit]
+        print(f"Processing only the first {limit} grants for testing")
+    
+    total = len(project_numbers)
+    
+    for i, project_num in enumerate(project_numbers):
+        print(f"Processing grant {i+1}/{total}: {project_num}")
+        
+        # Check cache first
+        if project_num in cache:
+            print(f"  Using cached data for {project_num}")
+            results.append(cache[project_num])
+            continue
         
         payload = {
             "criteria": {
-                "project_nums": chunk
+                "project_nums": [project_num]
             },
             "include_fields": [
                 "ProjectNum",
-                "ProjectTitle", 
-                "AbstractText",
-                "ProjectStartDate",
-                "ProjectEndDate",
-                "TotalCost",
-                "AwardAmount",
                 "PrincipalInvestigators",
                 "Organization",
                 "ProjectTerms"
@@ -118,94 +144,82 @@ def get_nih_reporter_data_batch(project_numbers):
         }
         
         try:
-            print(f"\nMaking API request for {len(chunk)} grants...")
-            print(f"Payload: {json.dumps(payload, indent=2)}")
-            
+            print(f"  Querying API for {project_num}...")
             response = requests.post(base_url, headers=headers, json=payload)
-            print(f"Response status code: {response.status_code}")
             
             if response.status_code == 200:
-                # Save raw XML for inspection (for the first batch only)
-                if i == 0:
-                    with open("reporter_sample_response.xml", "w", encoding="utf-8") as f:
-                        f.write(response.text)
-                    print(f"Sample XML response saved to reporter_sample_response.xml")
+                data = response.json()
                 
-                # Parse XML to extract required information
-                try:
-                    import xml.etree.ElementTree as ET
-                    root = ET.fromstring(response.text)
+                # Process API response
+                if data.get('results') and len(data['results']) > 0:
+                    result_data = {
+                        "project_num": project_num,
+                        "organization": {},
+                        "principal_investigators": [],
+                        "terms": ""
+                    }
                     
-                    # Extract results from the XML
-                    result_elements = root.findall(".//result")
-                    print(f"Results found in XML: {len(result_elements)}")
+                    result = data['results'][0]
                     
-                    # Process each result
-                    for result_elem in result_elements:
-                        result_data = {
-                            "project_num": result_elem.find("project_num").text if result_elem.find("project_num") is not None else "",
-                            "organization": {},
-                            "principal_investigators": [],
-                            "terms": result_elem.find("terms").text if result_elem.find("terms") is not None else ""
+                    # Extract organization data
+                    if 'organization' in result:
+                        org = result['organization']
+                        result_data["organization"] = {
+                            "org_city": org.get('org_city', ''),
+                            "org_state": org.get('org_state', ''),
+                            "org_country": org.get('org_country', '')
                         }
-                        
-                        # Extract organization data
-                        org_elem = result_elem.find("organization")
-                        if org_elem is not None:
-                            result_data["organization"] = {
-                                "org_city": org_elem.find("org_city").text if org_elem.find("org_city") is not None else "",
-                                "org_state": org_elem.find("org_state").text if org_elem.find("org_state") is not None else "",
-                                "org_country": org_elem.find("org_country").text if org_elem.find("org_country") is not None else ""
-                            }
-                        
-                        # Extract PI data
-                        pi_elems = result_elem.findall(".//principal_investigators/principal_investigator")
-                        for pi_elem in pi_elems:
-                            if pi_elem.find("full_name") is not None:
+                    
+                    # Extract PI data
+                    if 'principal_investigators' in result:
+                        for pi in result['principal_investigators']:
+                            if 'full_name' in pi:
                                 result_data["principal_investigators"].append({
-                                    "full_name": pi_elem.find("full_name").text
+                                    "full_name": pi['full_name']
                                 })
-                        
-                        results.append(result_data)
-                        
-                    # Print sample result for inspection (first result only)
-                    if results:
-                        print("Sample parsed result structure:")
-                        print(json.dumps(results[0], indent=2))
-                        
-                except Exception as xml_err:
-                    print(f"Error parsing XML: {str(xml_err)}")
-                    # Save problematic XML for debugging
-                    with open("error_xml_response.xml", "w", encoding="utf-8") as f:
-                        f.write(response.text)
-                    print("Problematic XML saved to error_xml_response.xml")
+                    
+                    # Extract terms
+                    result_data["terms"] = result.get('terms', '')
+                    
+                    # Save to cache and results
+                    cache[project_num] = result_data
+                    results.append(result_data)
+                    print(f"  Data found for {project_num}")
+                else:
+                    print(f"  No data found for {project_num}")
             else:
-                print(f"Error response: {response.text}")
-                
-            time.sleep(1)
+                print(f"  API error: {response.status_code} - {response.text}")
+            
+            # Save cache after each successful API call
+            with open(cache_file, 'w', encoding='utf-8') as f:
+                json.dump(cache, f, indent=2)
+            
+            # Be nice to the API
+            time.sleep(0.5)
             
         except Exception as e:
-            print(f"Error fetching batch: {str(e)}")
-            print(f"Full error details: {e.__class__.__name__}")
+            print(f"  Error processing {project_num}: {str(e)}")
     
     return results
 
-def enrich_dataframe_with_reporter_data(df):
+def enrich_dataframe_with_reporter_data(df, limit=None):
     """
-    Add NIH RePORTER data to the DataFrame using batch processing with debug output
+    Add NIH RePORTER data to the DataFrame using individual processing with caching
+    
+    Args:
+        df: DataFrame with grant data
+        limit: Maximum number of grants to process (None for all)
+    
+    Returns:
+        DataFrame with added RePORTER data
     """
     project_numbers = df['Award Number'].dropna().unique().tolist()
-    print(f"\nAttempting to fetch data for {len(project_numbers)} unique grants...")
+    print(f"\nFound {len(project_numbers)} unique grant numbers")
     
-    results = get_nih_reporter_data_batch(project_numbers)
+    results = get_nih_reporter_data_individual(project_numbers, limit=limit)
     
     print("\nProcessing results into DataFrame...")
     reporter_data = []
-    
-    # First, print a complete sample result to inspect the structure
-    if results:
-        print("\nComplete sample result for field mapping:")
-        print(json.dumps(results[0], indent=2))
     
     for result in results:
         project_number = result.get('project_num', '')
@@ -232,12 +246,18 @@ def enrich_dataframe_with_reporter_data(df):
     reporter_df = pd.DataFrame(reporter_data)
     
     if not reporter_df.empty:
-        print("\nColumns in reporter_df:", reporter_df.columns.tolist())
-        print("\nColumns in original df:", df.columns.tolist())
+        print(f"\nAdding RePORTER data for {len(reporter_df)} grants")
+        print("Columns in reporter_df:", reporter_df.columns.tolist())
         
         # Use 'Award Number' for joining
         merged_df = pd.merge(df, reporter_df, on='Award Number', how='left')
+        
+        # Count how many records were enriched
+        enriched_count = merged_df[~merged_df['Organization_City'].isna()].shape[0]
+        print(f"Successfully enriched {enriched_count} out of {df.shape[0]} records")
+        
         return merged_df
+    
     return df
 
 def main():
@@ -257,9 +277,9 @@ def main():
         # Basic data cleaning
         df = df.dropna(how='all')  # Remove empty rows
 
-        # Enrich with NIH RePORTER data
+        # Enrich with NIH RePORTER data - start with just 10 entries
         print("\nFetching additional data from NIH RePORTER...")
-        df = enrich_dataframe_with_reporter_data(df)
+        df = enrich_dataframe_with_reporter_data(df, limit=10)
         
         # Display basic information about the data
         print("\nDataFrame Info:")
@@ -267,7 +287,7 @@ def main():
         
         # Display first few rows
         print("\nFirst few rows of data:")
-        print(df.head(50))
+        print(df.head(10))
         
         # Save to CSV with specific formatting
         csv_path = pdf_path.with_suffix('.csv')
