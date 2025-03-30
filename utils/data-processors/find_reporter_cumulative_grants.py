@@ -669,10 +669,11 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
 def save_grants_list(all_award_date_grants, output_filename="nih_awards_all"):
     """
     Create a CSV containing a list of all grants with award_date, grant_number, and ic.
-    Then compress the CSV using zstd.
+    Then compress the CSV using zstd and remove the original uncompressed file.
     """
     import pandas as pd
     import zstandard as zstd
+    import os
 
     records = []
     for year, grants in all_award_date_grants.items():
@@ -702,7 +703,7 @@ def save_grants_list(all_award_date_grants, output_filename="nih_awards_all"):
     df = pd.DataFrame(records)
     df.sort_values(by="award_date", inplace=True)
     
-    csv_file = f"{REPORTS_DIR}/{output_filename}.csv"
+    csv_file = f"data/processed/reporter/{output_filename}.csv"
     df.to_csv(csv_file, index=False)
     compressed_file = f"{csv_file}.zst"
     with open(csv_file, "rb") as f_in:
@@ -711,7 +712,13 @@ def save_grants_list(all_award_date_grants, output_filename="nih_awards_all"):
     compressed = cctx.compress(data)
     with open(compressed_file, "wb") as f_out:
         f_out.write(compressed)
-    print(f"Grants list saved and compressed as {compressed_file}")
+    
+    # Remove the uncompressed CSV file after successful compression
+    try:
+        os.remove(csv_file)
+        print(f"Grants list compressed as {compressed_file} (uncompressed CSV removed)")
+    except Exception as e:
+        print(f"Grants list compressed as {compressed_file}, but could not remove CSV: {e}")
 
 
 def check_api_freshness():
