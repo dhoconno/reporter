@@ -21,8 +21,16 @@ from bs4 import BeautifulSoup
 import pandas as pd
 import os
 
+# Define base directory and output directories
+REPORTS_DIR = "pages/reports"
+ASSETS_DIR = "pages/assets"
+
+# Ensure the output directories exist
+os.makedirs(REPORTS_DIR, exist_ok=True)
+os.makedirs(ASSETS_DIR, exist_ok=True)
+
 # Use a local cache directory
-cache_base_dir = "fr_cache"
+cache_base_dir = "cache/federal_register"
 os.makedirs(cache_base_dir, exist_ok=True)
 print("Local cache directory created:", cache_base_dir)
 
@@ -125,17 +133,22 @@ class FederalRegisterCache:
         except Exception as e:
             print(f"Error saving cache for {year}-{month:02d}: {e}")
 
-def create_ic_plots_dir():
-    """Create directory for institute-specific plots if it doesn't exist."""
-    ic_plots_dir = Path("ic_plots")
-    ic_plots_dir.mkdir(exist_ok=True)
-    print(f"Ensuring IC plots directory exists: {ic_plots_dir}")
-    return ic_plots_dir
+def create_ic_plots_dirs():
+    """Create directories for institute-specific plots if they don't exist."""
+    # HTML files go to pages/reports
+    ic_plots_html_dir = REPORTS_DIR
+    # PNG files go to pages/assets
+    ic_plots_png_dir = ASSETS_DIR
+    
+    print(f"Ensuring IC plots HTML directory exists: {ic_plots_html_dir}")
+    print(f"Ensuring IC plots PNG directory exists: {ic_plots_png_dir}")
+    
+    return ic_plots_html_dir, ic_plots_png_dir
 
 def plot_ic_data(meetings_by_year, current_year, cutoff_day):
     """Generate separate plots for each institute in the federal register data."""
     print("\nGenerating per-institute FR plots...")
-    ic_plots_dir = create_ic_plots_dir()
+    ic_plots_html_dir, ic_plots_png_dir = create_ic_plots_dirs()
     
     # Get all institutes across all years
     all_institutes = set()
@@ -176,9 +189,12 @@ def plot_ic_data(meetings_by_year, current_year, cutoff_day):
     # Plot CSR meetings explicitly
     if csr_meetings_by_year:
         cum_data = create_cumulative_counts(csr_meetings_by_year, cutoff_day)
-        output_filename = f"ic_plots/nih_fr_meetings_CSR"
+        output_basename = "nih_fr_meetings_CSR"
+        html_output = f"{ic_plots_html_dir}/{output_basename}"
+        png_output = f"{ic_plots_png_dir}/{output_basename}"
         plot_cumulative_data(cum_data, current_year, colors=colors, 
-                             output_filename=output_filename)
+                             output_html=html_output,
+                             output_png=png_output)
     
     # For each institute, create a separate plot
     for institute in sorted(all_institutes):
@@ -199,9 +215,12 @@ def plot_ic_data(meetings_by_year, current_year, cutoff_day):
         # Only create plot if we have data
         if institute_meetings_by_year:
             cum_data = create_cumulative_counts(institute_meetings_by_year, cutoff_day)
-            output_filename = f"ic_plots/nih_fr_meetings_{institute}"
+            output_basename = f"nih_fr_meetings_{institute}"
+            html_output = f"{ic_plots_html_dir}/{output_basename}"
+            png_output = f"{ic_plots_png_dir}/{output_basename}"
             plot_cumulative_data(cum_data, current_year, colors=colors, 
-                                output_filename=output_filename)
+                                output_html=html_output,
+                                output_png=png_output)
 
 def get_pastel_color(i, total):
     """Generate a pastel color using HLS conversion."""
@@ -509,7 +528,8 @@ def create_cumulative_counts(meetings_by_year, cutoff):
     
     return cum_data
 
-def plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=None, output_filename="nih_fr_meetings"):
+def plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=None, 
+                        output_filename=None, output_html=None, output_png=None):
     fig = go.Figure()
     
     today = datetime.date.today()
@@ -568,18 +588,27 @@ def plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=None, o
         margin=dict(t=100, r=20, b=70, l=20)
     )
     
+    # Handle separate output paths for HTML and PNG
+    if output_html is None and output_png is None and output_filename is not None:
+        # For backward compatibility - use output_filename for both
+        output_html = output_filename
+        output_png = output_filename
+    
     # Export HTML with plotly.js included
-    html_file = f"{output_filename}.html"
-    fig.write_html(html_file, include_plotlyjs=True, full_html=True)
+    if output_html is not None:
+        html_file = f"{output_html}.html"
+        fig.write_html(str(html_file), include_plotlyjs=True, full_html=True)
+        print(f"HTML plot saved as {html_file}")
     
     # Export PNG with standardized size and high resolution
-    png_file = f"{output_filename}.png"
-    try:
-        fig.write_image(png_file, width=1200, height=800, scale=2)  # Match NIH Reporter script size
-    except Exception as e:
-        print(f"Error writing PNG: {e}")
+    if output_png is not None:
+        png_file = f"{output_png}.png"
+        try:
+            fig.write_image(str(png_file), width=1200, height=800, scale=2)
+            print(f"PNG plot saved as {png_file}")
+        except Exception as e:
+            print(f"Error writing PNG: {e}")
     
-    print(f"Plot saved as {html_file} and {png_file}")
     return fig
 
 def export_meetings_to_csv(meetings_by_year, filename=None, compress=True):
@@ -593,12 +622,12 @@ def export_meetings_to_csv(meetings_by_year, filename=None, compress=True):
         print("No meetings found to export.")
         return
     if not filename:
-        filename = "nih_fr_meetings_all.csv"
+        filename = "data/processed/federal_register/nih_fr_meetings_all.csv"
     
     df = pd.DataFrame(all_meetings)
     
     # Save the CSV
-    df.to_csv(filename, index=False)
+    df.to_csv(str(filename), index=False)
     print(f"Exported {len(all_meetings)} meetings to {filename}")
     
     # Compress with zstd if requested
@@ -677,16 +706,19 @@ def run_analysis(start_year=2016, end_year=None, use_cached=True, small_test=Fal
     for i, year in enumerate(sorted(non_current_years)):
         colors[year] = get_pastel_color(i, total if total > 0 else 1)
     colors[current_year] = "#FF0000"
-    fig = plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=colors, output_filename="nih_fr_meetings")
+    
+    output_basename = "nih_fr_meetings"
+    html_output = f"pages/reports/{output_basename}"
+    png_output = f"pages/assets/{output_basename}"
+    
+    fig = plot_cumulative_data(cum_data, current_year, tick_interval=7, colors=colors, 
+                              output_html=html_output, output_png=png_output)
 
     df = display_meetings_table(meetings_by_year, current_year, n=15)
-    export_meetings_to_csv(meetings_by_year, filename="nih_fr_meetings_all.csv")
+    export_meetings_to_csv(meetings_by_year, filename="data/processed/federal_register/nih_fr_meetings_all.csv")
 
     # Generate per-IC plots
     plot_ic_data(meetings_by_year, current_year, cutoff_day)
-    
-    df = display_meetings_table(meetings_by_year, current_year, n=15)
-    export_meetings_to_csv(meetings_by_year, filename="nih_fr_meetings_all.csv")
 
     try:
         xml_cache_count = len(list(cache.xml_cache_dir.glob("*.xml")))
