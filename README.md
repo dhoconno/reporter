@@ -12,10 +12,10 @@ I welcome feedback and corrections if you find any mistakes!
 ## Now with 100% more federal register
 Under the [Federal Advisory Committee Act](https://www.gsa.gov/policy-regulations/policy/federal-advisory-committee-management/legislation-and-regulations/federal-advisory-committee-act) study sections that review NIH grants need to be announced in the [Federal Register](https://www.federalregister.gov) at least 15 days before the study section meets. I parsed the meetings from Federal Register notices and created plots comparing the current year to the previous nine years.
 
-## Latest HHS terminated grants
-[TAGGS HHS terminated grant data explorer](https://dhoconno.github.io/reporter/terminated_grants.html)
+## Latest NIH terminated grants
+[TAGGS NIH terminated grant data explorer](https://dhoconno.github.io/reporter/terminated_grants.html)
 
-The [Health and Human Services Tracking Accountability in Government Grants System (TAGGS) website](https://taggs.hhs.gov) has a link to a PDF of awards that have been terminated. The PDF is not easy to explore and does not contain context (e.g,. investigators, keywords) that may be useful for analysis. I created a [CSV](./HHS_Grants_Terminated.csv) with that fetches this information from NIH RePORTER, where available, and uses this to populate the data explorer. Many of the projects that do not have RePORTER information have additional information in TAGGS, however, there is not an API I can use to easily extract this information. If time permits, I might look into putting together a web scraper. 
+The [Health and Human Services Tracking Accountability in Government Grants System (TAGGS) website](https://taggs.hhs.gov) has a link to a PDF of awards that have been terminated. The PDF is not easy to explore and does not contain context (e.g,. investigators, keywords) that may be useful for analysis. I created an explorer that merges TAGGS and RePORTER results for those records that have both types of information. 
 
 ## Latest Cumulative Award Count Plot
 ![Cumulative Awards Plot](./nih_awards.png)
