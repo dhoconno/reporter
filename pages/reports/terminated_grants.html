@@ -3,245 +3,273 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1.0">
-  <title>Terminated grants in the Tracking Accountability in Government Grants System</title>
-  
-  <!-- Include DataTables CSS -->
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.0.0/css/searchPanes.dataTables.min.css">
-  <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.4/css/select.dataTables.min.css">
+  <title>Terminated Grants Explorer (TAGGS)</title>
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+  <!-- DataTables Extensions CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.2.0/css/searchPanes.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/select/1.7.0/css/select.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/scroller/2.2.0/css/scroller.dataTables.min.css">
+  <!-- FixedHeader CSS (Optional but recommended with scrollX/scrollY) -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/fixedheader/3.4.0/css/fixedHeader.dataTables.min.css">
+
 
   <style>
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-      padding: 20px;
-      max-width: 1200px;
-      margin: 0 auto;
+      padding: 15px;
+      /* Removed max-width to allow table to expand */
+      margin: 10px auto;
+      font-size: 0.9rem;
     }
-    h1, h2 {
+    h1 {
       color: #333;
+      text-align: center;
+      margin-bottom: 20px;
     }
     .container {
-      margin-top: 20px;
+      margin-top: 15px;
+      width: 100%; /* Ensure container takes full width */
+      overflow-x: auto; /* Let the container handle outer scroll if needed, though DT scrollX should handle table scroll */
     }
     .loading {
       text-align: center;
-      margin: 50px 0;
-      font-size: 18px;
+      margin: 60px 0;
+      font-size: 20px;
+      color: #555;
     }
     #grants-table {
-      width: 100%;
+      width: 100%; /* Let DataTables manage width with scrollX */
     }
+    /* Style SearchPanes container, buttons, filter input */
+    .dtsp-searchPanes, .dt-buttons, .dataTables_filter {
+        margin-bottom: 15px;
+    }
+    .dt-buttons .dt-button {
+        margin-right: 5px;
+    }
+    .dataTables_info {
+        margin-top: 10px;
+        padding-top: 10px;
+    }
+    .dataTables_filter input {
+        width: 280px;
+        margin-left: 0.5em;
+    }
+     /* --- REMOVED position: sticky for thead th ---
+        DataTables scrollX/scrollY handles header synchronization.
+        FixedHeader extension can be used for keeping header visible on *page* scroll.
+     -------------------------------------------------*/
+
+     /* Optional: Style the fixed header if using FixedHeader extension */
+     table.dataTable thead th {
+         background-color: #f8f8f8; /* Keep background */
+         border-bottom: 2px solid #ddd;
+     }
+
+    /* Style SearchPanes */
+    .dtsp-searchPanes {
+        border: 1px solid #ccc;
+        padding: 10px;
+        background-color: #fdfdfd;
+        border-radius: 4px;
+        margin-bottom: 15px; /* Ensure space below panes */
+    }
+    /* Truncated text hover effect */
+    .truncated-text {
+        cursor: default;
+    }
+
+    /* Ensure DataTables scroll wrapper behaves */
     .dataTables_wrapper {
-      margin-top: 20px;
+        width: 100%;
     }
+
   </style>
 </head>
 <body>
-  <h1>Terminated grants in the Tracking Accountability in Government Grants System</h1>
+  <h1>Terminated Grants Explorer (TAGGS Data)</h1>
   <div class="container">
-    <div id="loading" class="loading">Loading data...</div>
-    <table id="grants-table" class="display" style="width:100%; display:none;">
+    <div id="loading" class="loading">Loading grant data... Please wait.</div>
+    <table id="grants-table" class="display compact nowrap" style="width:100%; display:none;">
       <thead>
-        <!-- Headers will be populated dynamically -->
+        <!-- Headers populated dynamically -->
       </thead>
       <tbody>
-        <!-- Data will be populated dynamically -->
+        <!-- Data populated dynamically -->
       </tbody>
     </table>
   </div>
 
-  <!-- Include JavaScript libraries -->
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
-  <script src="https://cdn.datatables.net/searchpanes/2.0.0/js/dataTables.searchPanes.min.js"></script>
-  <script src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
-  
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <!-- JavaScript libraries -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+  <!-- DataTables Extensions JS -->
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/dataTables.buttons.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
-  <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
+  <script src="https://cdn.datatables.net/searchpanes/2.2.0/js/dataTables.searchPanes.min.js"></script>
+  <script src="https://cdn.datatables.net/select/1.7.0/js/dataTables.select.min.js"></script>
+  <script src="https://cdn.datatables.net/scroller/2.2.0/js/dataTables.scroller.min.js"></script>
+  <!-- FixedHeader JS (Optional but recommended with scrollX/scrollY) -->
+   <script src="https://cdn.datatables.net/fixedheader/3.4.0/js/dataTables.fixedHeader.min.js"></script>
+  <!-- PapaParse for CSV Handling -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
 
   <script>
     $(document).ready(function() {
-      // Specify your CSV file path
+      // --- Configuration ---
       const csvFilePath = '../assets/csv/hhs_grants_terminated.csv';
-      
-      // Use PapaParse to fetch and parse the CSV
+      const defaultSortColumn = 'Action Date (Date Terminated)';
+      const currencyColumns = [
+          'Total Amount Obligated',
+          'Total Amount Expended',
+          'Unliquidated Obligations (As of Termination)'
+      ];
+      const longTextColumns = {
+          'Project_Terms': 150,
+          'Award Title': 100,
+          'Recipient Name': 50
+      };
+      const excludeFromSearchPanes = [
+          'FAIN',
+          'Award Number',
+          'Project_Terms',
+          'PI_Names'
+      ];
+      // --- End Configuration ---
+
       Papa.parse(csvFilePath, {
         download: true,
         header: true,
-        skipEmptyLines: true,
+        skipEmptyLines: 'greedy',
+        dynamicTyping: true,
         complete: function(results) {
-          // Hide loading message
+          if (results.errors.length > 0) {
+            console.error("CSV Parsing Errors:", results.errors);
+            $('#loading').html(`Error parsing CSV file. Check console for details.`);
+            return;
+          }
+           if (!results.data || results.data.length === 0) {
+             $('#loading').html(`No data found in the CSV file.`);
+             return;
+          }
+
           $('#loading').hide();
-          
-          // Get headers
+
           const headers = results.meta.fields;
-          
-          // Create table headers
-          let headerRow = '';
+          const data = results.data;
+
+          // --- Prepare Table Headers ---
+          let headerRow = '<tr>';
           headers.forEach(header => {
-            headerRow += `<th>${header}</th>`;
+            headerRow += `<th>${header.replace(/_/g, ' ')}</th>`;
           });
-          $('#grants-table thead').append(`<tr>${headerRow}</tr>`);
-          
-          // Show the table
+          headerRow += '</tr>';
+          $('#grants-table thead').html(headerRow);
+
+          // --- Find Column Indices ---
+          const defaultSortColumnIndex = headers.indexOf(defaultSortColumn);
+          const currencyColumnIndices = currencyColumns.map(colName => headers.indexOf(colName)).filter(index => index !== -1);
+          const longTextColumnIndices = {};
+            for (const colName in longTextColumns) {
+                const index = headers.indexOf(colName);
+                if (index !== -1) { longTextColumnIndices[index] = longTextColumns[colName]; }
+            }
+           const searchPaneExcludeIndices = excludeFromSearchPanes.map(colName => headers.indexOf(colName)).filter(index => index !== -1);
+
+          // --- Prepare Column Definitions ---
+          const columnDefs = [
+             { searchPanes: { show: false }, targets: searchPaneExcludeIndices },
+             // { orderable: false, targets: headers.indexOf('Project_Terms') } // Optional: disable ordering
+          ];
+
+           // Add renderers for currency
+          currencyColumnIndices.forEach(index => {
+            columnDefs.push({
+                targets: index,
+                render: function(data, type, row) { /* ... (currency rendering unchanged) ... */
+                   if (type === 'display' || type === 'export') {
+                         if (data === null || data === undefined || data === '' || isNaN(Number(data))) {
+                            return '';
+                        }
+                        return '$' + Number(data).toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    }
+                     return (data === null || data === undefined || data === '') ? -Infinity : Number(data);
+                },
+                type: 'num-fmt'
+            });
+          });
+
+           // Add renderers for long text
+           for (const index in longTextColumnIndices) {
+                const maxLength = longTextColumnIndices[index];
+                columnDefs.push({
+                    targets: parseInt(index, 10),
+                    render: function(data, type, row) { /* ... (truncation rendering unchanged) ... */
+                        const text = String(data || '');
+                        if (type === 'display') {
+                            if (text.length > maxLength) {
+                                const escapedText = text.replace(/"/g, '"');
+                                return `<span class="truncated-text" title="${escapedText}">${text.substr(0, maxLength)}...</span>`;
+                            }
+                            return text;
+                        }
+                        return text;
+                    }
+                });
+            }
+
           $('#grants-table').show();
-          
-          // Initialize DataTable
-          $('#grants-table').DataTable({
-            data: results.data,
-            columns: headers.map(header => ({ data: header, title: header })),
-            dom: 'lfrtip',
-            buttons: [
-              {
-                extend: 'copy',
-                exportOptions: { orthogonal: 'export' }
-              },
-              {
-                extend: 'csv',
-                exportOptions: { orthogonal: 'export' }
-              },
-              {
-                extend: 'excel',
-                exportOptions: { orthogonal: 'export' }
-              }
+
+          // --- Initialize DataTable ---
+          const table = $('#grants-table').DataTable({
+            // --- Data ---
+            data: data,
+            columns: headers.map(header => ({ data: header, title: header.replace(/_/g, ' ') })),
+
+            // --- Core Features & Layout ---
+            dom: 'PBfrti',
+            deferRender: true,
+
+            // --- Scrolling ---
+            scrollX: true,        // *** ENABLE HORIZONTAL SCROLLING ***
+            scrollY: '60vh',
+            scrollCollapse: true,
+            scroller: true,       // Enable Scroller extension for vertical virtual scroll
+
+            // --- Extensions ---
+             buttons: [
+                { extend: 'copyHtml5', text: 'Copy' },
+                { extend: 'csvHtml5', text: 'CSV' },
+                { extend: 'excelHtml5', text: 'Excel' }
             ],
             searchPanes: {
-              layout: 'columns-4',
-              initCollapsed: true,
-              cascadePanes: true
+              layout: 'columns-auto',
+              initCollapsed: false,
+              cascadePanes: true,
+              viewTotal: true,
             },
-            columnDefs: [
-              {
-                // Enable these columns in SearchPanes
-                searchPanes: { show: true },
-                targets: [
-                  headers.indexOf('Organization_State'), 
-                  headers.indexOf('Organization_City'),
-                  headers.indexOf('Funding_Institutes')
-                ]
-              },
-              {
-                targets: headers.indexOf('Project_Terms'),
-                render: function(data, type, row) {
-                  if (type === 'export' || type === 'sort' || type === 'filter') {
-                    return data;
-                  }
-                  if (data && data.length > 100) {
-                    return `<span title="${data.replace(/"/g, '&quot;')}">${data.substr(0, 100)}...</span>`;
-                  }
-                  return data;
-                }
-              },
-              {
-                // Format numeric columns
-                targets: [
-                  headers.indexOf('Total Amount Obligated'), 
-                  headers.indexOf('Total Amount Expended'), 
-                  headers.indexOf('Total Payment Amount (As of Termination)'),
-                  headers.indexOf('Unliquidated Obligations (As of Termination)')
-                ],
-                render: function(data, type) {
-                  if (type === 'export' || type === 'sort' || type === 'filter') {
-                    return data;
-                  }
-                  if (data === null || data === undefined || isNaN(Number(data))) {
-                    return data;
-                  }
-                  return new Intl.NumberFormat('en-US').format(data);
-                }
-              }
-            ],
-            pageLength: 25,
-            responsive: true,
-            paging: true,
-            pagingType: 'full_numbers'
+            fixedHeader: true, // Optional: Use FixedHeader to keep header visible on PAGE scroll, works well with scrollX/scrollY
+
+            // --- Sorting & Column Defs ---
+            order: defaultSortColumnIndex !== -1 ? [[defaultSortColumnIndex, 'desc']] : [],
+            columnDefs: columnDefs,
+
+            // --- Minor Config ---
+            // stateSave: true, // Optional: Remember state
           });
-        },
-        error: function(error) {
-          $('#loading').html(`Error loading data: ${error}`);
-          console.error('Error loading CSV:', error);
+
+        }, // End complete callback
+        error: function(error, file) {
+          $('#loading').html(`Error loading or parsing CSV file: ${error}`);
+          console.error('PapaParse Error:', error, file);
         }
-      });
-    });
-
-    // Add this to your script
-    let page = 1;
-    let isLoading = false;
-    let hasMoreData = true;
-
-    // Load initial data with most recent first
-    document.addEventListener('DOMContentLoaded', () => {
-      fetchData();
-      
-      // Remove pagination elements if they exist
-      const paginationElement = document.querySelector('.pagination');
-      if (paginationElement) {
-        paginationElement.remove();
-      }
-      
-      // Add scroll event listener
-      window.addEventListener('scroll', handleScroll);
-    });
-
-    function handleScroll() {
-      if (isLoading || !hasMoreData) return;
-      
-      // Check if user has scrolled near the bottom
-      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
-        fetchMoreData();
-      }
-    }
-
-    function fetchData(resetData = true) {
-      isLoading = true;
-      
-      // Show loading indicator
-      const loadingIndicator = document.getElementById('loading-indicator');
-      if (loadingIndicator) loadingIndicator.style.display = 'block';
-      
-      fetch(`/api/actions?page=${page}&sort=desc`)
-        .then(response => response.json())
-        .then(data => {
-          if (resetData) {
-            const actionsContainer = document.getElementById('actions-container');
-            actionsContainer.innerHTML = '';
-          }
-          
-          renderActions(data.actions);
-          hasMoreData = data.actions.length > 0;
-          isLoading = false;
-          
-          if (loadingIndicator) loadingIndicator.style.display = 'none';
-        })
-        .catch(error => {
-          console.error('Error fetching data:', error);
-          isLoading = false;
-          if (loadingIndicator) loadingIndicator.style.display = 'none';
-        });
-    }
-
-    function fetchMoreData() {
-      page++;
-      fetchData(false);
-    }
-
-    function renderActions(actions) {
-      // Sort actions by date in descending order
-      actions.sort((a, b) => new Date(b.date) - new Date(a.date));
-      
-      // Render your actions to the DOM
-      const actionsContainer = document.getElementById('actions-container');
-      
-      actions.forEach(action => {
-        // Create and append action elements
-        const actionElement = createActionElement(action);
-        actionsContainer.appendChild(actionElement);
-      });
-    }
+      }); // End Papa.parse
+    }); // End document ready
   </script>
+
 </body>
 </html>
