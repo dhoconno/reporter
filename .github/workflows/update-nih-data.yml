@@ -25,13 +25,13 @@ jobs:
           pip install requests plotly numpy kaleido bs4 pandas zstandard tabula-py
       - name: Run update script
         run: |
-          python utils/data-processors/cumulative_grants_by_award_date.py --force-refresh
+          python utils/data-processors/find_reporter_cumulative_grants.py --force-refresh
       - name: Run federal register script
         run: |
-          python utils/data-processors/cumulative_fr_announcements.py
+          python utils/data-processors/find_federal_register_announcements.py
       - name: Run terminated grants script
         run: |
-          python utils/data-processors/extract_terminated_grants.py
+          python utils/data-processors/find_taggs_terminated_grants.py
       - name: Commit and push if changes exist
         run: |
           git config --global user.name "GitHub Action"
