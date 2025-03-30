@@ -94,7 +94,7 @@
           $('#grants-table').DataTable({
             data: results.data,
             columns: headers.map(header => ({ data: header, title: header })),
-            dom: 'BPlfrtip',
+            dom: 'lfrtip',
             buttons: [
               {
                 extend: 'copy',
@@ -167,6 +167,81 @@
         }
       });
     });
+
+    // Add this to your script
+    let page = 1;
+    let isLoading = false;
+    let hasMoreData = true;
+
+    // Load initial data with most recent first
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchData();
+      
+      // Remove pagination elements if they exist
+      const paginationElement = document.querySelector('.pagination');
+      if (paginationElement) {
+        paginationElement.remove();
+      }
+      
+      // Add scroll event listener
+      window.addEventListener('scroll', handleScroll);
+    });
+
+    function handleScroll() {
+      if (isLoading || !hasMoreData) return;
+      
+      // Check if user has scrolled near the bottom
+      if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+        fetchMoreData();
+      }
+    }
+
+    function fetchData(resetData = true) {
+      isLoading = true;
+      
+      // Show loading indicator
+      const loadingIndicator = document.getElementById('loading-indicator');
+      if (loadingIndicator) loadingIndicator.style.display = 'block';
+      
+      fetch(`/api/actions?page=${page}&sort=desc`)
+        .then(response => response.json())
+        .then(data => {
+          if (resetData) {
+            const actionsContainer = document.getElementById('actions-container');
+            actionsContainer.innerHTML = '';
+          }
+          
+          renderActions(data.actions);
+          hasMoreData = data.actions.length > 0;
+          isLoading = false;
+          
+          if (loadingIndicator) loadingIndicator.style.display = 'none';
+        })
+        .catch(error => {
+          console.error('Error fetching data:', error);
+          isLoading = false;
+          if (loadingIndicator) loadingIndicator.style.display = 'none';
+        });
+    }
+
+    function fetchMoreData() {
+      page++;
+      fetchData(false);
+    }
+
+    function renderActions(actions) {
+      // Sort actions by date in descending order
+      actions.sort((a, b) => new Date(b.date) - new Date(a.date));
+      
+      // Render your actions to the DOM
+      const actionsContainer = document.getElementById('actions-container');
+      
+      actions.forEach(action => {
+        // Create and append action elements
+        const actionElement = createActionElement(action);
+        actionsContainer.appendChild(actionElement);
+      });
+    }
   </script>
 </body>
 </html>
