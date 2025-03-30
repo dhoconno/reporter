@@ -75,90 +75,18 @@ def extract_data_from_pdf(pdf_path):
         multiple_tables=True,
         pandas_options={'header': None}
     )
+    df = pd.concat(tables, ignore_index=True)
+    # Use the first row as headers, then remove it from the DataFrame
+    df.columns = df.iloc[0]
+    df = df.iloc[1:].reset_index(drop=True)
     
-    processed_tables = []
-    
-    # Process each table separately to handle multi-line headers
-    for table_idx, table in enumerate(tables):
-        # Find potential header rows (usually the first 1-3 rows)
-        potential_header_rows = table.head(3)
-        
-        # Find the last row that contains "Awarding Office" or similar header text
-        header_keywords = ["awarding office", "fain", "award number", "recipient"]
-        header_end_idx = -1
-        
-        for idx, row in potential_header_rows.iterrows():
-            row_text = ' '.join([str(val).lower() for val in row.values if not pd.isna(val)])
-            if any(keyword in row_text for keyword in header_keywords):
-                header_end_idx = idx
-        
-        if header_end_idx >= 0:
-            # Combine header rows into a single header
-            header_rows = table.iloc[:header_end_idx + 1]
-            data_rows = table.iloc[header_end_idx + 1:]
-            
-            # Create combined headers
-            combined_headers = []
-            for col_idx in range(len(header_rows.columns)):
-                col_values = [str(row[col_idx]) for _, row in header_rows.iterrows() 
-                             if not pd.isna(row[col_idx]) and str(row[col_idx]).strip()]
-                combined_headers.append(' '.join(col_values).strip())
-            
-            # Ensure header names are unique by adding a suffix for duplicates
-            header_counts = {}
-            for i, header in enumerate(combined_headers):
-                if header in header_counts:
-                    header_counts[header] += 1
-                    combined_headers[i] = f"{header}_{header_counts[header]}"
-                else:
-                    header_counts[header] = 0
-            
-            # Create new DataFrame with combined headers
-            new_table = pd.DataFrame(data_rows.values, columns=combined_headers)
-            processed_tables.append(new_table)
-        else:
-            # If no header rows found, use first row as header
-            # Ensure column names are unique
-            if not table.empty:
-                if table.shape[0] > 0:  # At least one row for header
-                    headers = [str(x) for x in table.iloc[0]]
-                    # Make headers unique
-                    header_counts = {}
-                    for i, header in enumerate(headers):
-                        if header in header_counts:
-                            header_counts[header] += 1
-                            headers[i] = f"{header}_{header_counts[header]}"
-                        else:
-                            header_counts[header] = 0
-                    
-                    processed_table = pd.DataFrame(table.iloc[1:].values, columns=headers)
-                    processed_tables.append(processed_table)
-                else:
-                    # Generate generic headers if no rows
-                    processed_table = table.copy()
-                    processed_table.columns = [f"Col_{i+1}" for i in range(len(processed_table.columns))]
-                    processed_tables.append(processed_table)
-    
-    if not processed_tables:
-        return pd.DataFrame()  # Return empty DataFrame if no tables extracted
-        
-    # Concatenate all processed tables
-    try:
-        df = pd.concat(processed_tables, ignore_index=True)
-    except Exception as e:
-        print(f"Error concatenating tables: {str(e)}")
-        # If concat fails, return the first table or an empty DataFrame
-        return processed_tables[0] if processed_tables else pd.DataFrame()
-    
-    # Merge continuation rows
+    # Merge continuation rows before other processing
     df = merge_continuation_rows(df)
     
-    # Remove rows where any column contains "FAIN" (likely header repeats)
+    # Remove rows where "Awarding Office" equals "Awarding Office" or any column contains "FAIN"
     df = df[~df.apply(lambda x: x.astype(str).str.contains('FAIN', case=False)).any(axis=1)]
-    
     # Remove completely empty columns
     df = df.dropna(axis=1, how='all')
-    
     # Clean the DataFrame
     df = clean_dataframe(df)
     return df
