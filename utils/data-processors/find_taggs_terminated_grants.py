@@ -160,7 +160,7 @@ def merge_continuation_rows(df):
     # Create a new DataFrame from the merged entries
     return pd.DataFrame(result)
 
-def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_cache/terminated_grants_reporter_cache.json", not_found_cache_file="terminated_cache/not_found_cache.json", limit=None):
+def get_nih_reporter_data_individual(project_numbers, cache_file="cache/taggs/terminated_grants_reporter_cache.json", not_found_cache_file="cache/taggs/not_found_cache.json", limit=None):
     """
     Fetch grant details from NIH RePORTER API one by one with caching
     
@@ -381,8 +381,8 @@ def enrich_dataframe_with_reporter_data(df, limit=None):
     # Use both caches (regular and not-found)
     results = get_nih_reporter_data_individual(
         project_numbers, 
-        cache_file="terminated_cache/terminated_grants_reporter_cache.json",
-        not_found_cache_file="terminated_cache/not_found_cache.json",
+        cache_file="cache/taggs/terminated_grants_reporter_cache.json",
+        not_found_cache_file="cache/taggs/not_found_cache.json",
         limit=limit
     )
     
@@ -457,10 +457,9 @@ def enrich_dataframe_with_reporter_data(df, limit=None):
 def main():
     # Set up paths
     pdf_url = "https://taggs.hhs.gov/Content/Data/HHS_Grants_Terminated.pdf"
-    pdf_path = Path("HHS_Grants_Terminated.pdf")
-    nih_pdf_path = Path("NIH_Grants_Terminated.pdf")
-    hhs_pdf_path = Path("HHS_Grants_Terminated.pdf")
-    
+    base_dir = Path(os.path.dirname(os.path.abspath(__file__))).parent.parent
+    pdf_path = base_dir / "data" / "external" / "HHS_Grants_Terminated.pdf"
+ 
     # Download PDF
     print("Downloading PDF...")
     if download_pdf(pdf_url, pdf_path):
@@ -498,7 +497,11 @@ def main():
         
         # Save the FULL dataset of all HHS grants (for reference)
         # Some CDC and other grants may not parse correctly
-        full_csv_path = Path("HHS_Grants_Terminated.csv")
+        results_dir = base_dir / "data" / "taggs"
+        if not results_dir.exists():
+            results_dir.mkdir(parents=True, exist_ok=True)
+            
+        full_csv_path = results_dir / "HHS_Grants_Terminated.csv"
         enriched_df.to_csv(full_csv_path, 
                   index=False,
                   float_format='%.2f',
@@ -506,17 +509,6 @@ def main():
                   encoding='utf-8',
                   lineterminator='\n')
         print(f"\nFull dataset saved to {full_csv_path}")
-        
-        # Save only the FILTERED dataset to the main CSV file
-        # This includes only the NIH grants with RePORTER data
-        csv_path = Path("NIH_Grants_Terminated.csv")
-        filtered_df.to_csv(csv_path, 
-                  index=False,
-                  float_format='%.2f',
-                  quoting=1,
-                  encoding='utf-8',
-                  lineterminator='\n')
-        print(f"\nFiltered dataset saved to {csv_path}")
         
     else:
         print("Failed to download PDF")
