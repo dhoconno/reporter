@@ -17,8 +17,6 @@ Under the [Federal Advisory Committee Act](https://www.gsa.gov/policy-regulation
 
 The [Health and Human Services Tracking Accountability in Government Grants System (TAGGS) website](https://taggs.hhs.gov) has a link to a PDF of awards that have been terminated. The PDF is not easy to explore and does not contain context (e.g,. investigators, keywords) that may be useful for analysis. I created a [CSV](./HHS_Grants_Terminated.csv) with that fetches this information from NIH RePORTER, where available, and uses this to populate the data explorer. Many of the projects that do not have RePORTER information have additional information in TAGGS, however, there is not an API I can use to easily extract this information. If time permits, I might look into putting together a web scraper. 
 
-I also built an in-line data explorer for searching and filtering. I'm not sure how best to plot this information but am open to requests.
-
 ## Latest Cumulative Award Count Plot
 ![Cumulative Awards Plot](./nih_awards.png)
 
