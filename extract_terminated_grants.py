@@ -72,6 +72,7 @@ def extract_data_from_pdf(pdf_path):
     tables = tabula.read_pdf(
         pdf_path,
         pages='all',
+        lattice=True,
         multiple_tables=True,
         pandas_options={'header': None}
     )
