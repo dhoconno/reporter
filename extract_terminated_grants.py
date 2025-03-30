@@ -79,6 +79,10 @@ def extract_data_from_pdf(pdf_path):
     # Use the first row as headers, then remove it from the DataFrame
     df.columns = df.iloc[0]
     df = df.iloc[1:].reset_index(drop=True)
+    
+    # Merge continuation rows before other processing
+    df = merge_continuation_rows(df)
+    
     # Remove rows where "Awarding Office" equals "Awarding Office" or any column contains "FAIN"
     df = df[~df.apply(lambda x: x.astype(str).str.contains('FAIN', case=False)).any(axis=1)]
     # Remove completely empty columns
@@ -86,6 +90,56 @@ def extract_data_from_pdf(pdf_path):
     # Clean the DataFrame
     df = clean_dataframe(df)
     return df
+
+def merge_continuation_rows(df):
+    """
+    Merge rows that are continuations of previous rows.
+    A row is considered a continuation if it's missing an Award Number.
+    """
+    # Create a new dataframe to build our merged results
+    result = []
+    current_entry = None
+    
+    # Award Number is our key identifier for main entries
+    key_column = 'Award Number'
+    
+    for _, row in df.iterrows():
+        row_dict = row.to_dict()
+        
+        # Check if this is a main entry (has Award Number) or a continuation
+        has_award_number = not pd.isna(row_dict.get(key_column)) and str(row_dict.get(key_column, '')).strip() != ''
+        
+        if has_award_number:
+            # If we were building a previous entry, save it
+            if current_entry is not None:
+                result.append(current_entry)
+            
+            # Start a new entry
+            current_entry = row_dict
+        else:
+            # This is a continuation row - merge with current entry
+            if current_entry is not None:
+                for col in df.columns:
+                    # Get the value of the continuation cell
+                    cell_value = row_dict.get(col)
+                    
+                    # Skip empty cells in continuation rows
+                    if pd.isna(cell_value) or str(cell_value).strip() == '':
+                        continue
+                    
+                    # If the current entry has this field and it's a string, append the continuation
+                    if col in current_entry and isinstance(current_entry[col], str) and isinstance(cell_value, str):
+                        current_entry[col] = f"{current_entry[col]} {cell_value}"
+                    # If the field is empty in the current entry, use the continuation value
+                    elif col not in current_entry or pd.isna(current_entry[col]) or str(current_entry[col]).strip() == '':
+                        current_entry[col] = cell_value
+    
+    # Don't forget to add the last entry
+    if current_entry is not None:
+        result.append(current_entry)
+    
+    # Create a new DataFrame from the merged entries
+    return pd.DataFrame(result)
 
 def get_nih_reporter_data_individual(project_numbers, cache_file="terminated_cache/terminated_grants_reporter_cache.json", not_found_cache_file="terminated_cache/not_found_cache.json", limit=None):
     """
