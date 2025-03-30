@@ -1,5 +1,8 @@
 name: Update NIH Reporter Data
 on:
+  push:
+    branches:
+      - refactor_structure
   schedule:
     - cron: '0 0 * * *' # Run at midnight every day
   workflow_dispatch: # Allow manual triggers
