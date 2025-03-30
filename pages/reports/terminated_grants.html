@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <title>Terminated grants in the Tracking Accountability in Government Grants System</title>
+  
+  <!-- Include DataTables CSS -->
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/searchpanes/2.0.0/css/searchPanes.dataTables.min.css">
+  <link rel="stylesheet" href="https://cdn.datatables.net/select/1.3.4/css/select.dataTables.min.css">
+
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+      padding: 20px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1, h2 {
+      color: #333;
+    }
+    .container {
+      margin-top: 20px;
+    }
+    .loading {
+      text-align: center;
+      margin: 50px 0;
+      font-size: 18px;
+    }
+    #grants-table {
+      width: 100%;
+    }
+    .dataTables_wrapper {
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Terminated grants in the Tracking Accountability in Government Grants System</h1>
+  <div class="container">
+    <div id="loading" class="loading">Loading data...</div>
+    <table id="grants-table" class="display" style="width:100%; display:none;">
+      <thead>
+        <!-- Headers will be populated dynamically -->
+      </thead>
+      <tbody>
+        <!-- Data will be populated dynamically -->
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Include JavaScript libraries -->
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.2.2/js/dataTables.buttons.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.html5.min.js"></script>
+  <script src="https://cdn.datatables.net/searchpanes/2.0.0/js/dataTables.searchPanes.min.js"></script>
+  <script src="https://cdn.datatables.net/select/1.3.4/js/dataTables.select.min.js"></script>
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+  <script src="https://cdn.datatables.net/buttons/2.2.2/js/buttons.print.min.js"></script>
+
+  <script>
+    $(document).ready(function() {
+      // Specify your CSV file path
+      const csvFilePath = 'data/processed/taggs/HHS_Grants_Terminated.csv';
+      
+      // Use PapaParse to fetch and parse the CSV
+      Papa.parse(csvFilePath, {
+        download: true,
+        header: true,
+        skipEmptyLines: true,
+        complete: function(results) {
+          // Hide loading message
+          $('#loading').hide();
+          
+          // Get headers
+          const headers = results.meta.fields;
+          
+          // Create table headers
+          let headerRow = '';
+          headers.forEach(header => {
+            headerRow += `<th>${header}</th>`;
+          });
+          $('#grants-table thead').append(`<tr>${headerRow}</tr>`);
+          
+          // Show the table
+          $('#grants-table').show();
+          
+          // Initialize DataTable
+          $('#grants-table').DataTable({
+            data: results.data,
+            columns: headers.map(header => ({ data: header, title: header })),
+            dom: 'BPlfrtip',
+            buttons: [
+              {
+                extend: 'copy',
+                exportOptions: { orthogonal: 'export' }
+              },
+              {
+                extend: 'csv',
+                exportOptions: { orthogonal: 'export' }
+              },
+              {
+                extend: 'excel',
+                exportOptions: { orthogonal: 'export' }
+              }
+            ],
+            searchPanes: {
+              layout: 'columns-4',
+              initCollapsed: true,
+              cascadePanes: true
+            },
+            columnDefs: [
+              {
+                // Enable these columns in SearchPanes
+                searchPanes: { show: true },
+                targets: [
+                  headers.indexOf('Organization_State'), 
+                  headers.indexOf('Organization_City'),
+                  headers.indexOf('Funding_Institutes')
+                ]
+              },
+              {
+                targets: headers.indexOf('Project_Terms'),
+                render: function(data, type, row) {
+                  if (type === 'export' || type === 'sort' || type === 'filter') {
+                    return data;
+                  }
+                  if (data && data.length > 100) {
+                    return `<span title="${data.replace(/"/g, '&quot;')}">${data.substr(0, 100)}...</span>`;
+                  }
+                  return data;
+                }
+              },
+              {
+                // Format numeric columns
+                targets: [
+                  headers.indexOf('Total Amount Obligated'), 
+                  headers.indexOf('Total Amount Expended'), 
+                  headers.indexOf('Total Payment Amount (As of Termination)'),
+                  headers.indexOf('Unliquidated Obligations (As of Termination)')
+                ],
+                render: function(data, type) {
+                  if (type === 'export' || type === 'sort' || type === 'filter') {
+                    return data;
+                  }
+                  if (data === null || data === undefined || isNaN(Number(data))) {
+                    return data;
+                  }
+                  return new Intl.NumberFormat('en-US').format(data);
+                }
+              }
+            ],
+            pageLength: 25,
+            responsive: true,
+            paging: true,
+            pagingType: 'full_numbers'
+          });
+        },
+        error: function(error) {
+          $('#loading').html(`Error loading data: ${error}`);
+          console.error('Error loading CSV:', error);
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,5 +1,8 @@
 name: Update NIH Reporter Data
 on:
+  push:
+    branches:
+      - main
   schedule:
     - cron: '0 0 * * *' # Run at midnight every day
   workflow_dispatch: # Allow manual triggers
@@ -16,39 +19,50 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+      - name: Set up JDK 11 # needed for tabula-py
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '11'
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests plotly numpy kaleido bs4 pandas zstandard tabula-py
       - name: Run update script
         run: |
-          python cumulative_grants_by_award_date.py --force-refresh
+          python utils/data-processors/find_reporter_cumulative_grants.py --force-refresh
       - name: Run federal register script
         run: |
-          python cumulative_fr_announcements.py
+          python utils/data-processors/find_federal_register_announcements.py
       - name: Run terminated grants script
         run: |
-          python extract_terminated_grants.py
+          python utils/data-processors/find_taggs_terminated_grants.py
       - name: Commit and push if changes exist
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          # Add cache directories for both scripts
-          git add cache/*.json
-          git add fr_cache/**/*
-          git add terminated_cache/*.json
+          
+          # Add cache directories for all scripts
+          git add cache/reporter/*.json
+          git add cache/federal_register/**/*
+          git add cache/taggs/*.json
+          
           # Add output files from cumulate_grants scripts
-          git add nih_awards.html
-          git add nih_awards.png
-          git add nih_award_amounts.html
-          git add nih_award_amounts.png
-          git add nih_awards_all.csv.zst
+          git add pages/reports/nih_awards.html
+          git add pages/assets/images/nih_awards.png
+          git add pages/reports/nih_award_amounts.html
+          git add pages/assets/images/nih_award_amounts.png
+          git add data/processed/reporter/nih_awards_all.csv.zst
+          
           # Add output files from federal register scripts
-          git add nih_fr_meetings.html
-          git add nih_fr_meetings.png
-          git add nih_fr_meetings_all.csv.zst
+          git add pages/reports/nih_fr_meetings.html
+          git add pages/assets/images/nih_fr_meetings.png
+          git add data/processed/federal_register/nih_fr_meetings_all.csv.zst
+          
           # Add output files from terminated grants scripts
-          git add terminated_grants.html
-          git add HHS_Grants_Terminated.csv
-          git add HHS_Grants_Terminated.pdf
-          git diff --quiet && git diff --staged --quiet || (git commit -m "Update NIH Reporter data $(date +'%Y-%m-%d')" && git push)
+          git add pages/reports/terminated_grants.html
+          git add data/processed/taggs/hhs_grants_terminated.csv
+          
+          # Commit if there are changes
+          git diff --staged --quiet || git commit -m "Update NIH data"
+          git push
