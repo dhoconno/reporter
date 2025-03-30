@@ -17,15 +17,15 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3  # latest version
         with:
           fetch-depth: 0
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v4  # latest version
         with:
           python-version: '3.10'
       - name: Set up JDK 11 # needed for tabula-py
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v3  # latest version
         with:
           distribution: 'temurin'
           java-version: '11'
@@ -74,13 +74,13 @@ jobs:
           
       # GitHub Pages deployment steps (added directly to the update-data job)
       - name: Setup Pages
-        uses: actions/configure-pages
+        uses: actions/configure-pages@v3  # specifying latest version
         
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact
+        uses: actions/upload-pages-artifact@v2  # specifying latest version
         with:
           path: 'pages'  # Upload the pages directory
           
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages
+        uses: actions/deploy-pages@v2  # specifying latest version
