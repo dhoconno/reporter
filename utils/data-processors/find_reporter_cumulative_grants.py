@@ -15,12 +15,26 @@ import requests
 import numpy as np
 import plotly.graph_objects as go
 import colorsys
+import os
+
+# Define base directory and output directories
+REPORTS_DIR = "pages/reports"
+ASSETS_DIR = "pages/assets"
+
+# Ensure the output directories exist
+os.makedirs(REPORTS_DIR, exist_ok=True)
+os.makedirs(ASSETS_DIR, exist_ok=True)
+
+# Use a local cache directory
+cache_base_dir = "cache/reporter"
+os.makedirs(cache_base_dir, exist_ok=True)
+print("Local cache directory created:", cache_base_dir)
 
 API_URL = "https://api.reporter.nih.gov/v2/projects/search"
 
 
 class NIHReporterCache:
-    def __init__(self, cache_dir="cache"):
+    def __init__(self, cache_dir=cache_base_dir):
         """Initialize cache in the specified directory."""
         self.cache_dir = Path(cache_dir)
         self.cache_dir.mkdir(exist_ok=True)
@@ -63,21 +77,31 @@ class NIHReporterCache:
             "fetch_date": datetime.date.today().strftime("%Y-%m-%d"),
             "grants": grants,
         }
-        with open(cache_path, "w") as f:
-            json.dump(data, f)
+        try:
+            with open(cache_path, 'w') as f:
+                json.dump(data, f)
+            print(f"Cache saved: {cache_path}")
+        except Exception as e:
+            print(f"Error saving cache for {year}-{month:02d}: {e}")
 
 
 def create_ic_plots_dir():
     """Create directory for institute-specific plots if it doesn't exist."""
-    ic_plots_dir = Path("ic_plots")
-    ic_plots_dir.mkdir(exist_ok=True)
-    print(f"Ensuring IC plots directory exists: {ic_plots_dir}")
-    return ic_plots_dir
+    # HTML files go to pages/reports
+    ic_plots_html_dir = REPORTS_DIR
+    # PNG files go to pages/assets
+    ic_plots_png_dir = ASSETS_DIR
+    
+    print(f"Ensuring IC plots HTML directory exists: {ic_plots_html_dir}")
+    print(f"Ensuring IC plots PNG directory exists: {ic_plots_png_dir}")
+    
+    return ic_plots_html_dir, ic_plots_png_dir
+
 
 def plot_ic_data(data_counts, data_amounts, ic_data, current_ics, current_year, cutoff_day):
     """Generate institute-specific plots for each IC."""
     print("\nGenerating per-IC plots...")
-    ic_plots_dir = create_ic_plots_dir()
+    ic_plots_html_dir, ic_plots_png_dir = create_ic_plots_dir()
     
     # Get all ICs across all years
     all_ics = set()
@@ -125,14 +149,15 @@ def plot_ic_data(data_counts, data_amounts, ic_data, current_ics, current_year, 
         # Only create plots if we have data
         if any(len(counts) > 0 for counts in ic_data_counts.values()):
             # Plot count data
-            output_filename = f"ic_plots/nih_awards_{ic}"
+            output_filename = f"{REPORTS_DIR}/nih_awards_{ic}"
             plot_cumulative_data(cum_counts, ic_data, {ic}, current_year, 
                                 colors=colors, output_filename=output_filename)
             
             # Plot amount data
-            output_filename = f"ic_plots/nih_award_amounts_{ic}"
+            output_filename = f"{REPORTS_DIR}/nih_award_amounts_{ic}"
             plot_cumulative_amounts(cum_amounts, ic_data, {ic}, current_year,
                                    colors=colors, output_filename=output_filename)
+
 
 def get_pastel_color(i, total):
     """Generate a pastel color using HLS conversion."""
@@ -360,6 +385,7 @@ def fetch_all_grants_by_month(start_year, current_year, cutoff_date, force_refre
     validation_info = {"monthly_warnings": monthly_warnings}
     return data_by_year_counts, data_by_year_amounts, ic_data_by_year, current_ics, validation_info, all_award_date_grants
 
+
 def create_cumulative_counts(data_counts, cutoff_day):
     """
     Create cumulative counts data for plotting.
@@ -451,6 +477,7 @@ def create_cumulative_amounts(year_awards, cutoff):
         cum_data[year] = (dates_array, np.cumsum(amounts))
     return cum_data
 
+
 def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_interval=7, colors=None, output_filename="nih_awards", validation_info=None):
     """
     Plot cumulative NIH awards (YTD) by award notice date.
@@ -540,9 +567,10 @@ def plot_cumulative_data(cum_data, ic_data, current_ics, current_year, tick_inte
     )
     html_file = f"{output_filename}.html"
     fig.write_html(html_file, full_html=True, include_plotlyjs="cdn")
-    png_file = f"{output_filename}.png"
+    png_file = f"{ASSETS_DIR}/{output_filename.split('/')[-1]}.png"
     fig.write_image(png_file, width=1200, height=800, scale=2)
     print(f"Count plots saved as {html_file} and {png_file}")
+
 
 def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_interval=7, colors=None, output_filename="nih_award_amounts", validation_info=None):
     """
@@ -633,9 +661,10 @@ def plot_cumulative_amounts(cum_data, ic_data, current_ics, current_year, tick_i
     )
     html_file = f"{output_filename}.html"
     fig.write_html(html_file, full_html=True, include_plotlyjs="cdn")
-    png_file = f"{output_filename}.png"
+    png_file = f"{ASSETS_DIR}/{output_filename.split('/')[-1]}.png"
     fig.write_image(png_file, width=1200, height=800, scale=2)
     print(f"Award amount plots saved as {html_file} and {png_file}")
+
 
 def save_grants_list(all_award_date_grants, output_filename="nih_awards_all"):
     """
@@ -673,7 +702,7 @@ def save_grants_list(all_award_date_grants, output_filename="nih_awards_all"):
     df = pd.DataFrame(records)
     df.sort_values(by="award_date", inplace=True)
     
-    csv_file = f"{output_filename}.csv"
+    csv_file = f"{REPORTS_DIR}/{output_filename}.csv"
     df.to_csv(csv_file, index=False)
     compressed_file = f"{csv_file}.zst"
     with open(csv_file, "rb") as f_in:
@@ -683,6 +712,7 @@ def save_grants_list(all_award_date_grants, output_filename="nih_awards_all"):
     with open(compressed_file, "wb") as f_out:
         f_out.write(compressed)
     print(f"Grants list saved and compressed as {compressed_file}")
+
 
 def check_api_freshness():
     """Query the API for the most recent legitimate grant to check data freshness."""
@@ -981,7 +1011,7 @@ def main():
         current_year,
         tick_interval=7,
         colors=colors,
-        output_filename="nih_awards",
+        output_filename=f"{REPORTS_DIR}/nih_awards",
         validation_info=validation_info,
     )
 
@@ -993,7 +1023,7 @@ def main():
         current_year,
         tick_interval=7,
         colors=colors,
-        output_filename="nih_award_amounts",
+        output_filename=f"{REPORTS_DIR}/nih_award_amounts",
         validation_info=validation_info,
     )
 
