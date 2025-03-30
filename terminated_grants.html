@@ -111,6 +111,21 @@
                                     headers.indexOf('Organization_City'),
                                     headers.indexOf('Funding_Institutes')
                                 ]
+                            },
+                            // Add this new columnDef for Project_Terms
+                            {
+                                targets: headers.indexOf('Project_Terms'),
+                                render: function(data, type, row) {
+                                    // For sorting and filtering, use the full data
+                                    if (type === 'sort' || type === 'filter') {
+                                        return data;
+                                    }
+                                    // For display, truncate to 100 characters and add tooltip
+                                    if (data && data.length > 100) {
+                                        return `<span title="${data.replace(/"/g, '&quot;')}">${data.substr(0, 100)}...</span>`;
+                                    }
+                                    return data;
+                                }
                             }
                         ],
                         pageLength: 25,
