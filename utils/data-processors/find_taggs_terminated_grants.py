@@ -497,11 +497,11 @@ def main():
         
         # Save the FULL dataset of all HHS grants (for reference)
         # Some CDC and other grants may not parse correctly
-        results_dir = base_dir / "data" / "taggs"
+        results_dir = Path("data/processed/taggs")
         if not results_dir.exists():
             results_dir.mkdir(parents=True, exist_ok=True)
             
-        full_csv_path = results_dir / "HHS_Grants_Terminated.csv"
+        full_csv_path = f"{results_dir}/hhs_grants_terminated.csv"
         enriched_df.to_csv(full_csv_path, 
                   index=False,
                   float_format='%.2f',

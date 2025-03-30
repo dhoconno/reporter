@@ -38,26 +38,25 @@ jobs:
           git config --global user.email "action@github.com"
           
           # Add cache directories for all scripts
-          git add cache/grants/*.json
-          git add cache/federal-register/**/*
-          git add cache/taggs/terminated_cache/*.json
+          git add cache/reporter/*.json
+          git add cache/federal_register/**/*
+          git add cache/taggs/*.json
           
           # Add output files from cumulate_grants scripts
           git add pages/reports/nih_awards.html
           git add pages/assets/images/nih_awards.png
           git add pages/reports/nih_award_amounts.html
           git add pages/assets/images/nih_award_amounts.png
-          git add results/grants/nih_awards_all.csv.zst
+          git add data/processed/reporter/nih_awards_all.csv.zst
           
           # Add output files from federal register scripts
           git add pages/reports/nih_fr_meetings.html
           git add pages/assets/images/nih_fr_meetings.png
-          git add results/federal-register/nih_fr_meetings_all.csv.zst
+          git add data/processed/federal_register/nih_fr_meetings_all.csv.zst
           
           # Add output files from terminated grants scripts
           git add pages/reports/terminated_grants.html
-          git add results/taggs/HHS_Grants_Terminated.csv
-          git add results/taggs/NIH_Grants_Terminated.csv
+          git add data/processed/taggs/hhs_grants_terminated.csv
           
           # Commit if there are changes
           git diff --staged --quiet || git commit -m "Update NIH data"
