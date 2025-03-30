@@ -495,8 +495,7 @@ def main():
         print("\nFirst few rows of filtered data:")
         print(filtered_df.head(5))
         
-        # Save the FULL dataset of all HHS grants (for reference)
-        # Some CDC and other grants may not parse correctly
+        # Save the dataset of all HHS grants to the data folder
         results_dir = Path("data/processed/taggs")
         if not results_dir.exists():
             results_dir.mkdir(parents=True, exist_ok=True)
@@ -509,6 +508,19 @@ def main():
                   encoding='utf-8',
                   lineterminator='\n')
         print(f"\nFull dataset saved to {full_csv_path}")
+        
+        # Also save a copy of the CSV file to pages/assets/csv
+        assets_dir = Path("pages/assets/csv")
+        if not assets_dir.exists():
+            assets_dir.mkdir(parents=True, exist_ok=True)
+        assets_csv_path = f"{assets_dir}/hhs_grants_terminated.csv"
+        enriched_df.to_csv(assets_csv_path, 
+                  index=False,
+                  float_format='%.2f',
+                  quoting=1,
+                  encoding='utf-8',
+                  lineterminator='\n')
+        print(f"\nCSV copy saved to {assets_csv_path}")
         
     else:
         print("Failed to download PDF")
