@@ -78,6 +78,8 @@ jobs:
         
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3  # updated to latest version to avoid deprecation issues
+        with:
+          path: 'pages'  # Specify the directory containing your site's content
           
       - name: Deploy to GitHub Pages
         id: deployment
