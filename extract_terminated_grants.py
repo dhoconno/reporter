@@ -457,6 +457,8 @@ def main():
     # Set up paths
     pdf_url = "https://taggs.hhs.gov/Content/Data/HHS_Grants_Terminated.pdf"
     pdf_path = Path("HHS_Grants_Terminated.pdf")
+    nih_pdf_path = Path("NIH_Grants_Terminated.pdf")
+    hhs_pdf_path = Path("HHS_Grants_Terminated.pdf")
     
     # Download PDF
     print("Downloading PDF...")
@@ -469,30 +471,51 @@ def main():
         
         # Basic data cleaning
         df = df.dropna(how='all')  # Remove empty rows
+        original_count = len(df)
+        print(f"\nOriginal record count: {original_count}")
 
-        # Enrich with NIH RePORTER data - start with just 10 entries
+        # Enrich with NIH RePORTER data
         print("\nFetching additional data from NIH RePORTER...")
-        # df = enrich_dataframe_with_reporter_data(df, limit=10) #testing with 10 entries
-        # Uncomment the following line to process all entries
-        df = enrich_dataframe_with_reporter_data(df)
+        enriched_df = enrich_dataframe_with_reporter_data(df)
         
-        # Display basic information about the data
-        print("\nDataFrame Info:")
-        print(df.info())
+        # FILTER: Only keep records that have RePORTER data
+        filtered_df = enriched_df[~enriched_df['Organization_City'].isna()]
+        filtered_count = len(filtered_df)
+        
+        print(f"\nFiltering results to only include RePORTER entries:")
+        print(f"  - Original records: {original_count}")
+        print(f"  - Records with RePORTER data: {filtered_count}")
+        print(f"  - Records removed: {original_count - filtered_count}")
+        
+        # Display basic information about the filtered data
+        print("\nFiltered DataFrame Info:")
+        print(filtered_df.info())
         
         # Display first few rows
-        print("\nFirst few rows of data:")
-        print(df.head(10))
+        print("\nFirst few rows of filtered data:")
+        print(filtered_df.head(5))
         
-        # Save to CSV with specific formatting
-        csv_path = pdf_path.with_suffix('.csv')
-        df.to_csv(csv_path, 
+        # Save the FULL dataset of all HHS grants (for reference)
+        # Some CDC and other grants may not parse correctly
+        full_csv_path = Path("HHS_Grants_Terminated.csv")
+        enriched_df.to_csv(full_csv_path, 
                   index=False,
-                  float_format='%.2f',  # Format numbers with 2 decimal places
-                  quoting=1,           # Quote only when necessary
+                  float_format='%.2f',
+                  quoting=1,
                   encoding='utf-8',
-                  lineterminator='\n')  # Ensure consistent line endings
-        print(f"\nData saved to {csv_path}")
+                  lineterminator='\n')
+        print(f"\nFull dataset saved to {full_csv_path}")
+        
+        # Save only the FILTERED dataset to the main CSV file
+        # This includes only the NIH grants with RePORTER data
+        csv_path = Path("NIH_Grants_Terminated.csv")
+        filtered_df.to_csv(csv_path, 
+                  index=False,
+                  float_format='%.2f',
+                  quoting=1,
+                  encoding='utf-8',
+                  lineterminator='\n')
+        print(f"\nFiltered dataset saved to {csv_path}")
         
     else:
         print("Failed to download PDF")
