@@ -149,6 +149,28 @@
                                     }
                                     return data;
                                 }
+                            },
+                            {
+                                // Target columns containing numeric data - adjust these indices based on your data
+                                targets: [
+                                    headers.indexOf('Total Amount Obligated'), 
+                                    headers.indexOf('Total Amount Expended'), 
+                                    headers.indexOf('Total Payment Amount (As of Termination Date)'),
+                                ],
+                                render: function(data, type, row) {
+                                    // For export, sort, and filter, use the original data
+                                    if (type === 'export' || type === 'sort' || type === 'filter') {
+                                        return data;
+                                    }
+                                    
+                                    // Skip if data is null, undefined, or not a number
+                                    if (data === null || data === undefined || isNaN(Number(data))) {
+                                        return data;
+                                    }
+                                    
+                                    // Format the number with thousands separators
+                                    return new Intl.NumberFormat('en-US').format(data);
+                                }
                             }
                         ],
                         pageLength: 25,
