@@ -26,6 +26,9 @@ jobs:
       - name: Run federal register script
         run: |
           python cumulative_fr_announcements.py
+      - name: Run terminated grants script
+        run: |
+          python extract_terminated_grants.py
       - name: Commit and push if changes exist
         run: |
           git config --global user.name "GitHub Action"
@@ -33,14 +36,19 @@ jobs:
           # Add cache directories for both scripts
           git add cache/*.json
           git add fr_cache/**/*
-          # Add output files from the first script
+          git add terminated_cache/*.json
+          # Add output files from cumulate_grants scripts
           git add nih_awards.html
           git add nih_awards.png
           git add nih_award_amounts.html
           git add nih_award_amounts.png
           git add nih_awards_all.csv.zst
-          # Add output files from the second script
+          # Add output files from federal register scripts
           git add nih_fr_meetings.html
           git add nih_fr_meetings.png
           git add nih_fr_meetings_all.csv.zst
+          # Add output files from terminated grants scripts
+          git add terminated_grants.html
+          git add HHS_Grants_Terminated.csv
+          git add HHS_Grants_Terminated.pdf
           git diff --quiet && git diff --staged --quiet || (git commit -m "Update NIH Reporter data $(date +'%Y-%m-%d')" && git push)
