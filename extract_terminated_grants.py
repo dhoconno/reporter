@@ -94,22 +94,30 @@ def extract_data_from_pdf(pdf_path):
 def merge_continuation_rows(df):
     """
     Merge rows that are continuations of previous rows.
-    A row is considered a continuation if it's missing an Award Number.
+    A row is considered a continuation if it's missing key identifiers.
     """
     # Create a new dataframe to build our merged results
     result = []
     current_entry = None
     
-    # Award Number is our key identifier for main entries
-    key_column = 'Award Number'
+    # Key columns that should have values in each main entry
+    key_columns = ['Award Number', 'FAIN', 'Awarding Office', 'Recipient Name']
+    # All columns that should be single-valued per entry
+    important_columns = key_columns + ['Action Date (Date Terminated)', 'Award Title']
     
     for _, row in df.iterrows():
         row_dict = row.to_dict()
         
-        # Check if this is a main entry (has Award Number) or a continuation
-        has_award_number = not pd.isna(row_dict.get(key_column)) and str(row_dict.get(key_column, '')).strip() != ''
+        # Count how many key columns have values
+        keys_with_values = sum(1 for col in key_columns 
+                              if col in row_dict and not pd.isna(row_dict.get(col)) 
+                              and str(row_dict.get(col, '')).strip() != '')
         
-        if has_award_number:
+        # If at least two key columns have values, consider it a main entry
+        # This is more robust than just checking Award Number
+        is_main_entry = keys_with_values >= 2
+        
+        if is_main_entry:
             # If we were building a previous entry, save it
             if current_entry is not None:
                 result.append(current_entry)
@@ -127,12 +135,22 @@ def merge_continuation_rows(df):
                     if pd.isna(cell_value) or str(cell_value).strip() == '':
                         continue
                     
-                    # If the current entry has this field and it's a string, append the continuation
-                    if col in current_entry and isinstance(current_entry[col], str) and isinstance(cell_value, str):
-                        current_entry[col] = f"{current_entry[col]} {cell_value}"
-                    # If the field is empty in the current entry, use the continuation value
-                    elif col not in current_entry or pd.isna(current_entry[col]) or str(current_entry[col]).strip() == '':
-                        current_entry[col] = cell_value
+                    # Process based on column type
+                    if col in important_columns:
+                        # For important columns, always append with space if not empty
+                        if col in current_entry and isinstance(current_entry[col], str) and isinstance(cell_value, str):
+                            if current_entry[col].strip() != '':
+                                current_entry[col] = f"{current_entry[col]} {cell_value}"
+                            else:
+                                current_entry[col] = cell_value
+                        elif col not in current_entry or pd.isna(current_entry[col]) or str(current_entry[col]).strip() == '':
+                            current_entry[col] = cell_value
+                    else:
+                        # For other columns, use the same logic as before
+                        if col in current_entry and isinstance(current_entry[col], str) and isinstance(cell_value, str):
+                            current_entry[col] = f"{current_entry[col]} {cell_value}"
+                        elif col not in current_entry or pd.isna(current_entry[col]) or str(current_entry[col]).strip() == '':
+                            current_entry[col] = cell_value
     
     # Don't forget to add the last entry
     if current_entry is not None:
