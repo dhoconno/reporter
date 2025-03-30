@@ -155,7 +155,8 @@
                                 targets: [
                                     headers.indexOf('Total Amount Obligated'), 
                                     headers.indexOf('Total Amount Expended'), 
-                                    headers.indexOf('Total Payment Amount (As of Termination Date)'),
+                                    headers.indexOf('Total Payment Amount (As of Termination)'),
+                                    headers.indexOf('Unliquidated Obligations (As of Termination)')
                                 ],
                                 render: function(data, type, row) {
                                     // For export, sort, and filter, use the original data
