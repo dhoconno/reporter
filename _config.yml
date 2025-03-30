@@ -1,0 +1,9 @@
+# _config.yml
+
+# Exclude directories or files from processing
+exclude:
+  - cache
+  - fr_cache
+  - ic_plots
+  - terminated_cache
+  - utils
