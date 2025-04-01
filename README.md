@@ -9,7 +9,7 @@ The first few months of the new administration have brought significant changes 
 ## Federal register
 Under the [Federal Advisory Committee Act](https://www.gsa.gov/policy-regulations/policy/federal-advisory-committee-management/legislation-and-regulations/federal-advisory-committee-act) study sections that review NIH grants need to be announced in the [Federal Register](https://www.federalregister.gov) at least 15 days before the study section meets. I parsed the meetings from Federal Register notices and created plots comparing the current year to the previous nine years.
 
-- [Cumulative Federal Register Study Section Announcements)](https://dhoconno.github.io/reporter/reports/nih_fr_meetings.html)
+- [Cumulative Federal Register Study Section Announcements](https://dhoconno.github.io/reporter/reports/nih_fr_meetings.html)
 
 ## Tracking Accountability in Government Grants System (TAGGS) 
 The [Health and Human Services Tracking Accountability in Government Grants System (TAGGS) website](https://taggs.hhs.gov) has a link to a PDF of awards that have been terminated. The PDF is not easy to explore and does not contain context (e.g,. investigators, keywords) that may be useful for analysis.
