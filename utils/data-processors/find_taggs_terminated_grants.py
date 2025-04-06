@@ -364,6 +364,28 @@ def parse_project_terms(terms_string):
     # Join with semicolons
     return '; '.join(terms_list)
 
+def clean_project_number(project_num):
+    """
+    Clean project numbers to ensure compatibility with NIH RePORTER API.
+    Removes spaces, handles formats like '5 K01 AG065440-05' properly.
+    
+    Args:
+        project_num: The original grant/project number
+    
+    Returns:
+        Cleaned project number suitable for NIH RePORTER lookups
+    """
+    if not project_num or not isinstance(project_num, str):
+        return project_num
+    
+    # Remove all spaces
+    cleaned = project_num.strip().replace(' ', '')
+    
+    # Handle special cases for NIH grants
+    # NIH grants often follow format: <activity code><institute code><serial number>-<year/suffix>
+    # We want to preserve this structure for the API lookup
+    return cleaned
+
 def enrich_dataframe_with_reporter_data(df, limit=None):
     """
     Add NIH RePORTER data to the DataFrame using individual processing with caching
@@ -375,7 +397,11 @@ def enrich_dataframe_with_reporter_data(df, limit=None):
     Returns:
         DataFrame with added RePORTER data
     """
-    project_numbers = df['Award Number'].dropna().unique().tolist()
+    # Create a new column with cleaned project numbers
+    df['Clean_Award_Number'] = df['Award Number'].apply(clean_project_number)
+    
+    # Use the clean project numbers for API lookups
+    project_numbers = df['Clean_Award_Number'].dropna().unique().tolist()
     print(f"\nFound {len(project_numbers)} unique grant numbers")
     
     # Use both caches (regular and not-found)
@@ -428,7 +454,7 @@ def enrich_dataframe_with_reporter_data(df, limit=None):
         
         if project_number:
             reporter_data.append({
-                'Award Number': project_number,
+                'Clean_Award_Number': project_number,
                 'Organization_City': org.get('org_city', ''),
                 'Organization_State': org.get('org_state', ''),
                 'Organization_Country': org.get('org_country', ''),
@@ -443,8 +469,11 @@ def enrich_dataframe_with_reporter_data(df, limit=None):
         print(f"\nAdding RePORTER data for {len(reporter_df)} grants")
         print("Columns in reporter_df:", reporter_df.columns.tolist())
         
-        # Use 'Award Number' for joining
-        merged_df = pd.merge(df, reporter_df, on='Award Number', how='left')
+        # Use 'Clean_Award_Number' for joining instead of 'Award Number'
+        merged_df = pd.merge(df, reporter_df, on='Clean_Award_Number', how='left')
+        
+        # Remove the temporary column used for joining
+        merged_df = merged_df.drop(columns=['Clean_Award_Number'])
         
         # Count how many records were enriched
         enriched_count = merged_df[~merged_df['Organization_City'].isna()].shape[0]
