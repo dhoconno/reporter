@@ -69,28 +69,119 @@ def clean_dataframe(df):
 
 def extract_data_from_pdf(pdf_path):
     """Extract tables from PDF into a pandas DataFrame"""
-    tables = tabula.read_pdf(
-        pdf_path,
-        pages='all',
-        lattice=True,
-        multiple_tables=True,
-        pandas_options={'header': None}
-    )
-    df = pd.concat(tables, ignore_index=True)
-    # Use the first row as headers, then remove it from the DataFrame
-    df.columns = df.iloc[0]
-    df = df.iloc[1:].reset_index(drop=True)
+    print(f"Attempting to extract tables from {pdf_path}")
     
-    # Merge continuation rows before other processing
-    df = merge_continuation_rows(df)
-    
-    # Remove rows where "Awarding Office" equals "Awarding Office" or any column contains "FAIN"
-    df = df[~df.apply(lambda x: x.astype(str).str.contains('FAIN', case=False)).any(axis=1)]
-    # Remove completely empty columns
-    df = df.dropna(axis=1, how='all')
-    # Clean the DataFrame
-    df = clean_dataframe(df)
-    return df
+    # Check if PDF exists and has content
+    if not os.path.exists(pdf_path):
+        print(f"ERROR: PDF file not found at {pdf_path}")
+        return pd.DataFrame()
+        
+    if os.path.getsize(pdf_path) == 0:
+        print(f"ERROR: PDF file is empty at {pdf_path}")
+        return pd.DataFrame()
+        
+    try:
+        # First, try to extract tables with area and stream mode for better header parsing
+        tables = tabula.read_pdf(
+            pdf_path,
+            pages='all',
+            lattice=True,
+            multiple_tables=True,
+            pandas_options={'header': None}
+        )
+        
+        print(f"Extracted {len(tables)} tables from PDF")
+        
+        if not tables or len(tables) == 0:
+            print("ERROR: No tables were extracted from the PDF")
+            return pd.DataFrame()
+            
+        # Define expected column headers based on the PDF structure
+        expected_headers = [
+            'Awarding Office', 
+            'FAIN', 
+            'Award Number', 
+            'Recipient Name', 
+            'Action Date (Date Terminated)', 
+            'Total Amount Obligated', 
+            'Total Amount Expended', 
+            'Total Payment Amount (As of Termination)', 
+            'Unliquidated Obligations (As of Termination)', 
+            'Award Title', 
+            'Presidential Action', 
+            'For Cause (Put X if applicable)'
+        ]
+        
+        # Process each table to ensure proper headers
+        processed_tables = []
+        
+        for i, table in enumerate(tables):
+            print(f"Processing table {i+1} with shape: {table.shape}")
+            
+            # Skip empty tables
+            if table.empty:
+                continue
+                
+            # Check if this is a header row or data row
+            first_row = table.iloc[0].astype(str).tolist()
+            first_cell = first_row[0] if len(first_row) > 0 else ""
+            
+            # If first table with merged headers, skip it
+            if i == 0 and "Awarding" in first_cell and "FAIN" in first_cell:
+                print(f"Skipping header table {i+1}")
+                continue
+                
+            # For data tables, assign proper column headers
+            if table.shape[1] >= len(expected_headers):
+                table.columns = expected_headers + [f'Extra_{j}' for j in range(table.shape[1] - len(expected_headers))]
+            else:
+                # Pad with NA columns if needed
+                for j in range(table.shape[1], len(expected_headers)):
+                    table[expected_headers[j]] = None
+                table = table[expected_headers]
+                
+            processed_tables.append(table)
+        
+        # Concatenate all processed tables
+        if not processed_tables:
+            print("ERROR: No valid data tables found after processing")
+            return pd.DataFrame()
+            
+        df = pd.concat(processed_tables, ignore_index=True)
+        print(f"Combined DataFrame shape: {df.shape}")
+        
+        # Remove rows that contain header text again
+        header_text = "Awarding Office"
+        df = df[~df['Awarding Office'].astype(str).str.contains(header_text)]
+        
+        # Debug column names
+        print(f"Column names after extraction: {df.columns.tolist()}")
+        
+        # Merge continuation rows
+        df = merge_continuation_rows(df)
+        
+        # Debug column names after merging rows
+        print(f"Column names after merging rows: {df.columns.tolist()}")
+        
+        # Remove rows that still have header-like content
+        df = df[~df.apply(lambda x: x.astype(str).str.contains('FAIN', case=False)).any(axis=1)]
+        
+        # Remove completely empty columns and rows
+        df = df.dropna(axis=1, how='all')
+        df = df.dropna(how='all')
+        
+        # Clean the DataFrame
+        df = clean_dataframe(df)
+        
+        print(f"Final DataFrame shape: {df.shape}")
+        print(f"Final column names: {df.columns.tolist()}")
+        
+        return df
+    except Exception as e:
+        print(f"ERROR extracting data from PDF: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return pd.DataFrame()
 
 def merge_continuation_rows(df):
     """
@@ -497,6 +588,25 @@ def main():
         # Extract data
         print("Extracting data from PDF...")
         df = extract_data_from_pdf(pdf_path)
+        
+        # Check if DataFrame is valid
+        if df.empty:
+            print("ERROR: Failed to extract data from PDF. Exiting.")
+            return
+            
+        # Check if required columns exist
+        required_columns = ['Award Number']
+        missing_columns = [col for col in required_columns if col not in df.columns]
+        if missing_columns:
+            print(f"ERROR: Required columns are missing: {missing_columns}")
+            print(f"Available columns: {df.columns.tolist()}")
+            # Try to find alternative column names that might match
+            for missing_col in missing_columns:
+                # Check for similar column names
+                similar_cols = [col for col in df.columns if missing_col.lower() in col.lower()]
+                if similar_cols:
+                    print(f"Found potential matches for '{missing_col}': {similar_cols}")
+            return
         
         # Basic data cleaning
         df = df.dropna(how='all')  # Remove empty rows
