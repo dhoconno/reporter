@@ -33,6 +33,16 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install requests plotly numpy kaleido bs4 pandas zstandard tabula-py
+      - name: Create output directories
+        run: |
+          mkdir -p cache/reporter
+          mkdir -p cache/federal_register
+          mkdir -p cache/taggs
+          mkdir -p pages/reports
+          mkdir -p pages/assets/images
+          mkdir -p pages/assets/csv
+          mkdir -p data/processed/reporter
+          mkdir -p data/processed/federal_register
       - name: Run update script
         run: |
           python utils/data-processors/find_reporter_cumulative_grants.py --force-refresh
