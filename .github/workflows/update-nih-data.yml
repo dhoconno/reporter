@@ -95,10 +95,10 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           
-          # Add cache and output files
-          git add cache/taggs/*.json
-          git add pages/reports/terminated_grants.html
-          git add pages/assets/csv/hhs_grants_terminated.csv
+          # Add cache files and CSV output (exclude HTML file that doesn't exist)
+          git add -f cache/taggs/*.json || true
+          git add -f data/processed/taggs/hhs_grants_terminated.csv || true
+          git add -f pages/assets/csv/hhs_grants_terminated.csv || true
           
           # Commit if there are changes
           git diff --staged --quiet || git commit -m "Update terminated grants data"
