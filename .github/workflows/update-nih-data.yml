@@ -4,7 +4,7 @@ on:
     branches:
       - main
   schedule:
-    - cron: '0 12 * * *' # Run at midnight every day
+    - cron: '0 12 * * *' # Run at noon every day
   workflow_dispatch: # Allow manual triggers
 permissions:
   contents: write
@@ -45,54 +45,74 @@ jobs:
           mkdir -p data/processed/federal_register
           mkdir -p data/processed/taggs
           mkdir -p data/external
+          
       - name: Run update script
         run: |
           python utils/data-processors/find_reporter_cumulative_grants.py --force-refresh
-      - name: Run federal register script
-        run: |
-          python utils/data-processors/find_federal_register_announcements.py
-      - name: Run terminated grants script
-        run: |
-          python utils/data-processors/find_taggs_terminated_grants.py
-      - name: Commit and push if changes exist
+          
+      - name: Commit reporter data
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           
-          # Add cache directories for all scripts
+          # Add cache and output files
           git add cache/reporter/*.json
-          git add cache/federal_register/**/*
-          git add cache/taggs/*.json
-          
-          # Add output files from cumulate_grants scripts
           git add pages/reports/nih_awards.html
-          git add pages/assets/images/nih_awards.png
+          git add pages/assets/nih_awards.png
           git add pages/reports/nih_award_amounts.html
-          git add pages/assets/images/nih_award_amounts.png
+          git add pages/assets/nih_award_amounts.png
           git add data/processed/reporter/nih_awards_all.csv.zst
           
-          # Add output files from federal register scripts
+          # Commit if there are changes
+          git diff --staged --quiet || git commit -m "Update NIH Reporter data"
+          git push
+          
+      - name: Run federal register script
+        run: |
+          python utils/data-processors/find_federal_register_announcements.py
+          
+      - name: Commit federal register data
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          
+          # Add cache and output files
+          git add cache/federal_register/**/*
           git add pages/reports/nih_fr_meetings.html
-          git add pages/assets/images/nih_fr_meetings.png
+          git add pages/assets/nih_fr_meetings.png
           git add data/processed/federal_register/nih_fr_meetings_all.csv.zst
           
-          # Add output files from terminated grants scripts
+          # Commit if there are changes
+          git diff --staged --quiet || git commit -m "Update Federal Register data"
+          git push
+          
+      - name: Run terminated grants script
+        run: |
+          python utils/data-processors/find_taggs_terminated_grants.py
+          
+      - name: Commit terminated grants data
+        run: |
+          git config --global user.name "GitHub Action"
+          git config --global user.email "action@github.com"
+          
+          # Add cache and output files
+          git add cache/taggs/*.json
           git add pages/reports/terminated_grants.html
           git add pages/assets/csv/hhs_grants_terminated.csv
           
           # Commit if there are changes
-          git diff --staged --quiet || git commit -m "Update NIH data"
+          git diff --staged --quiet || git commit -m "Update terminated grants data"
           git push
           
-      # GitHub Pages deployment steps (added directly to the update-data job)
+      # GitHub Pages deployment steps
       - name: Setup Pages
-        uses: actions/configure-pages@v5  # specifying latest version
+        uses: actions/configure-pages@v5
         
       - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3  # updated to latest version to avoid deprecation issues
+        uses: actions/upload-pages-artifact@v3
         with:
-          path: 'pages'  # Specify the directory containing your site's content
+          path: 'pages'
           
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4  # specifying latest version
+        uses: actions/deploy-pages@v4
