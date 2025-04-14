@@ -43,6 +43,8 @@ jobs:
           mkdir -p pages/assets/csv
           mkdir -p data/processed/reporter
           mkdir -p data/processed/federal_register
+          mkdir -p data/processed/taggs
+          mkdir -p data/external
       - name: Run update script
         run: |
           python utils/data-processors/find_reporter_cumulative_grants.py --force-refresh
