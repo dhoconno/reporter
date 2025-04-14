@@ -55,6 +55,9 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           
+          # Pull latest changes
+          git pull origin main
+          
           # Add cache and output files
           git add cache/reporter/*.json
           git add pages/reports/nih_awards.html
@@ -65,7 +68,7 @@ jobs:
           
           # Commit if there are changes
           git diff --staged --quiet || git commit -m "Update NIH Reporter data"
-          git push
+          git push origin main
           
       - name: Run federal register script
         run: |
@@ -76,6 +79,9 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           
+          # Pull latest changes
+          git pull origin main
+          
           # Add cache and output files
           git add cache/federal_register/**/*
           git add pages/reports/nih_fr_meetings.html
@@ -84,7 +90,7 @@ jobs:
           
           # Commit if there are changes
           git diff --staged --quiet || git commit -m "Update Federal Register data"
-          git push
+          git push origin main
           
       - name: Run terminated grants script
         run: |
@@ -95,6 +101,9 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
           
+          # Pull latest changes
+          git pull origin main
+          
           # Add cache files and CSV output (exclude HTML file that doesn't exist)
           git add -f cache/taggs/*.json || true
           git add -f data/processed/taggs/hhs_grants_terminated.csv || true
@@ -102,7 +111,7 @@ jobs:
           
           # Commit if there are changes
           git diff --staged --quiet || git commit -m "Update terminated grants data"
-          git push
+          git push origin main
           
       # GitHub Pages deployment steps
       - name: Setup Pages
