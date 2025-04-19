@@ -96625,5 +96625,136 @@
     "indirect_cost_amt": 463130,
     "project_detail_url": "https://reporter.nih.gov/project-details/10920445",
     "date_added": "2024-09-07T04:09:48Z"
+  },
+  "3U54GM115516-08S1": {
+    "appl_id": 11037349,
+    "subproject_id": null,
+    "fiscal_year": 2024,
+    "project_num": "3U54GM115516-08S1",
+    "project_serial_num": "GM115516",
+    "organization": {
+      "org_name": "MAINEHEALTH",
+      "city": null,
+      "country": null,
+      "org_city": "PORTLAND",
+      "org_country": "UNITED STATES",
+      "org_state": "ME",
+      "org_state_name": null,
+      "dept_type": null,
+      "fips_country_code": null,
+      "org_duns": [
+        "071732663"
+      ],
+      "org_ueis": [
+        "MAYKB1LWD5U9"
+      ],
+      "primary_duns": "071732663",
+      "primary_uei": "MAYKB1LWD5U9",
+      "org_fips": "US",
+      "org_ipf_code": "4757601",
+      "org_zipcode": "041023175",
+      "external_org_id": 4757601
+    },
+    "award_type": "3",
+    "activity_code": "U54",
+    "award_amount": 248974,
+    "is_active": false,
+    "project_num_split": {
+      "appl_type_code": "3",
+      "activity_code": "U54",
+      "ic_code": "GM",
+      "serial_num": "115516",
+      "support_year": "08",
+      "full_support_year": "08S1",
+      "suffix_code": "S1"
+    },
+    "principal_investigators": [
+      {
+        "profile_id": 1971652,
+        "first_name": "CLIFFORD",
+        "middle_name": "JAMES",
+        "last_name": "ROSEN",
+        "is_contact_pi": true,
+        "full_name": "CLIFFORD JAMES ROSEN",
+        "title": "SENIOR SCIENTIST"
+      },
+      {
+        "profile_id": 1864839,
+        "first_name": "Gary",
+        "middle_name": "S.",
+        "last_name": "Stein",
+        "is_contact_pi": false,
+        "full_name": "Gary S. Stein",
+        "title": ""
+      }
+    ],
+    "contact_pi_name": "ROSEN, CLIFFORD JAMES",
+    "program_officers": [
+      {
+        "first_name": "KYUNGSOOK",
+        "middle_name": "",
+        "last_name": "GARTRELL",
+        "full_name": "KYUNGSOOK  GARTRELL"
+      }
+    ],
+    "agency_ic_admin": {
+      "code": "GM",
+      "abbreviation": "NIGMS",
+      "name": "National Institute of General Medical Sciences"
+    },
+    "agency_ic_fundings": [
+      {
+        "fy": 2024,
+        "code": "GM",
+        "name": "National Institute of General Medical Sciences",
+        "abbreviation": "NIGMS",
+        "total_cost": 248974.0,
+        "direct_cost_ic": 248974.0,
+        "indirect_cost_ic": 0.0
+      }
+    ],
+    "cong_dist": "ME-01",
+    "spending_categories": null,
+    "project_start_date": "2017-07-03T12:07:00Z",
+    "project_end_date": "2025-03-10T12:03:00Z",
+    "organization_type": {
+      "name": "Independent Hospitals",
+      "code": "30",
+      "is_other": false
+    },
+    "geo_lat_lon": {
+      "lon": -70.275471,
+      "lat": 43.653164
+    },
+    "opportunity_number": "PA-20-272",
+    "full_study_section": {
+      "srg_code": "ZGM1",
+      "srg_flex": null,
+      "sra_designator_code": null,
+      "sra_flex_code": null,
+      "group_code": "IC",
+      "name": "ZGM1(IC)"
+    },
+    "award_notice_date": "2024-08-05T12:08:00Z",
+    "is_new": false,
+    "mechanism_code_dc": "RC",
+    "core_project_num": "U54GM115516",
+    "terms": "<Acceleration><Address><Aging><American><Area><Atherosclerosis><Atherosclerotic Cardiovascular Disease><Award><Biometrics><Biometry><Biostatistics><COBRE><COVID crisis><COVID epidemic><COVID pandemic><COVID-19><COVID-19 crisis><COVID-19 epidemic><COVID-19 era><COVID-19 global health crisis><COVID-19 global pandemic><COVID-19 health crisis><COVID-19 pandemic><COVID-19 period><COVID-19 public health crisis><COVID-19 years><CV-19><Cancers><Cardiovascular Diseases><Center of Biomedical Research Excellence><Centers of Research Excellence><Chronic><Clinical Data><Clinical Investigator><Clinical Research><Clinical Study><Clinical Trials><Collaborations><Communication><Communities><Community Health><Community Outreach><Coronavirus Infectious Disease 2019><Coupled><Cultural Diversity><Data><Development><Diabetes Mellitus><Disease><Disorder><EXTMR><Education><Educational aspects><Environment><Environmental Toxin><Epidemiology><Equipment><Evaluation><Extramural><Extramural Activities><Faculty><Foundations><Funding><Funding Mechanisms><Goals><Governing Board><Grant><Groups at risk><HPV vaccination hesitancy><HPV vaccine hesitancy><HPV vaccine hesitant><HRSA><Health><Health Resources and Services Administration><Healthcare><Human Resources><Immigrant><Infrastructure><Institution><Investigators><Leadership><Learning><Link><Maine><Malignant Neoplasms><Malignant Tumor><Manpower><Mentors><Mentorship><Modeling><Multiculturalism><NIH><National Institutes of Health><Native American group><Native American individual><Native American people><Native American population><Native Americans><New England><New Hampshire><Northeastern United States><Obesity><Opiate Addiction><Opiate Dependence><Opiates><Opioid><PASC><Passamaquoddy><Patient Care><Patient Care Delivery><Peer Review><Penobscot><People at risk><Persons at risk><Pilot Projects><Play><Population><Populations at Risk><Post Acute Sequelae of COVID19><Post Acute Sequelae of SARS-CoV-2><Post Acute Sequelae of SARS-CoV2><Post Acute Sequelae of severe acute respiratory syndrome coronavirus 2><Post-Acute Sequelae of SARS-CoV-2 Infection><Predisposition><Primary Care><Public Health><Publications><Registries><Research><Research Design><Research Infrastructure><Research Personnel><Research Resources><Research Support><Researchers><Reservations><Resource Sharing><Resources><Role><Rural><Rural Health><Rural Population><Rural group><Rural people><SARS-CoV-2 epidemic><SARS-CoV-2 global health crisis><SARS-CoV-2 global pandemic><SARS-CoV-2 pandemic><SARS-coronavirus-2 epidemic><SARS-coronavirus-2 pandemic><Scientific Publication><Services><Severe Acute Respiratory Syndrome CoV 2 epidemic><Severe Acute Respiratory Syndrome CoV 2 pandemic><Severe acute respiratory syndrome coronavirus 2 epidemic><Severe acute respiratory syndrome coronavirus 2 pandemic><Site><Study Type><Substance Use Disorder><Substance abuse problem><Susceptibility><Technology><Toxic Environmental Agents><Toxic Environmental Substances><Training><Training Programs><Translational Research><Translational Science><Tribes><United States Health Resources and Services Administration><United States National Institutes of Health><Universities><Urban Population><Vermont><abuse of substances><adiposity><adverse sequelae of COVID><adverse sequelae of COVID-19><adverse sequelae of coronavirus disease><adverse sequelae of coronavirus disease 2019><atheromatosis><atherosclerotic disease><atherosclerotic vascular disease><cardiovascular disorder><care for patients><care of patients><career><caring for patients><chronic COVID-19 sequelae><clinical investigation><cohort><community based design><community based research><community engagement><community involvement><community-based health><continuous learning><coronavirus disease 2019><coronavirus disease 2019 crisis><coronavirus disease 2019 epidemic><coronavirus disease 2019 global health crisis><coronavirus disease 2019 global pandemic><coronavirus disease 2019 health crisis><coronavirus disease 2019 pandemic><coronavirus disease 2019 public health crisis><coronavirus disease crisis><coronavirus disease epidemic><coronavirus disease pandemic><coronavirus disease-19><coronavirus disease-19 global pandemic><coronavirus disease-19 pandemic><coronavirus infectious disease-19><corpulence><developmental><diabetes><differences in health><disparity in health><diversity, equity, and inclusiveness><engagement with communities><environmental toxicant><epidemiologic><epidemiological><equity, diversity, and inclusion><flexibility><flexible><food insecurity><health care><health communication><health difference><health disparity><health equity><hesitant to HPV vaccination><hesitant to human papilloma virus vaccination><human papilloma virus vaccination hesitancy><human papilloma virus vaccine hesitancy><human papilloma virus vaccine hesitant><improved><innovate><innovation><innovative><learning progression><long haul sequelae of COVID-19><long haul sequelae of coronavirus disease 2019><long-term sequelae of COVID-19><long-term sequelae of SARS-CoV-2><long-term sequelae of coronavirus disease 2019><long-term sequelae of severe acute respiratory syndrome coronavirus 2><malignancy><neoplasm/cancer><new approaches><novel><novel approaches><novel strategies><novel strategy><opioid addiction><opioid dependence><opioid dependent><patient centered><patient oriented><personnel><pilot study><post COVID-19 sequelae><post acute sequelae following COVID-19><post-COVID><post-COVID-19><post-acute sequelae following SARS-CoV-2 infection><post-acute sequelae of COVID-19><post-acute sequelae of acute COVID infection><post-acute sequelae of coronavirus disease 2019><post-coronavirus disease 2019><practice-based research network><primary care practice><programs><rural individual><rurality><severe acute respiratory syndrome coronavirus 2 global health crisis><severe acute respiratory syndrome coronavirus 2 global pandemic><social role><study design><substance abuse><substance use and disorder><suburban communities><technical report><telehealth><translation research><translational investigation><under served community><underserved community><urban group><urban individual><urban people><urban under served><urban underserved>",
+    "pref_terms": "Acceleration;Address;Aging;American;Area;Atherosclerosis;Award;Biometry;COVID-19;COVID-19 pandemic;Cardiovascular Diseases;Centers of Research Excellence;Chronic;Clinical Data;Clinical Investigator;Clinical Research;Clinical Trials;Collaborations;Communication;Communities;Community Health;Community Outreach;Coupled;Cultural Diversity;Data;Development;Diabetes Mellitus;Disease;Education;Environment;Epidemiology;Equipment;Evaluation;Extramural Activities;Faculty;Foundations;Funding;Funding Mechanisms;Goals;Governing Board;Grant;HPV vaccine hesitancy;Health;Healthcare;Human Resources;Immigrant;Infrastructure;Institution;Leadership;Learning;Link;Maine;Malignant Neoplasms;Mentors;Mentorship;Modeling;Native American population;Native Americans;New England;New Hampshire;Obesity;Opiate Addiction;Opioid;Passamaquoddy;Patient Care;Peer Review;Penobscot;Pilot Projects;Play;Population;Populations at Risk;Post-Acute Sequelae of SARS-CoV-2 Infection;Predisposition;Primary Care;Public Health;Publications;Registries;Research;Research Design;Research Infrastructure;Research Personnel;Research Support;Reservations;Resource Sharing;Resources;Role;Rural;Rural Health;Rural Population;Services;Site;Substance Use Disorder;Substance abuse problem;Technology;Toxic Environmental Substances;Training;Training Programs;Translational Research;Tribes;United States Health Resources and Services Administration;United States National Institutes of Health;Universities;Urban Population;Vermont;career;clinical investigation;cohort;community based research;community engagement;community involvement;equity, diversity, and inclusion;flexibility;food insecurity;health communication;health difference;health disparity;health equity;improved;innovation;learning progression;novel;novel strategies;patient oriented;post-COVID-19;practice-based research network;primary care practice;programs;rurality;suburban communities;technical report;telehealth;underserved community;urban underserved",
+    "abstract_text": "The long-term goal of the Northern New England Clinical and Translational Research Network (NNE-CTR),\ncomposed of MaineHealth, the University of Vermont, and the University of Southern Maine, is to sustain a\nclinical and translational research infrastructure that supports improvements in community health for northern\nNew England inhabitants. Maine and Vermont have the oldest populations in the U.S. and that, coupled with\nrurality, predisposes residents to a range of disorders ranging from cancer to substance use disorders, food\ninsecurity, obesity, diabetes and cardiovascular disease. In addition, northern New England has a growing\nunderserved immigrant population, as well as a Native American population. Our communities have been\nchallenged by the Covid-19 pandemic, and we are addressing these challenges by linking primary care\npractice centers with academic centers and developing innovative approaches to community-based research.\nDuring our first four years, the NNE-CTR has built a strong foundation for clinical research. We partnered with\nthe oldest regional practice-based research network (PBRN), the Dartmouth Co-Op, and actively supported\nsuccessful NIH program applications, including two COBREs, two NCI program grants, an infrastructure grant\nfor a new Center for Biomedical Shared Resources, and a HRSA grant to build on the opioid treatment model\npioneered in Vermont. The NNE-CTR PI is playing a leadership role in coordinating a national CTR network,\nincluding the CTR National COVID Cohort Collaborative (N3C), a registry to share clinical data on Covid-19\nnationally, and the NIH-sponsored RECOVER trial, which will define the long-term sequelae of Covid-19. In\nthis renewal, we plan to expand our collaborations both regionally and nationally, strengthen our PBRN, and\nembrace cultural diversity. We will strengthen Core resources that include: the Biostatistics, Epidemiology and\nResearch Design Core, which will improve data capability and research navigation services; the Professional\nDevelopment Core, which will offer an array of new educational and mentorship opportunities; the Pilot\nProjects Program, which will provide new and flexible funding mechanisms to offer more support for\ncommunity-based projects; the Translational Research and Technology Core, offering state-of-the-art\ntechnologies and training for new investigators, and the Community Engagement and Outreach Core, which\nwill build stronger bridges to underserved communities. We propose three specific aims: 1-Expand\ninfrastructure and resources to address clinical and translational research needs in northern New England; 2-\nStrengthen clinical and translational research that addresses health equity and disparities encountered by at-\nrisk populations, including expansion of clinical trial access, telehealth, and mentored training programs for\nnew investigators; and 3-Accelerate regional and national collaborative initiatives within the IDeA networks\nand through NIH such as N3C and RECOVER. In sum, we will strengthen the NNE-CTR through continuous\nlearning and improvement supported by the principles of diversity, inclusion, and equity.",
+    "project_title": "Northern New England Clinical and Translational Research Network - Equipment",
+    "phr_text": "PUBLIC HEALTH NARRATIVE\nThe aging and rural populations of northern New England suffer from numerous chronic health issues,\nincluding cancer, obesity, diabetes, cardiovascular disease, and substance abuse. The Northern New England\nClinical and Translational Research Network, which includes healthcare, educational and research institutions\nin Maine, Vermont, and New Hampshire, has helped build a foundation for clinical and translational research in\nthe tri-state region. In this renewal application, our goal is to strengthen our network of clinical and translational\nresearch through a learning infrastructure that is supported by the principles of diversity, inclusion, and equity,\nfor the benefit of all residents in our region.",
+    "spending_categories_desc": null,
+    "agency_code": "NIH",
+    "covid_response": null,
+    "arra_funded": "N",
+    "budget_start": "2024-07-01T12:07:00Z",
+    "budget_end": "2025-03-10T12:03:00Z",
+    "cfda_code": "859",
+    "funding_mechanism": "Research Centers",
+    "direct_cost_amt": 248974,
+    "indirect_cost_amt": 0,
+    "project_detail_url": "https://reporter.nih.gov/project-details/11037349",
+    "date_added": "2024-08-12T06:08:53Z"
   }
 }
