@@ -253,6 +253,14 @@ def fetch_grants_with_cache(start_date, cache, force_refresh=False):
     return grants, "miss"
 
 
+def parse_award_date(date_str):
+    """Parse ISO‐8601 timestamps that may end with 'Z' or not."""
+    try:
+        return datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
+    except ValueError:
+        return datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+
+
 def fetch_all_grants_by_month(start_year, current_year, cutoff_date, force_refresh=False, include_all_recent=False):
     """
     For each year from start_year to current_year, fetch monthly grant data (using award_notice_date)
@@ -287,20 +295,12 @@ def fetch_all_grants_by_month(start_year, current_year, cutoff_date, force_refre
             print(f"Fetched {len(grants)} grants ({cache_status})")
             
             valid_grants = [g for g in grants if g.get("award_notice_date")]
-            valid_grants.sort(
-                key=lambda grant: datetime.datetime.strptime(
-                    grant.get("award_notice_date"), "%Y-%m-%dT%H:%M:%SZ"
-                )
-            )
+            valid_grants.sort(key=lambda g: parse_award_date(g["award_notice_date"]))
+
             for grant in valid_grants:
-                # Get project number to track duplicates
-                project_num = grant.get("project_num", "")
-                if project_num:
-                    seen_grants[project_num] = grant
-                
-                award_date_str = grant.get("award_notice_date")
+                award_date_str = grant["award_notice_date"]
                 try:
-                    dt = datetime.datetime.strptime(award_date_str, "%Y-%m-%dT%H:%M:%SZ").date()
+                    dt = parse_award_date(award_date_str).date()
                 except Exception as e:
                     print(f"Warning: Could not parse award_notice_date '{award_date_str}': {e}")
                     continue
