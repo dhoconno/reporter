@@ -307,7 +307,7 @@ def fetch_all_grants_by_month(start_year, current_year, cutoff_date, force_refre
             valid_grants.sort(key=lambda g: parse_award_date(g["award_notice_date"]))
 
             for grant in valid_grants:
-                award_date_str = grant["award_notice_date"]
+                award_date_str = grant.get("award_notice_date")
                 dt_obj = parse_award_date(award_date_str)
                 if dt_obj is None:
                     continue
@@ -356,11 +356,10 @@ def fetch_all_grants_by_month(start_year, current_year, cutoff_date, force_refre
         
         for grant in grants:
             award_date_str = grant.get("award_notice_date")
-            try:
-                dt = datetime.datetime.strptime(award_date_str, "%Y-%m-%dT%H:%M:%SZ").date()
-            except Exception as e:
-                print(f"Warning: Could not parse award_notice_date '{award_date_str}': {e}")
+            dt_obj = parse_award_date(award_date_str)
+            if dt_obj is None:
                 continue
+            dt = dt_obj.date()
                 
             # Only include awards on or before the cutoff_date, unless include_all_recent is True
             if not include_all_recent and (dt.month, dt.day) > (cutoff_date.month, cutoff_date.day):
