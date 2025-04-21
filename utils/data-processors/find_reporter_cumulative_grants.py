@@ -221,9 +221,12 @@ def fetch_grants_by_award_date(start_date):
         # Debug logging to show date ranges
         if batch:
             try:
-                first_date = datetime.datetime.strptime(batch[0].get("award_notice_date", ""), "%Y-%m-%dT%H:%M:%SZ").date()
-                last_date = datetime.datetime.strptime(batch[-1].get("award_notice_date", ""), "%Y-%m-%dT%H:%M:%SZ").date()
-                print(f"Batch grants sorted newest to oldest: {first_date} to {last_date}")
+                first_dt = parse_award_date(batch[0].get("award_notice_date", ""))
+                last_dt = parse_award_date(batch[-1].get("award_notice_date", ""))
+                if first_dt and last_dt:
+                    first_date = first_dt.date()
+                    last_date = last_dt.date()
+                    print(f"Batch grants sorted newest to oldest: {first_date} to {last_date}")
             except Exception:
                 pass
 
@@ -255,10 +258,16 @@ def fetch_grants_with_cache(start_date, cache, force_refresh=False):
 
 def parse_award_date(date_str):
     """Parse ISO‐8601 timestamps that may end with 'Z' or not."""
+    if not date_str:
+        return None
     try:
-        return datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
-    except ValueError:
-        return datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+        if date_str.endswith('Z'):
+            return datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%SZ")
+        else:
+            return datetime.datetime.strptime(date_str, "%Y-%m-%dT%H:%M:%S")
+    except ValueError as e:
+        print(f"Warning: Could not parse award_notice_date '{date_str}': {e}")
+        return None
 
 
 def fetch_all_grants_by_month(start_year, current_year, cutoff_date, force_refresh=False, include_all_recent=False):
@@ -299,11 +308,10 @@ def fetch_all_grants_by_month(start_year, current_year, cutoff_date, force_refre
 
             for grant in valid_grants:
                 award_date_str = grant["award_notice_date"]
-                try:
-                    dt = parse_award_date(award_date_str).date()
-                except Exception as e:
-                    print(f"Warning: Could not parse award_notice_date '{award_date_str}': {e}")
+                dt_obj = parse_award_date(award_date_str)
+                if dt_obj is None:
                     continue
+                dt = dt_obj.date()
                 
                 # Add to all_award_date_grants - THIS LINE WAS MISSING
                 all_award_date_grants[year].append(grant)
@@ -687,11 +695,9 @@ def save_grants_list(all_award_date_grants, output_filename="nih_awards_all"):
             
             # Format award_date to YYYY-MM-DD if possible
             if award_date:
-                try:
-                    dt = datetime.datetime.strptime(award_date, "%Y-%m-%dT%H:%M:%SZ")
-                    award_date = dt.strftime("%Y-%m-%d")
-                except Exception:
-                    pass
+                dt_obj = parse_award_date(award_date)
+                if dt_obj:
+                    award_date = dt_obj.strftime("%Y-%m-%d")
                     
             records.append({
                 "award_date": award_date, 
@@ -746,15 +752,14 @@ def check_api_freshness():
                 if not grant.get("award_notice_date"):
                     continue
                     
-                try:
-                    dt = datetime.datetime.strptime(grant["award_notice_date"], "%Y-%m-%dT%H:%M:%SZ").date()
-                    # Skip grants with dates in the future
-                    if dt > today:
-                        continue
-                    valid_grants.append((dt, grant))
-                except Exception as e:
-                    print(f"Error parsing date: {e}")
+                dt_obj = parse_award_date(grant["award_notice_date"])
+                if dt_obj is None:
                     continue
+                dt = dt_obj.date()
+                # Skip grants with dates in the future
+                if dt > today:
+                    continue
+                valid_grants.append((dt, grant))
             
             if valid_grants:
                 # Sort by date descending (most recent first)
