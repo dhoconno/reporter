@@ -5,123 +5,106 @@ on:
       - main
   schedule:
     - cron: '0 12 * * *' # Run at noon every day
-  workflow_dispatch: # Allow manual triggers
+  workflow_dispatch:    # Allow manual triggers
+
 permissions:
   contents: write
   pages: write      # Required for GitHub Pages deployment
   id-token: write   # Required for GitHub Pages deployment
+
 jobs:
   update-data:
     runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     steps:
-      - uses: actions/checkout@v4  # latest version
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          persist-credentials: true
+
       - name: Set up Python
-        uses: actions/setup-python@v5  # latest version
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
+
       - name: Set up JDK 11 # needed for tabula-py
-        uses: actions/setup-java@v4  # latest version
+        uses: actions/setup-java@v4
         with:
           distribution: 'temurin'
           java-version: '11'
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install requests plotly numpy kaleido bs4 pandas zstandard tabula-py
+
       - name: Create output directories
         run: |
-          mkdir -p cache/reporter
-          mkdir -p cache/federal_register
-          mkdir -p cache/taggs
-          mkdir -p pages/reports
-          mkdir -p pages/assets/images
-          mkdir -p pages/assets/csv
-          mkdir -p data/processed/reporter
-          mkdir -p data/processed/federal_register
-          mkdir -p data/processed/taggs
+          mkdir -p cache/reporter cache/federal_register cache/taggs
+          mkdir -p pages/reports pages/assets/images pages/assets/csv
+          mkdir -p data/processed/reporter data/processed/federal_register data/processed/taggs
           mkdir -p data/external
-          
-      - name: Run update script
+
+      - name: Run reporter update
         run: |
           python utils/data-processors/find_reporter_cumulative_grants.py --force-refresh
-          
+
       - name: Commit reporter data
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          
-          # Pull latest changes
-          git pull origin main
-          
-          # Add cache and output files
+
           git add cache/reporter/*.json
-          git add pages/reports/nih_awards.html
-          git add pages/assets/nih_awards.png
-          git add pages/reports/nih_award_amounts.html
-          git add pages/assets/nih_award_amounts.png
+          git add pages/reports/nih_awards.html pages/assets/nih_awards.png
+          git add pages/reports/nih_award_amounts.html pages/assets/nih_award_amounts.png
           git add data/processed/reporter/nih_awards_all.csv.zst
-          
-          # Commit if there are changes
+
           git diff --staged --quiet || git commit -m "Update NIH Reporter data"
           git push origin main
-          
-      - name: Run federal register script
+
+      - name: Run federal register update
         run: |
           python utils/data-processors/find_federal_register_announcements.py
-          
+
       - name: Commit federal register data
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          
-          # Pull latest changes
-          git pull origin main
-          
-          # Add cache and output files
+
           git add cache/federal_register/**/*
-          git add pages/reports/nih_fr_meetings.html
-          git add pages/assets/nih_fr_meetings.png
+          git add pages/reports/nih_fr_meetings.html pages/assets/nih_fr_meetings.png
           git add data/processed/federal_register/nih_fr_meetings_all.csv.zst
-          
-          # Commit if there are changes
+
           git diff --staged --quiet || git commit -m "Update Federal Register data"
           git push origin main
-          
-      - name: Run terminated grants script
+
+      - name: Run terminated grants update
         run: |
           python utils/data-processors/find_taggs_terminated_grants.py
-          
+
       - name: Commit terminated grants data
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
-          
-          # Pull latest changes
-          git pull origin main
-          
-          # Add cache files and CSV output (exclude HTML file that doesn't exist)
+
           git add -f cache/taggs/*.json || true
           git add -f data/processed/taggs/hhs_grants_terminated.csv || true
           git add -f pages/assets/csv/hhs_grants_terminated.csv || true
-          
-          # Commit if there are changes
+
           git diff --staged --quiet || git commit -m "Update terminated grants data"
           git push origin main
-          
-      # GitHub Pages deployment steps
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-        
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: 'pages'
-          
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
