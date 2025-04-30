@@ -3,8 +3,11 @@ The first few months of the new administration have brought significant changes 
 ## NIH RePORTER cumulative awards and award amounts
 [NIH RePORTER](https://reporter.nih.gov) has information on all grants and contracts funded by NIH. These plots compare cumulative funding in the current year to the past 9 years through today's date. RePORTER updates late every Sunday.
 
-- [Cumulative awards](https://dhoconno.github.io/reporter/reports/nih_awards.html)
-- [Cumulative award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts.html)
+- [Calendar year awards](https://dhoconno.github.io/reporter/reports/nih_awards.html)
+- [Calendar year award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts.html)
+- [Fiscal year awards](https://dhoconno.github.io/reporter/reports/nih_awards_FY.html)
+- [Fiscal year award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_FY.html)
+
 
 ## Federal register
 Under the [Federal Advisory Committee Act](https://www.gsa.gov/policy-regulations/policy/federal-advisory-committee-management/legislation-and-regulations/federal-advisory-committee-act) study sections that review NIH grants need to be announced in the [Federal Register](https://www.federalregister.gov) at least 15 days before the study section meets. I parsed the meetings from Federal Register notices and created plots comparing the current year to the previous nine years.
@@ -47,3 +50,58 @@ The following NIH Institutes and Centers have individual plots available. Click 
 | National Library of Medicine | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_NLM.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_NLM.html) \| [meeting notices](https://dhoconno.github.io/reporter/reports/nih_fr_meetings_NLM.html) |
 | Office of the Director | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_OD.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_OD.html) \| [meeting notices](https://dhoconno.github.io/reporter/reports/nih_fr_meetings_OD.html) |
 
+## State‑Specific Plots
+
+| State | Available Plots |
+| --- | --- |
+| AL | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_AL.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_AL.html) |
+| AK | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_AK.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_AK.html) |
+| AZ | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_AZ.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_AZ.html) |
+| AR | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_AR.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_AR.html) |
+| CA | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_CA.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_CA.html) |
+| CO | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_CO.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_CO.html) |
+| CT | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_CT.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_CT.html) |
+| DE | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_DE.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_DE.html) |
+| FL | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_FL.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_FL.html) |
+| GA | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_GA.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_GA.html) |
+| HI | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_HI.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_HI.html) |
+| ID | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_ID.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_ID.html) |
+| IL | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_IL.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_IL.html) |
+| IN | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_IN.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_IN.html) |
+| IA | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_IA.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_IA.html) |
+| KS | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_KS.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_KS.html) |
+| KY | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_KY.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_KY.html) |
+| LA | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_LA.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_LA.html) |
+| ME | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_ME.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_ME.html) |
+| MD | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_MD.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_MD.html) |
+| MA | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_MA.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_MA.html) |
+| MI | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_MI.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_MI.html) |
+| MN | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_MN.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_MN.html) |
+| MS | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_MS.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_MS.html) |
+| MO | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_MO.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_MO.html) |
+| MT | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_MT.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_MT.html) |
+| NE | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_NE.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_NE.html) |
+| NV | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_NV.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_NV.html) |
+| NH | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_NH.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_NH.html) |
+| NJ | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_NJ.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_NJ.html) |
+| NM | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_NM.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_NM.html) |
+| NY | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_NY.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_NY.html) |
+| NC | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_NC.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_NC.html) |
+| ND | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_ND.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_ND.html) |
+| OH | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_OH.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_OH.html) |
+| OK | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_OK.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_OK.html) |
+| OR | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_OR.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_OR.html) |
+| PA | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_PA.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_PA.html) |
+| RI | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_RI.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_RI.html) |
+| SC | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_SC.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_SC.html) |
+| SD | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_SD.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_SD.html) |
+| TN | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_TN.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_TN.html) |
+| TX | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_TX.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_TX.html) |
+| UT | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_UT.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_UT.html) |
+| VT | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_VT.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_VT.html) |
+| VA | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_VA.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_VA.html) |
+| WA | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_WA.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_WA.html) |
+| WV | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_WV.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_WV.html) |
+| WI | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_WI.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_WI.html) |
+| WY | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_WY.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_WY.html) |
+| DC | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_DC.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_DC.html) |
