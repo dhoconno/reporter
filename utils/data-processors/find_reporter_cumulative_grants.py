@@ -46,9 +46,14 @@ class NIHReporterCache:
     def get_cached_data(self, year, month):
         """
         Retrieve cached data for a specific year and month.
-        Always use cache if available for any month.
+        Bypass cache for the current and immediately previous month.
         """
-        # Remove bypass logic for current/previous month to cache all months
+        today = datetime.date.today()
+        if (year == today.year and month in [today.month, today.month - 1]) or (
+            today.month == 1 and year == today.year - 1 and month == 12
+        ):
+            return None
+
         cache_path = self.get_cache_path(year, month)
         if not cache_path.exists():
             return None
@@ -58,9 +63,8 @@ class NIHReporterCache:
                 data = json.load(f)
                 if not all(key in data for key in ["fetch_date", "grants"]):
                     return None
-                # Still check for freshness (7 days)
                 fetch_date = datetime.datetime.strptime(data["fetch_date"], "%Y-%m-%d").date()
-                if (datetime.date.today() - fetch_date).days > 7:
+                if (today - fetch_date).days > 7:
                     return None
                 return data["grants"]
         except (json.JSONDecodeError, KeyError):
@@ -199,7 +203,6 @@ def fetch_grants_by_award_date(start_date):
                 "contact_pi_name",
                 "project_title",
                 "organization_name",
-                "organization_state",  # Added organization_state field
             ],
         }
         print(f"Query payload (award date): {query}")
@@ -813,7 +816,6 @@ def fetch_most_recent_grants(days_back=14):
                 "contact_pi_name",
                 "project_title",
                 "organization_name",
-                "organization_state",  # Added organization_state field
             ],
         }
         
