@@ -68,7 +68,6 @@ def compress(seq: List[str] | None) -> str | None:
 def map_record(rec: dict) -> Dict[str, object]:
     org = rec.get("organization") or {}
     fs = rec.get("full_study_section" ) or {}
-    pns = rec.get("project_num_split") or {}
     return {
         "appl_id":           rec.get("appl_id"),
         "fiscal_year":       rec.get("fiscal_year"),
@@ -77,7 +76,6 @@ def map_record(rec: dict) -> Dict[str, object]:
         "core_project_num":  rec.get("core_project_num"),
         "application_type_code": rec.get("award_type"),
         "activity_code":     rec.get("activity_code"),
-        "suffix_code":       pns.get("suffix_code"),
         "project_num":       rec.get("project_num"),
         "project_title":     rec.get("project_title"),
 
