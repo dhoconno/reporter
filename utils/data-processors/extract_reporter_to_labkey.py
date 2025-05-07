@@ -211,7 +211,7 @@ def run_sync(force: bool) -> None:
 
     # 3) determine date range
     today = date.today()
-    start_date = date(today.year - 10, 1, 1) if force else today - timedelta(days=30)
+    start_date = date(today.year - 10, 1, 1) if force else today - timedelta(days=60)
     log.info("Sync window begins %s (force=%s)", start_date, force)
 
     total_new = 0
