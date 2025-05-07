@@ -29,7 +29,7 @@ from labkey.exceptions import RequestError
 
 API_URL    = "https://api.reporter.nih.gov/v2/projects/search"
 BATCH_SIZE = 500               # NIH API max
-TEST_LIMIT = 10              # set to small int for quick tests
+TEST_LIMIT = 20              # set to small int for quick tests
 
 LABKEY_DOMAIN      = "openresearch.labkey.com"
 LABKEY_PROJECT     = "Reporter"       # container path
@@ -68,15 +68,16 @@ def compress(seq: List[str] | None) -> str | None:
 def map_record(rec: dict) -> Dict[str, object]:
     org = rec.get("organization") or {}
     fs = rec.get("full_study_section" ) or {}
+    pns = rec.get("project_num_split") or {}
     return {
         "appl_id":           rec.get("appl_id"),
         "fiscal_year":       rec.get("fiscal_year"),
         "subproject_id":     str(rec.get("subproject_id") or "0"),
         "project_serial_num":rec.get("project_serial_num"),
         "core_project_num":  rec.get("core_project_num"),
-        "application_type_code": rec.get("application_type_code"),
+        "application_type_code": rec.get("award_type"),
         "activity_code":     rec.get("activity_code"),
-        "suffix_code":       rec.get("suffix_code"),
+        "suffix_code":       pns.get("suffix_code"),
         "project_num":       rec.get("project_num"),
         "project_title":     rec.get("project_title"),
 
