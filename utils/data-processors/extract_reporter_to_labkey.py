@@ -1,26 +1,9 @@
 #!/usr/bin/env python3
 """
-ihireporter_sync_labkey.py
-====================================================================
-Incrementally load NIH RePORTER project data into a LabKey **list**
-(project “Reporter” → list “nih_reporter”) using the official
-labkey-api-python client and an **API key**.
-
 Uniqueness is determined by appl_id alone: any record whose appl_id
 already exists in LabKey will be skipped.
 
---------------------------------------------------------------------
-Quick-start
---------------------------------------------------------------------
-1) Install dependencies::
-
-       pip install labkey requests
-
-2) Configure your API key once per shell::
-
-       export LABKEY_API_KEY="<your-labkey-personal-access-token>"
-
-3) Run the sync::
+Run the sync::
 
        python ihireporter_sync_labkey.py         # last 30 days
        python ihireporter_sync_labkey.py --force # back-fill 10 years
@@ -84,6 +67,7 @@ def compress(seq: List[str] | None) -> str | None:
 
 def map_record(rec: dict) -> Dict[str, object]:
     org = rec.get("organization") or {}
+    fs = rec.get("full_study_section" ) or {}
     return {
         "appl_id":           rec.get("appl_id"),
         "fiscal_year":       rec.get("fiscal_year"),
@@ -96,8 +80,8 @@ def map_record(rec: dict) -> Dict[str, object]:
         "project_num":       rec.get("project_num"),
         "project_title":     rec.get("project_title"),
 
-        "study_section_name":rec.get("study_section_name"),
-        "study_section_code":rec.get("study_section"),
+        "study_section_name":fs.get("name"),
+        "study_section_code":fs.get("srg_code"),
 
         "project_start_date":rec.get("project_start_date"),
         "project_end_date":  rec.get("project_end_date"),
