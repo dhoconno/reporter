@@ -29,7 +29,7 @@ from labkey.exceptions import RequestError
 
 API_URL    = "https://api.reporter.nih.gov/v2/projects/search"
 BATCH_SIZE = 500               # NIH API max
-TEST_LIMIT = 20              # set to small int for quick tests
+TEST_LIMIT = None              # set to small int for quick tests
 
 LABKEY_DOMAIN      = "openresearch.labkey.com"
 LABKEY_PROJECT     = "Reporter"       # container path
