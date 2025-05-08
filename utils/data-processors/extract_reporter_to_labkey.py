@@ -24,6 +24,7 @@ from typing import Dict, List, Set, Tuple
 import requests
 from labkey.api_wrapper import APIWrapper
 from labkey.exceptions import RequestError
+from labkey.query import QueryFilter
 
 # -------------------------- Configuration -------------------------- #
 
@@ -187,43 +188,67 @@ def run_sync(force: bool) -> None:
         context_path=CONTEXT_PATH,
         use_ssl=True,
         api_key=api_key,
-        # Remove disable_csrf parameter as it may not be needed with API key
     )
-
-    # Add debugging to see what's happening
-    log.info(f"Connecting to {LABKEY_DOMAIN}/{LABKEY_PROJECT} with API key authentication")
     
-    # Test the connection before proceeding
+    log.info(f"Connecting to {LABKEY_DOMAIN}/{LABKEY_PROJECT} with API key authentication")
     try:
         # Simple test query to verify connection
-        test = api.query.select_rows(
-            "core", 
-            "containers",
-            max_rows=1
-        )
+        test = api.query.select_rows("core", "containers", max_rows=1)
         log.info("Connection successful")
     except Exception as e:
         log.error(f"Connection test failed: {e}")
         raise
 
-    # 2) preload existing appl_id
-    existing_ids = fetch_existing_appl_ids(api)
-
-    # 3) determine date range
+    # 2) determine date range
     today = date.today()
-    start_date = date(today.year - 10, 1, 1) if force else today - timedelta(days=60)
+    start_date = date(today.year - 10, 1, 1) if force else today - timedelta(days=14)
     log.info("Sync window begins %s (force=%s)", start_date, force)
+    
+    # 3) Fetch recently added appl_ids from LabKey for the same time period
+    s_str = start_date.strftime("%Y-%m-%d")
+    e_str = today.strftime("%Y-%m-%d")
+    
+    log.info(f"Fetching existing records from LabKey for {s_str} to {e_str}")
+    existing_ids = set()
+    offset = 0
+    page_size = 1000
 
+    while True:
+        # Use proper QueryFilter objects instead of filter_array
+        filters = [
+            QueryFilter("award_notice_date", s_str, QueryFilter.Types.DATE_GREATER_THAN_OR_EQUAL),
+            QueryFilter("award_notice_date", e_str, QueryFilter.Types.DATE_LESS_THAN_OR_EQUAL)
+        ]
+        
+        resp = api.query.select_rows(
+            LABKEY_SCHEMA,
+            LABKEY_LIST,
+            columns=["appl_id"],
+            filter_array=[
+                f"award_notice_date~dategte={s_str},award_notice_date~datelte={e_str}"
+            ],
+            offset=offset,
+            max_rows=page_size
+        )
+        rows = resp.get("rows", [])
+        if not rows:
+            break
+        for r in rows:
+            existing_ids.add(int(r["appl_id"]))
+        offset += len(rows)
+    
+    log.info(f"Found {len(existing_ids)} existing records in LabKey for this date range")
+    
+    # 4) Process month by month from RePORTER
     total_new = 0
     current = start_date.replace(day=1)
 
-    # 4) month-by-month batches
     while current <= today and (TEST_LIMIT is None or total_new < TEST_LIMIT):
         y, m = current.year, current.month
         end_of_month = min(date(y, m, calendar.monthrange(y, m)[1]), today)
         s_str = current.strftime("%Y-%m-%d")
         e_str = end_of_month.strftime("%Y-%m-%d")
-        log.info("Window %s → %s", s_str, e_str)
+        log.info(f"Processing window {s_str} → {e_str}")
 
         offset = 0
         while True:
@@ -231,21 +256,20 @@ def run_sync(force: bool) -> None:
             if not batch:
                 break
 
-            to_insert: List[Dict[str, object]] = []
+            to_insert = []
             for rec in batch:
-                appl = rec.get("appl_id")
-                if appl in existing_ids:
-                    log.debug("Skipping appl_id %s (seen)", appl)
+                appl = int(rec.get("appl_id")) if rec.get("appl_id") else None
+                if appl and appl in existing_ids:
                     continue
                 to_insert.append(map_record(rec))
-                existing_ids.add(appl)
+                existing_ids.add(appl)  # Add to set to prevent duplicates
                 total_new += 1
                 if TEST_LIMIT and total_new >= TEST_LIMIT:
                     break
 
             if to_insert:
                 inserted = insert_new_rows(api, to_insert)
-                log.info("  +%d rows (running %d)", inserted, total_new)
+                log.info(f"  +{inserted} rows (running {total_new})")
 
             if len(batch) < BATCH_SIZE or (TEST_LIMIT and total_new >= TEST_LIMIT):
                 break
@@ -256,7 +280,7 @@ def run_sync(force: bool) -> None:
         # advance to next month
         current = date(y + (m // 12), (m % 12) + 1, 1)
 
-    log.info("Sync complete — %d new rows inserted", total_new)
+    log.info(f"Sync complete — {total_new} new rows inserted")
 
 
 # ---------------------------- Entrypoint ---------------------------- #
@@ -268,7 +292,7 @@ if __name__ == "__main__":
     p.add_argument(
         "--force",
         action="store_true",
-        help="Back-fill ten years (instead of last 30 days)",
+        help="Back-fill ten years (instead of last 14 days)",
     )
     args = p.parse_args()
     try:
