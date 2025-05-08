@@ -175,7 +175,7 @@ def insert_new_rows(api: APIWrapper, rows: List[Dict[str, object]]) -> int:
 
 # ------------------------------ Sync Loop ------------------------------ #
 
-def run_sync(force: bool) -> None:
+def run_sync(force: bool, dry_run: bool = False) -> None:
     # 1) get API key & init client
     api_key = os.environ.get("LABKEY_API_KEY")
     if not api_key:
@@ -190,7 +190,7 @@ def run_sync(force: bool) -> None:
         api_key=api_key,
     )
     
-    log.info(f"Connecting to {LABKEY_DOMAIN}/{LABKEY_PROJECT} with API key authentication")
+    log.info(f"Connecting to {LABKEY_DOMAIN}/{LABKEY_PROJECT} with API key authentication {'(DRY RUN)' if dry_run else ''}")
     try:
         # Simple test query to verify connection
         test = api.query.select_rows("core", "containers", max_rows=1)
@@ -268,8 +268,12 @@ def run_sync(force: bool) -> None:
                     break
 
             if to_insert:
-                inserted = insert_new_rows(api, to_insert)
-                log.info(f"  +{inserted} rows (running {total_new})")
+                if dry_run:
+                    log.info(f"  Would insert {len(to_insert)} rows (running {total_new}) [DRY RUN]")
+                    inserted = len(to_insert)
+                else:
+                    inserted = insert_new_rows(api, to_insert)
+                    log.info(f"  +{inserted} rows (running {total_new})")
 
             if len(batch) < BATCH_SIZE or (TEST_LIMIT and total_new >= TEST_LIMIT):
                 break
@@ -280,7 +284,7 @@ def run_sync(force: bool) -> None:
         # advance to next month
         current = date(y + (m // 12), (m % 12) + 1, 1)
 
-    log.info(f"Sync complete — {total_new} new rows inserted")
+    log.info(f"Sync complete — {total_new} new rows {'would be' if dry_run else 'were'} inserted")
 
 
 # ---------------------------- Entrypoint ---------------------------- #
@@ -294,8 +298,13 @@ if __name__ == "__main__":
         action="store_true",
         help="Back-fill ten years (instead of last 14 days)",
     )
+    p.add_argument(
+        "--dry-run", "-n",
+        action="store_true",
+        help="Simulate the sync without inserting records into LabKey",
+    )
     args = p.parse_args()
     try:
-        run_sync(force=args.force)
+        run_sync(force=args.force, dry_run=args.dry_run)
     except KeyboardInterrupt:
         log.warning("Interrupted by user; partial progress kept.")
