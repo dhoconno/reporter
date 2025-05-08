@@ -39,7 +39,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests plotly numpy kaleido bs4 pandas zstandard tabula-py
+          pip install requests plotly numpy kaleido bs4 pandas zstandard tabula-py labkey
 
       - name: Create output directories
         run: |
@@ -104,6 +104,11 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           path: 'pages'
+
+      - name: Upload NIH Reporter data to LabKey
+        run: python utils/data-processors/extract_reporter_to_labkey.py
+        env:
+          LABKEY_API_KEY: ${{ secrets.LABKEY_API_KEY }}
 
       - name: Deploy to GitHub Pages
         id: deployment
