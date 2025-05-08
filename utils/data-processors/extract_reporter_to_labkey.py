@@ -12,7 +12,6 @@ Run the sync::
 from __future__ import annotations
 
 import argparse
-import calendar
 import json
 import logging
 import os
@@ -129,32 +128,54 @@ def map_record(rec: dict) -> Dict[str, object]:
 
 # -------------------- LabKey APIWrapper Helpers -------------------- #
 
-def fetch_existing_appl_ids(api: APIWrapper) -> Set[int]:
+def fetch_existing_appl_ids(api: APIWrapper, start_date: str, end_date: str) -> Set[int]:
     """
-    Page through the LabKey list, grabbing appl_id from every row.
+    Page through the LabKey list, grabbing appl_id from every row
+    within the given date range.
     """
     existing: Set[int] = set()
     offset = 0
     page_size = 1000
 
     while True:
+        # build two QueryFilter objects (these are AND’ed together)
+        filters = [
+            QueryFilter(
+                "award_notice_date",
+                start_date,
+                QueryFilter.Types.DATE_GREATER_THAN_OR_EQUAL,
+            ),
+            QueryFilter(
+                "award_notice_date",
+                end_date,
+                QueryFilter.Types.DATE_LESS_THAN_OR_EQUAL,
+            ),
+        ]
+
         resp = api.query.select_rows(
             LABKEY_SCHEMA,
             LABKEY_LIST,
             columns=["appl_id"],
+            filter_array=filters,      # <-- use filter_array here
             offset=offset,
-            max_rows=page_size
+            max_rows=page_size,
         )
+
         rows = resp.get("rows", [])
         if not rows:
             break
+
         for r in rows:
             existing.add(int(r["appl_id"]))
         offset += len(rows)
 
-    log.info("Loaded %d existing appl_id values", len(existing))
+    log.info(
+        "Loaded %d existing appl_id values from date range %s to %s",
+        len(existing),
+        start_date,
+        end_date,
+    )
     return existing
-
 
 def insert_new_rows(api: APIWrapper, rows: List[Dict[str, object]]) -> int:
     """
@@ -200,91 +221,71 @@ def run_sync(force: bool, dry_run: bool = False) -> None:
         raise
 
     # 2) determine date range
-    today = date.today()
+    today = date.today()  # 2025-05-08
     start_date = date(today.year - 10, 1, 1) if force else today - timedelta(days=14)
     log.info("Sync window begins %s (force=%s)", start_date, force)
     
-    # 3) Fetch recently added appl_ids from LabKey for the same time period
+    # 3) Fetch existing appl_ids from LabKey
     s_str = start_date.strftime("%Y-%m-%d")
     e_str = today.strftime("%Y-%m-%d")
+    log.info(f"Fetching existing records from LabKey")
+    existing_ids = fetch_existing_appl_ids(api, s_str, e_str)
     
-    log.info(f"Fetching existing records from LabKey for {s_str} to {e_str}")
-    existing_ids = set()
-    offset = 0
-    page_size = 1000
-
-    while True:
-        # Use proper QueryFilter objects instead of filter_array
-        filters = [
-            QueryFilter("award_notice_date", s_str, QueryFilter.Types.DATE_GREATER_THAN_OR_EQUAL),
-            QueryFilter("award_notice_date", e_str, QueryFilter.Types.DATE_LESS_THAN_OR_EQUAL)
-        ]
-        
-        resp = api.query.select_rows(
-            LABKEY_SCHEMA,
-            LABKEY_LIST,
-            columns=["appl_id"],
-            filter_array=[
-                f"award_notice_date~dategte={s_str},award_notice_date~datelte={e_str}"
-            ],
-            offset=offset,
-            max_rows=page_size
-        )
-        rows = resp.get("rows", [])
-        if not rows:
-            break
-        for r in rows:
-            existing_ids.add(int(r["appl_id"]))
-        offset += len(rows)
+    # 4) Process directly with the actual date range instead of by month
+    s_str = start_date.strftime("%Y-%m-%d")
+    e_str = today.strftime("%Y-%m-%d")
+    log.info(f"Processing window {s_str} → {e_str} directly from RePORTER")
     
-    log.info(f"Found {len(existing_ids)} existing records in LabKey for this date range")
-    
-    # 4) Process month by month from RePORTER
     total_new = 0
-    current = start_date.replace(day=1)
-
-    while current <= today and (TEST_LIMIT is None or total_new < TEST_LIMIT):
-        y, m = current.year, current.month
-        end_of_month = min(date(y, m, calendar.monthrange(y, m)[1]), today)
-        s_str = current.strftime("%Y-%m-%d")
-        e_str = end_of_month.strftime("%Y-%m-%d")
-        log.info(f"Processing window {s_str} → {e_str}")
-
-        offset = 0
-        while True:
-            batch, _ = fetch_batch(s_str, e_str, offset)
-            if not batch:
+    reporter_total = 0
+    already_exists = 0
+    offset = 0
+    
+    while True:
+        batch, total = fetch_batch(s_str, e_str, offset)
+        if offset == 0:
+            # Log the total records in RePORTER for this date range
+            reporter_total = total
+            log.info(f"Found {reporter_total} records in RePORTER for this date range")
+        
+        if not batch:
+            break
+            
+        to_insert = []
+        for rec in batch:
+            appl = int(rec.get("appl_id")) if rec.get("appl_id") else None
+            if appl and appl in existing_ids:
+                already_exists += 1
+                continue
+            to_insert.append(map_record(rec))
+            existing_ids.add(appl)
+            total_new += 1
+            if TEST_LIMIT and total_new >= TEST_LIMIT:
                 break
-
-            to_insert = []
-            for rec in batch:
-                appl = int(rec.get("appl_id")) if rec.get("appl_id") else None
-                if appl and appl in existing_ids:
-                    continue
-                to_insert.append(map_record(rec))
-                existing_ids.add(appl)  # Add to set to prevent duplicates
-                total_new += 1
-                if TEST_LIMIT and total_new >= TEST_LIMIT:
-                    break
-
-            if to_insert:
-                if dry_run:
-                    log.info(f"  Would insert {len(to_insert)} rows (running {total_new}) [DRY RUN]")
-                    inserted = len(to_insert)
-                else:
-                    inserted = insert_new_rows(api, to_insert)
-                    log.info(f"  +{inserted} rows (running {total_new})")
-
-            if len(batch) < BATCH_SIZE or (TEST_LIMIT and total_new >= TEST_LIMIT):
-                break
-
-            offset += len(batch)
-            time.sleep(0.4)
-
-        # advance to next month
-        current = date(y + (m // 12), (m % 12) + 1, 1)
-
+                
+        # Process batch statistics
+        if to_insert:
+            if dry_run:
+                log.info(f"  Would insert {len(to_insert)} rows (running {total_new}) [DRY RUN]")
+                inserted = len(to_insert)
+            else:
+                inserted = insert_new_rows(api, to_insert)
+                log.info(f"  +{inserted} rows (running {total_new})")
+                
+        if len(batch) < BATCH_SIZE or (TEST_LIMIT and total_new >= TEST_LIMIT):
+            break
+            
+        offset += len(batch)
+        time.sleep(0.4)
+    
+    # Final statistics
+    log.info(f"RePORTER statistics for {s_str} → {e_str}:")
+    log.info(f"  - Total records found in RePORTER: {reporter_total}")
+    log.info(f"  - Already in LabKey: {already_exists}")
+    log.info(f"  - New records added: {total_new}")
     log.info(f"Sync complete — {total_new} new rows {'would be' if dry_run else 'were'} inserted")
+    
+    return
 
 
 # ---------------------------- Entrypoint ---------------------------- #

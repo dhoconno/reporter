@@ -105,6 +105,11 @@ jobs:
         with:
           path: 'pages'
 
+      - name: Upload NIH Reporter data to LabKey
+        run: python utils/data-processors/extract_reporter_to_labkey.py
+        env:
+          LABKEY_API_KEY: ${{ secrets.LABKEY_API_KEY }}
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
