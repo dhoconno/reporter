@@ -67,7 +67,10 @@ def compress(seq: List[str] | None) -> str | None:
 
 def map_record(rec: dict) -> Dict[str, object]:
     org = rec.get("organization") or {}
-    fs = rec.get("full_study_section" ) or {}
+    fs = rec.get("full_study_section") or {}
+    admin_ic_obj = rec.get("agency_ic_admin") or {}
+    funding_ics_list = rec.get("agency_ic_fundings") or []
+    
     return {
         "appl_id":           rec.get("appl_id"),
         "fiscal_year":       rec.get("fiscal_year"),
@@ -78,6 +81,10 @@ def map_record(rec: dict) -> Dict[str, object]:
         "activity_code":     rec.get("activity_code"),
         "project_num":       rec.get("project_num"),
         "project_title":     rec.get("project_title"),
+
+        # Add NIH institute/center fields
+        "administering_ic": admin_ic_obj.get("abbreviation") or admin_ic_obj.get("abbreviation"),
+        "funding_ics": compress([ic.get("abbreviation") for ic in funding_ics_list]),
 
         "study_section_name":fs.get("name"),
         "study_section_code":fs.get("srg_code"),
@@ -124,7 +131,6 @@ def map_record(rec: dict) -> Dict[str, object]:
         "covid_response": json.dumps(rec.get("covid_response") or {}),
         "date_added":     rec.get("date_added"),
     }
-
 
 # -------------------- LabKey APIWrapper Helpers -------------------- #
 
