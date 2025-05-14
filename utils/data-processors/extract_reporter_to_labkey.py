@@ -199,7 +199,6 @@ def insert_new_rows(api: APIWrapper, rows: List[Dict[str, object]]) -> int:
             return 0
         raise
 
-
 # ------------------------------ Sync Loop ------------------------------ #
 
 def run_sync(force: bool, dry_run: bool = False) -> None:
@@ -227,28 +226,61 @@ def run_sync(force: bool, dry_run: bool = False) -> None:
         raise
 
     # 2) determine date range
-    today = date.today()  # 2025-05-08
-    start_date = date(today.year - 10, 1, 1) if force else today - timedelta(days=14)
-    log.info("Sync window begins %s (force=%s)", start_date, force)
+    today = date.today()
     
-    # 3) Fetch existing appl_ids from LabKey
-    s_str = start_date.strftime("%Y-%m-%d")
-    e_str = today.strftime("%Y-%m-%d")
-    log.info(f"Fetching existing records from LabKey")
-    existing_ids = fetch_existing_appl_ids(api, s_str, e_str)
-    
-    # 4) Process directly with the actual date range instead of by month
-    s_str = start_date.strftime("%Y-%m-%d")
-    e_str = today.strftime("%Y-%m-%d")
-    log.info(f"Processing window {s_str} → {e_str} directly from RePORTER")
-    
+    if not force:
+        # Normal mode: process last 14 days in one query
+        start_date = today - timedelta(days=14)
+        s_str = start_date.strftime("%Y-%m-%d")
+        e_str = today.strftime("%Y-%m-%d")
+        log.info(f"Sync window begins {s_str} (normal mode)")
+        
+        # Fetch existing records from LabKey for deduplication
+        log.info(f"Fetching existing records from LabKey for date range {s_str} to {e_str}")
+        existing_ids = fetch_existing_appl_ids(api, s_str, e_str)
+        
+        # Process the date range directly
+        process_date_range(api, s_str, e_str, existing_ids, dry_run)
+    else:
+        # Force mode: process 10 years month by month to avoid offset limitations
+        start_date = date(today.year - 10, 1, 1)
+        log.info(f"Sync window begins {start_date.strftime('%Y-%m-%d')} (force mode - processing month by month)")
+        
+        grand_total = 0
+        current = start_date.replace(day=1)
+        
+        # Process each month separately
+        while current <= today:
+            y, m = current.year, current.month
+            # Calculate end of month
+            if m == 12:
+                next_month = date(y + 1, 1, 1)
+            else:
+                next_month = date(y, m + 1, 1)
+            end_date = min(next_month - timedelta(days=1), today)
+            
+            s_str = current.strftime("%Y-%m-%d")
+            e_str = end_date.strftime("%Y-%m-%d")
+            
+            log.info(f"Processing month {s_str} to {e_str}")
+            month_total = process_month(api, s_str, e_str, dry_run)
+            grand_total += month_total
+            
+            # Advance to next month
+            current = next_month
+            
+        log.info(f"Force sync complete - {grand_total} total records processed across all months")
+
+
+def process_date_range(api, start_date, end_date, existing_ids, dry_run):
+    """Process a specific date range with duplicate checking against existing_ids"""
     total_new = 0
     reporter_total = 0
     already_exists = 0
     offset = 0
     
     while True:
-        batch, total = fetch_batch(s_str, e_str, offset)
+        batch, total = fetch_batch(start_date, end_date, offset)
         if offset == 0:
             # Log the total records in RePORTER for this date range
             reporter_total = total
@@ -285,13 +317,57 @@ def run_sync(force: bool, dry_run: bool = False) -> None:
         time.sleep(0.4)
     
     # Final statistics
-    log.info(f"RePORTER statistics for {s_str} → {e_str}:")
+    log.info(f"RePORTER statistics for {start_date} → {end_date}:")
     log.info(f"  - Total records found in RePORTER: {reporter_total}")
     log.info(f"  - Already in LabKey: {already_exists}")
     log.info(f"  - New records added: {total_new}")
     log.info(f"Sync complete — {total_new} new rows {'would be' if dry_run else 'were'} inserted")
     
-    return
+    return total_new
+
+
+def process_month(api, start_date, end_date, dry_run):
+    """Process a single month without checking for duplicates in LabKey"""
+    total_processed = 0
+    reporter_total = 0
+    offset = 0
+    
+    while True:
+        batch, total = fetch_batch(start_date, end_date, offset)
+        if offset == 0:
+            reporter_total = total
+            log.info(f"Found {reporter_total} records in RePORTER for this month")
+        
+        if not batch:
+            break
+            
+        # Don't check for duplicates in force mode - let LabKey handle it
+        to_insert = [map_record(rec) for rec in batch]
+        
+        # Process batch
+        if to_insert:
+            if dry_run:
+                log.info(f"  Would insert {len(to_insert)} rows (running total: {total_processed + len(to_insert)}) [DRY RUN]")
+                inserted = len(to_insert)
+            else:
+                try:
+                    inserted = insert_new_rows(api, to_insert)
+                    log.info(f"  +{inserted} rows (running total: {total_processed + inserted})")
+                except RequestError as err:
+                    log.warning(f"Batch insert error (likely duplicates): {err}")
+                    inserted = 0
+            
+            total_processed += inserted
+                
+        if len(batch) < BATCH_SIZE or offset + len(batch) >= 14999:
+            # Stop if we've reached the API limit or have all records
+            break
+            
+        offset += len(batch)
+        time.sleep(0.4)  # Be nice to the API
+    
+    log.info(f"Month completed: {reporter_total} found, {total_processed} processed")
+    return total_processed
 
 
 # ---------------------------- Entrypoint ---------------------------- #
