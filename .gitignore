@@ -1,2 +1,5 @@
 .DS_Store
 data/processed/reporter/nih_reporter.db
+# pixi environments
+.pixi
+*.egg-info
