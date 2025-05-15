@@ -1,0 +1,54 @@
+name: Make NIH RePORTER plots for LabKey
+
+on:
+  schedule:
+    # Runs at 11:00 UTC every Tuesday ≈ 06:00 America/Chicago (CDT),
+    # 05:00 during CST because cron is UTC‑only.
+    - cron: '0 11 * * 2'
+  workflow_dispatch:
+
+jobs:
+  dashboard:
+    runs-on: ubuntu-latest
+    env:
+      TZ: America/Chicago
+      LABKEY_API_KEY: ${{ secrets.LABKEY_API_KEY }}
+      LABKEY_USER:     ${{ secrets.LABKEY_USER }}
+      LABKEY_PASSWORD: ${{ secrets.LABKEY_PASSWORD }}
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup R
+        uses: r-lib/actions/setup-r@v2
+        with:
+          r-version: '4.3'
+
+      - name: Install Ubuntu system libraries needed by R packages
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y \
+            libcurl4-openssl-dev libssl-dev libxml2-dev \
+            libharfbuzz-dev libfribidi-dev libfontconfig1-dev \
+            libfreetype6-dev
+
+      - name: Cache & install R package dependencies
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          cache-version: 2
+          extra-packages: |
+            ggplot2
+            lubridate
+            Rlabkey
+            dplyr
+            scales
+            quantmod
+            gridExtra
+            optparse
+            logger
+            httr
+
+      - name: Run dashboard generator
+        run: |
+          Rscript utils/data-processors/make_plots_from_labkey.R --output nih_awards_dashboard.png
