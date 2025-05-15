@@ -39,7 +39,7 @@ jobs:
           cache-version: 2
           # Tell pak exactly what to install — no DESCRIPTION lookup
           packages: |
-            any::sessioninfo      # required by the action
+            any::sessioninfo
             crayon
             ggplot2
             lubridate
