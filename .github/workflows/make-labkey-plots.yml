@@ -33,6 +33,25 @@ jobs:
             libharfbuzz-dev libfribidi-dev libfontconfig1-dev \
             libfreetype6-dev
 
+      - name: Install R packages
+        uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          cache-version: 2
+          # Tell pak exactly what to install — no DESCRIPTION lookup
+          packages: |
+            any::sessioninfo      # required by the action
+            crayon
+            ggplot2
+            lubridate
+            Rlabkey
+            dplyr
+            scales
+            quantmod
+            gridExtra
+            optparse
+            logger
+            httr
+
       - name: Run dashboard generator
         run: |
           Rscript utils/data-processors/make_plots_from_labkey.R --output nih_awards_dashboard.png
