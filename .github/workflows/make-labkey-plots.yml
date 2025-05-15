@@ -33,22 +33,6 @@ jobs:
             libharfbuzz-dev libfribidi-dev libfontconfig1-dev \
             libfreetype6-dev
 
-      - name: Cache & install R package dependencies
-        uses: r-lib/actions/setup-r-dependencies@v2
-        with:
-          cache-version: 2
-          extra-packages: |
-            ggplot2
-            lubridate
-            Rlabkey
-            dplyr
-            scales
-            quantmod
-            gridExtra
-            optparse
-            logger
-            httr
-
       - name: Run dashboard generator
         run: |
           Rscript utils/data-processors/make_plots_from_labkey.R --output nih_awards_dashboard.png
