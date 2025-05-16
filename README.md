@@ -46,3 +46,52 @@ The following NIH Institutes and Centers have individual plots available. Click 
 | National Institute on Minority Health and Health Disparities | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_NIMHD.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_NIMHD.html) \| [meeting notices](https://dhoconno.github.io/reporter/reports/nih_fr_meetings_NIMHD.html) |
 | National Library of Medicine | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_NLM.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_NLM.html) \| [meeting notices](https://dhoconno.github.io/reporter/reports/nih_fr_meetings_NLM.html) |
 | Office of the Director | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_OD.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_OD.html) \| [meeting notices](https://dhoconno.github.io/reporter/reports/nih_fr_meetings_OD.html) |
+
+## State‑Specific Plots
+
+Cumulative awards by **state** (updated each Tuesday).
+
+| | | | | |
+|---|---|---|---|---|
+| [AL](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/AL.png) | [AK](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/AK.png) | [AZ](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/AZ.png) | [AR](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/AR.png) | [CA](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/CA.png) |
+| [CO](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/CO.png) | [CT](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/CT.png) | [DE](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/DE.png) | [FL](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/FL.png) | [GA](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/GA.png) |
+| [HI](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/HI.png) | [ID](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/ID.png) | [IL](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/IL.png) | [IN](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/IN.png) | [IA](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/IA.png) |
+| [KS](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/KS.png) | [KY](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/KY.png) | [LA](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/LA.png) | [ME](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/ME.png) | [MD](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/MD.png) |
+| [MA](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/MA.png) | [MI](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/MI.png) | [MN](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/MN.png) | [MS](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/MS.png) | [MO](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/MO.png) |
+| [MT](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/MT.png) | [NE](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/NE.png) | [NV](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/NV.png) | [NH](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/NH.png) | [NJ](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/NJ.png) |
+| [NM](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/NM.png) | [NY](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/NY.png) | [NC](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/NC.png) | [ND](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/ND.png) | [OH](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/OH.png) |
+| [OK](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/OK.png) | [OR](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/OR.png) | [PA](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/PA.png) | [RI](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/RI.png) | [SC](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/SC.png) |
+| [SD](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/SD.png) | [TN](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/TN.png) | [TX](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/TX.png) | [UT](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/UT.png) | [VT](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/VT.png) |
+| [VA](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/VA.png) | [WA](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/WA.png) | [WV](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/WV.png) | [WI](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/WI.png) | [WY](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/WY.png) |
+
+---
+
+## Condition‑Specific Plots
+
+Cumulative awards for key biomedical topics.
+
+- [Heart Disease](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/heart_disease.png)
+- [Breast Cancer](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/breast_cancer.png)
+- [Lung Cancer](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/lung_cancer.png)
+- [Prostate Cancer](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/prostate_cancer.png)
+- [Colorectal Cancer](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/colorectal_cancer.png)
+- [Pancreatic Cancer](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/pancreatic_cancer.png)
+- [Leukemia](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/leukemia.png)
+- [Lymphoma](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/lymphoma.png)
+- [Melanoma](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/melanoma.png)
+- [COVID‑19](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/covid.png)
+- [Trauma](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/trauma.png)
+- [Stroke](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/stroke.png)
+- [Respiratory Disease](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/respiratory_disease.png)
+- [Alzheimer](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/alzheimer.png)
+- [Diabetes](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/diabetes.png)
+- [Influenza](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/influenza.png)
+- [Kidney Disease](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/kidney_disease.png)
+- [Mental Health](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/mental_health.png)
+- [Suicide](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/suicide.png)
+- [Liver Disease](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/liver_disease.png)
+- [Hypertension](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/hypertension.png)
+- [Parkinson](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/parkinson.png)
+- [Obesity](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/obesity.png)
+- [HIV/AIDS](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/hiv_aids.png)
+- [Opioid Use Disorder](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/opioid.png)
