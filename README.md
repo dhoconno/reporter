@@ -47,6 +47,44 @@ The following NIH Institutes and Centers have individual plots available. Click 
 | National Library of Medicine | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_NLM.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_NLM.html) \| [meeting notices](https://dhoconno.github.io/reporter/reports/nih_fr_meetings_NLM.html) |
 | Office of the Director | [awards](https://dhoconno.github.io/reporter/reports/nih_awards_OD.html) \| [award amounts](https://dhoconno.github.io/reporter/reports/nih_award_amounts_OD.html) \| [meeting notices](https://dhoconno.github.io/reporter/reports/nih_fr_meetings_OD.html) |
 
+## Beta features (added 15 May 2025)
+
+Several features have been requested in the last few months. The NIH fiscal year is October 1 through September 30. Adding plots that use fiscal year makes it easier to visualize spending in this interval. 
+
+Comparing total grant amounts in 2016 and 2025 ignores the impact of inflation. I [created overall NIH plots](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/nih_awards_dashboard.png) that adjust historical award amounts to current‑dollar terms by first downloading the Consumer Price Index for All Urban Consumers (CPI‑U, series CPIAUCSL) from the Federal Reserve’s FRED database, then computing the mean CPI for each calendar and fiscal year. Using the most recent CPI value as the reference, it derives an adjustment factor for each year—defined as the ratio of the latest CPI to that year’s average CPI—and multiplies every award amount by its corresponding factor.
+
+I also created new plots that show NIH grant awards by state and by common medical conditions. For medical conditions, I extracted records that contain these RePORTER `project terms`:
+
+| Condition (slug)     | Keyword list                                                               |
+|----------------------|---------------------------------------------------------------------------|
+| heart_disease        | heart disease, cardiovascular, coronary, heart failure, myocardial infarction |
+| breast_cancer        | breast cancer, mammary carcinoma                                          |
+| lung_cancer          | lung cancer, pulmonary cancer, bronchogenic carcinoma                     |
+| prostate_cancer      | prostate cancer                                                           |
+| colorectal_cancer    | colorectal cancer, colon cancer, rectal cancer                            |
+| pancreatic_cancer    | pancreatic cancer                                                         |
+| leukemia             | leukemia                                                                  |
+| lymphoma             | lymphoma                                                                  |
+| melanoma             | melanoma                                                                  |
+| covid                | covid, sars-cov-2, coronavirus                                            |
+| trauma               | trauma, injury, accident                                                  |
+| stroke               | stroke, cerebrovascular, brain hemorrhage                                 |
+| respiratory_disease  | copd, asthma, emphysema, bronchitis, respiratory disease                  |
+| alzheimer            | alzheimer, dementia, neurodegenerative                                    |
+| diabetes             | diabetes, insulin resistance, hyperglycemia                               |
+| influenza            | influenza, pneumonia, flu                                                 |
+| kidney_disease       | kidney disease, renal disease, nephropathy, dialysis                      |
+| mental_health        | depression, anxiety, mental health, psychiatric                           |
+| suicide              | suicide, self-harm                                                        |
+| liver_disease        | liver disease, cirrhosis, hepatitis                                       |
+| hypertension         | hypertension, high blood pressure                                         |
+| parkinson            | parkinson, movement disorder                                              |
+| obesity              | obesity, overweight                                                       |
+| hiv_aids             | hiv, aids, acquired immune deficiency syndrome                            |
+| opioid               | opioid, addiction, substance abuse                                        |
+
+As always, I welcome feedback and corrections if any errors are found.
+
 ## State‑Specific Plots
 
 Cumulative awards by **state** (updated each Tuesday).
