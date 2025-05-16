@@ -102,8 +102,6 @@ Cumulative awards by **state** (updated each Tuesday).
 | [SD](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/SD.png) | [TN](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/TN.png) | [TX](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/TX.png) | [UT](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/UT.png) | [VT](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/VT.png) |
 | [VA](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/VA.png) | [WA](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/WA.png) | [WV](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/WV.png) | [WI](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/WI.png) | [WY](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_state/WY.png) |
 
----
-
 ## Condition‑Specific Plots
 
 Cumulative awards for key biomedical topics.
