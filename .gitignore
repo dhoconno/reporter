@@ -3,3 +3,4 @@
 .pixi
 *.egg-info
 error_records
+debug
