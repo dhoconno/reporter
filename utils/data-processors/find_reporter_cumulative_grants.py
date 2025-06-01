@@ -6,16 +6,18 @@ Monthly queries are run (with caching) and if any month reaches the API limit (1
 At the end, a CSV is generated (compressed with zstd) listing each grant's award date and grant number.
 """
 
-import argparse
+import requests
+import json
+import os
+from pathlib import Path
 import datetime
 import time
-import json
-from pathlib import Path
-import requests
-import numpy as np
 import plotly.graph_objects as go
-import colorsys
-import os
+import plotly.express as px
+from plotly.subplots import make_subplots
+import pandas as pd
+import argparse
+import zstandard as zstd
 
 # Define base directory and output directories
 REPORTS_DIR = "pages/reports"
@@ -41,7 +43,7 @@ class NIHReporterCache:
 
     def get_cache_path(self, year, month):
         """Get the cache file path for a specific year and month."""
-        return self.cache_dir / f"grants_{year}_{month:02d}.json"
+        return self.cache_dir / f"grants_{year}_{month:02d}.json.zst"
 
     def get_cached_data(self, year, month):
         """
@@ -59,30 +61,50 @@ class NIHReporterCache:
             return None
 
         try:
-            with open(cache_path, "r") as f:
-                data = json.load(f)
-                if not all(key in data for key in ["fetch_date", "grants"]):
-                    return None
-                fetch_date = datetime.datetime.strptime(data["fetch_date"], "%Y-%m-%d").date()
-                if (today - fetch_date).days > 7:
-                    return None
-                return data["grants"]
-        except (json.JSONDecodeError, KeyError):
+            # Decompress and load the JSON data
+            with open(cache_path, "rb") as f:
+                compressed_data = f.read()
+            
+            decompressor = zstd.ZstdDecompressor()
+            decompressed_data = decompressor.decompress(compressed_data)
+            data = json.loads(decompressed_data.decode('utf-8'))
+            
+            if not all(key in data for key in ["fetch_date", "grants"]):
+                return None
+            fetch_date = datetime.datetime.strptime(data["fetch_date"], "%Y-%m-%d").date()
+            if (today - fetch_date).days > 7:
+                return None
+            return data["grants"]
+        except (json.JSONDecodeError, KeyError, zstd.ZstdError) as e:
+            print(f"Error loading compressed cache for {year}-{month:02d}: {e}")
             return None
 
     def save_to_cache(self, year, month, grants):
-        """Save grant data to cache along with the current fetch date."""
+        """Save grant data to cache with compression along with the current fetch date."""
         cache_path = self.get_cache_path(year, month)
         data = {
             "fetch_date": datetime.date.today().strftime("%Y-%m-%d"),
             "grants": grants,
         }
         try:
-            with open(cache_path, 'w') as f:
-                json.dump(data, f)
-            print(f"Cache saved: {cache_path}")
+            # Compress the JSON data
+            json_str = json.dumps(data)
+            json_bytes = json_str.encode('utf-8')
+            
+            compressor = zstd.ZstdCompressor(level=3)  # Good balance of speed vs compression
+            compressed_data = compressor.compress(json_bytes)
+            
+            with open(cache_path, 'wb') as f:
+                f.write(compressed_data)
+            
+            # Calculate compression ratio for info
+            original_size = len(json_bytes)
+            compressed_size = len(compressed_data)
+            ratio = compressed_size / original_size * 100
+            
+            print(f"Cache saved: {cache_path} (compressed to {ratio:.1f}% of original size)")
         except Exception as e:
-            print(f"Error saving cache for {year}-{month:02d}: {e}")
+            print(f"Error saving compressed cache for {year}-{month:02d}: {e}")
 
 
 def create_ic_plots_dir():
