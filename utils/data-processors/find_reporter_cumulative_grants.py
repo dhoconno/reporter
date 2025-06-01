@@ -18,6 +18,8 @@ from plotly.subplots import make_subplots
 import pandas as pd
 import argparse
 import zstandard as zstd
+import numpy as np
+import colorsys
 
 # Define base directory and output directories
 REPORTS_DIR = "pages/reports"
