@@ -48,6 +48,40 @@ jobs:
           mkdir -p data/processed/reporter data/processed/federal_register data/processed/taggs
           mkdir -p data/external
 
+      - name: Migrate uncompressed cache files
+        run: |
+          python -c "
+          import os
+          import json
+          import zstandard as zstd
+          from pathlib import Path
+          
+          cache_dir = Path('cache/reporter')
+          if cache_dir.exists():
+              for json_file in cache_dir.glob('*.json'):
+                  if not json_file.name.endswith('.json.zst'):
+                      print(f'Compressing {json_file}...')
+                      try:
+                          with open(json_file, 'r') as f:
+                              data = json.load(f)
+                          
+                          json_str = json.dumps(data)
+                          json_bytes = json_str.encode('utf-8')
+                          
+                          compressor = zstd.ZstdCompressor(level=3)
+                          compressed_data = compressor.compress(json_bytes)
+                          
+                          compressed_file = json_file.with_suffix('.json.zst')
+                          with open(compressed_file, 'wb') as f:
+                              f.write(compressed_data)
+                          
+                          # Remove the original uncompressed file
+                          json_file.unlink()
+                          print(f'Migrated {json_file} to {compressed_file}')
+                      except Exception as e:
+                          print(f'Error migrating {json_file}: {e}')
+          "
+
       - name: Run reporter update
         run: |
           python utils/data-processors/find_reporter_cumulative_grants.py --force-refresh
@@ -57,7 +91,7 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
 
-          git add cache/reporter/*.json
+          git add cache/reporter/*.json.zst
           git add pages/reports/nih_awards.html pages/assets/nih_awards.png
           git add pages/reports/nih_award_amounts.html pages/assets/nih_award_amounts.png
           git add data/processed/reporter/nih_awards_all.csv.zst
