@@ -1,0 +1,9 @@
+requests
+plotly
+numpy
+kaleido
+bs4
+pandas
+zstandard
+tabula-py
+labkey
