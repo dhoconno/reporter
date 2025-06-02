@@ -135,3 +135,22 @@ Cumulative awards for key biomedical topics.
 ## Working with cache files
 Large cache files necessary for plot generation are stored using Git LFS. To speed up cloning, use `git clone --filter=blob:none`. After cloning, run `git lfs pull` to fetch the cached data when needed.
 
+## Testing Data
+
+For development and continuous integration it can be useful to work with very
+small copies of the processed datasets and caches. The `make_tiny_files.py`
+utility creates these truncated files by keeping only the first *N* elements of a
+CSV or JSON file. Compressed variants ending in `.zst` are also supported.
+
+Example:
+
+```bash
+python utils/data-processors/make_tiny_files.py \
+    --input data/processed/taggs/hhs_grants_terminated.csv \
+    --output data/tiny/hhs_grants_terminated.csv \
+    --lines 10
+```
+
+The script automatically handles plain CSV/JSON files as well as their
+zstd-compressed counterparts (`.csv.zst` / `.json.zst`).
+
