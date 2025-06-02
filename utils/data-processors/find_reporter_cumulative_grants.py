@@ -446,14 +446,15 @@ def create_cumulative_counts(data_counts, cutoff_day):
     else:
         max_day = cutoff_day
     
-    # Generate date strings for x-axis - USE CURRENT YEAR INSTEAD OF HARDCODED 2023
-    current_year = datetime.date.today().year
+    # Generate date strings for x-axis using a leap year so that all
+    # day-of-year values map consistently to month-day labels.  Using
+    # the current year can lead to incorrect labels when that year is
+    # not a leap year (e.g. day 60 would map to Mar 1 instead of Feb 29).
+    base_year = 2000  # leap year
     date_strs = []
     for day in range(1, max_day + 1):
-        # Use current year to get correct day of year conversions
-        date = datetime.date(current_year, 1, 1) + datetime.timedelta(days=day-1)
-        date_str = date.strftime("%b %d")
-        date_strs.append(date_str)
+        date = datetime.date(base_year, 1, 1) + datetime.timedelta(days=day - 1)
+        date_strs.append(date.strftime("%b %d"))
     
     # Create cumulative counts for each year
     for year, days in data_counts.items():
