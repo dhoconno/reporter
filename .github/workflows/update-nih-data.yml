@@ -88,8 +88,10 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
 
-          # Pull latest changes before adding our updates
+          # Stash any unstaged changes, pull latest, then pop stash
+          git stash push -m "temp stash before pull" || true
           git pull origin main --rebase
+          git stash pop || true
 
           git add cache/reporter/*.json.zst
           git add pages/reports/nih_awards.html pages/assets/nih_awards.png
@@ -108,8 +110,10 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
 
-          # Pull latest changes before adding our updates
+          # Stash any unstaged changes, pull latest, then pop stash
+          git stash push -m "temp stash before pull" || true
           git pull origin main --rebase
+          git stash pop || true
 
           git add cache/federal_register/**/*
           git add pages/reports/nih_fr_meetings.html pages/assets/nih_fr_meetings.png
@@ -127,8 +131,10 @@ jobs:
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
 
-          # Pull latest changes before adding our updates
+          # Stash any unstaged changes, pull latest, then pop stash
+          git stash push -m "temp stash before pull" || true
           git pull origin main --rebase
+          git stash pop || true
 
           git add -f cache/taggs/*.json || true
           git add -f data/processed/taggs/hhs_grants_terminated.csv || true
