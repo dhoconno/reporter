@@ -1,8 +1,5 @@
 name: Update NIH Reporter Data
 on:
-  push:
-    branches:
-      - main
   schedule:
     - cron: '0 12 * * *' # Run at noon every day
   workflow_dispatch:    # Allow manual triggers
