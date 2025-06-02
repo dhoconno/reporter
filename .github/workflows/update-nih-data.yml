@@ -93,10 +93,19 @@ jobs:
           git pull origin main --rebase
           git stash pop || true
 
-          git add cache/reporter/*.json.zst
+          # Force add cache files (they may be in .gitignore)
+          git add -f cache/reporter/*.json.zst || true
+          
+          # Add main reports and assets
           git add pages/reports/nih_awards.html pages/assets/nih_awards.png
           git add pages/reports/nih_award_amounts.html pages/assets/nih_award_amounts.png
           git add data/processed/reporter/nih_awards_all.csv.zst
+          
+          # Add all IC-specific reports that were generated
+          git add pages/reports/nih_awards_*.html || true
+          git add pages/reports/nih_award_amounts_*.html || true
+          git add pages/assets/nih_awards_*.png || true
+          git add pages/assets/nih_award_amounts_*.png || true
 
           git diff --staged --quiet || git commit -m "Update NIH Reporter data"
           git push origin main
