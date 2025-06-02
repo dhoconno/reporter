@@ -12,7 +12,7 @@ Under the [Federal Advisory Committee Act](https://www.gsa.gov/policy-regulation
 - [Cumulative Federal Register Study Section Announcements](https://dhoconno.github.io/reporter/reports/nih_fr_meetings.html)
 
 ## Tracking Accountability in Government Grants System (TAGGS) 
-The [Health and Human Services Tracking Accountability in Government Grants System (TAGGS) website](https://taggs.hhs.gov) has a link to a PDF of awards that have been terminated. The PDF is not easy to explore and does not contain context (e.g,. investigators, keywords) that may be useful for analysis.
+The [Health and Human Services Tracking Accountability in Government Grants System (TAGGS) website](https://taggs.hhs.gov) has a link to a PDF of awards that have been terminated. The PDF is not easy to explore and does not contain context (e.g., investigators, keywords) that may be useful for analysis.
 
 - [TAGGS terminated grant data explorer](https://dhoconno.github.io/reporter/reports/terminated_grants.html)
 
