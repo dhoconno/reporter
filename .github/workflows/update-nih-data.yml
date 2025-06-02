@@ -124,9 +124,16 @@ jobs:
           git pull origin main --rebase
           git stash pop || true
 
-          git add cache/federal_register/**/*
+          # Force add cache files (they may be in .gitignore)
+          git add -f cache/federal_register/**/* || true
+          
+          # Add main reports and assets
           git add pages/reports/nih_fr_meetings.html pages/assets/nih_fr_meetings.png
           git add data/processed/federal_register/nih_fr_meetings_all.csv.zst
+          
+          # Add all IC-specific Federal Register reports that were generated
+          git add pages/reports/nih_fr_meetings_*.html || true
+          git add pages/assets/nih_fr_meetings_*.png || true
 
           git diff --staged --quiet || git commit -m "Update Federal Register data"
           git push origin main
@@ -145,6 +152,7 @@ jobs:
           git pull origin main --rebase
           git stash pop || true
 
+          # Force add cache files (they may be in .gitignore)
           git add -f cache/taggs/*.json || true
           git add -f data/processed/taggs/hhs_grants_terminated.csv || true
           git add -f pages/assets/csv/hhs_grants_terminated.csv || true
