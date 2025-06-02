@@ -5,8 +5,8 @@ already exists in LabKey will be skipped.
 
 Run the sync::
 
-       python ihireporter_sync_labkey.py         # last 30 days
-       python ihireporter_sync_labkey.py --force # back-fill 10 years
+       python extract_reporter_to_labkey.py         # last 14 days
+       python extract_reporter_to_labkey.py --force # back-fill 10 years
 """
 
 from __future__ import annotations
