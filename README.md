@@ -131,3 +131,7 @@ Cumulative awards for key biomedical topics.
 - [Obesity](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/obesity.png)
 - [HIV/AIDS](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/hiv_aids.png)
 - [Opioid Use Disorder](https://dholk.primate.wisc.edu/_webdav/dho/public/reporter/@files/plots/by_condition/opioid.png)
+
+## Working with cache files
+Large cache files necessary for plot generation are stored using Git LFS. To speed up cloning, use `git clone --filter=blob:none`. After cloning, run `git lfs pull` to fetch the cached data when needed.
+
