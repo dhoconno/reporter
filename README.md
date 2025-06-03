@@ -134,6 +134,3 @@ Cumulative awards for key biomedical topics.
 
 ## Working with cache files
 Large cache files necessary for plot generation are stored using Git LFS. To speed up cloning, use `git clone --filter=blob:none`. After cloning, run `git lfs pull` to fetch the cached data when needed.
-
-Most caches are kept in compressed `.json.zst` format, including the TAGGS caches `terminated_grants_reporter_cache.json.zst` and `not_found_cache.json.zst`.
-
