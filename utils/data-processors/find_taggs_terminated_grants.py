@@ -9,6 +9,38 @@ import os
 import xml.etree.ElementTree as ET
 import zstandard as zstd
 
+def standardize_headers(df):
+    """Map raw column names from the PDF to standardized names."""
+    mapping = {
+        "awarding office": "Awarding Office",
+        "fain": "FAIN",
+        "project #": "Award Number",
+        "award number": "Award Number",
+        "recipient name": "Recipient Name",
+        "action date": "Action Date (Date Terminated)",
+        "date terminated": "Action Date (Date Terminated)",
+        "termination date": "Action Date (Date Terminated)",
+        "obligated": "Total Amount Obligated",
+        "expended": "Total Amount Expended",
+        "payment amount": "Total Payment Amount (As of Termination)",
+        "unliquidated": "Unliquidated Obligations (As of Termination)",
+        "award title": "Award Title",
+        "presidential action": "Presidential Action",
+        "for cause": "For Cause (Put X if applicable)",
+    }
+
+    new_cols = []
+    for col in df.columns:
+        normalized = str(col).strip().lower()
+        new_name = None
+        for key, val in mapping.items():
+            if key in normalized:
+                new_name = val
+                break
+        new_cols.append(new_name if new_name else col)
+    df.columns = new_cols
+    return df
+
 def download_pdf(url, output_path):
     """Download PDF file from URL"""
     response = requests.get(url)
@@ -97,23 +129,22 @@ def extract_data_from_pdf(pdf_path):
             print("ERROR: No tables were extracted from the PDF")
             return pd.DataFrame()
             
-        # Define expected column headers based on the PDF structure
+        # Standard column order used in the final CSV
         expected_headers = [
-            'Awarding Office', 
-            'FAIN', 
-            'Award Number', 
-            'Recipient Name', 
-            'Action Date (Date Terminated)', 
-            'Total Amount Obligated', 
-            'Total Amount Expended', 
-            'Total Payment Amount (As of Termination)', 
-            'Unliquidated Obligations (As of Termination)', 
-            'Award Title', 
-            'Presidential Action', 
+            'Awarding Office',
+            'FAIN',
+            'Award Number',
+            'Recipient Name',
+            'Action Date (Date Terminated)',
+            'Total Amount Obligated',
+            'Total Amount Expended',
+            'Total Payment Amount (As of Termination)',
+            'Unliquidated Obligations (As of Termination)',
+            'Award Title',
+            'Presidential Action',
             'For Cause (Put X if applicable)'
         ]
-        
-        # Process each table to ensure proper headers
+
         processed_tables = []
         
         for i, table in enumerate(tables):
@@ -132,15 +163,21 @@ def extract_data_from_pdf(pdf_path):
                 print(f"Skipping header table {i+1}")
                 continue
                 
-            # For data tables, assign proper column headers
-            if table.shape[1] >= len(expected_headers):
-                table.columns = expected_headers + [f'Extra_{j}' for j in range(table.shape[1] - len(expected_headers))]
-            else:
-                # Pad with NA columns if needed
-                for j in range(table.shape[1], len(expected_headers)):
-                    table[expected_headers[j]] = None
-                table = table[expected_headers]
-                
+            # If the first row looks like headers, drop it before standardising
+            if any('award' in str(x).lower() for x in first_row):
+                table = table.drop(index=0).reset_index(drop=True)
+
+            table = standardize_headers(table)
+
+            # Ensure all expected columns exist, filling missing ones with NA
+            for col in expected_headers:
+                if col not in table.columns:
+                    table[col] = None
+
+            # Reorder columns and keep any extras at the end
+            extra_cols = [c for c in table.columns if c not in expected_headers]
+            table = table[expected_headers + extra_cols]
+
             processed_tables.append(table)
         
         # Concatenate all processed tables
