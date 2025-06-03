@@ -7,6 +7,7 @@ import time
 import json
 import os
 import xml.etree.ElementTree as ET
+import zstandard as zstd
 
 def download_pdf(url, output_path):
     """Download PDF file from URL"""
@@ -251,7 +252,10 @@ def merge_continuation_rows(df):
     # Create a new DataFrame from the merged entries
     return pd.DataFrame(result)
 
-def get_nih_reporter_data_individual(project_numbers, cache_file="cache/taggs/terminated_grants_reporter_cache.json", not_found_cache_file="cache/taggs/not_found_cache.json", limit=None):
+def get_nih_reporter_data_individual(project_numbers,
+                                     cache_file="cache/taggs/terminated_grants_reporter_cache.json.zst",
+                                     not_found_cache_file="cache/taggs/not_found_cache.json.zst",
+                                     limit=None):
     """
     Fetch grant details from NIH RePORTER API one by one with caching
     
@@ -280,8 +284,10 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="cache/taggs/te
     cache = {}
     if os.path.exists(cache_file):
         try:
-            with open(cache_file, 'r', encoding='utf-8') as f:
-                cache = json.load(f)
+            with open(cache_file, 'rb') as f:
+                compressed = f.read()
+            dctx = zstd.ZstdDecompressor()
+            cache = json.loads(dctx.decompress(compressed).decode('utf-8'))
             print(f"Loaded {len(cache)} cached records from {cache_file}")
         except Exception as e:
             print(f"Error loading cache: {str(e)}")
@@ -291,8 +297,10 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="cache/taggs/te
     not_found_cache = []
     if os.path.exists(not_found_cache_file):
         try:
-            with open(not_found_cache_file, 'r', encoding='utf-8') as f:
-                not_found_cache = json.load(f)
+            with open(not_found_cache_file, 'rb') as f:
+                compressed = f.read()
+            dctx = zstd.ZstdDecompressor()
+            not_found_cache = json.loads(dctx.decompress(compressed).decode('utf-8'))
             print(f"Loaded {len(not_found_cache)} not-found records from {not_found_cache_file}")
         except Exception as e:
             print(f"Error loading not-found cache: {str(e)}")
@@ -398,14 +406,18 @@ def get_nih_reporter_data_individual(project_numbers, cache_file="cache/taggs/te
                     if project_num not in not_found_cache:
                         not_found_cache.append(project_num)
                         # Save not-found cache
-                        with open(not_found_cache_file, 'w', encoding='utf-8') as f:
-                            json.dump(not_found_cache, f)
+                        with open(not_found_cache_file, 'wb') as f:
+                            data = json.dumps(not_found_cache).encode('utf-8')
+                            cctx = zstd.ZstdCompressor(level=3)
+                            f.write(cctx.compress(data))
             else:
                 print(f"  API error: {response.status_code} - {response.text}")
             
             # Save cache after each successful API call
-            with open(cache_file, 'w', encoding='utf-8') as f:
-                json.dump(cache, f, indent=2)
+            with open(cache_file, 'wb') as f:
+                data = json.dumps(cache, indent=2).encode('utf-8')
+                cctx = zstd.ZstdCompressor(level=3)
+                f.write(cctx.compress(data))
             
             # Be nice to the API
             time.sleep(0.5)
@@ -497,9 +509,9 @@ def enrich_dataframe_with_reporter_data(df, limit=None):
     
     # Use both caches (regular and not-found)
     results = get_nih_reporter_data_individual(
-        project_numbers, 
-        cache_file="cache/taggs/terminated_grants_reporter_cache.json",
-        not_found_cache_file="cache/taggs/not_found_cache.json",
+        project_numbers,
+        cache_file="cache/taggs/terminated_grants_reporter_cache.json.zst",
+        not_found_cache_file="cache/taggs/not_found_cache.json.zst",
         limit=limit
     )
     
