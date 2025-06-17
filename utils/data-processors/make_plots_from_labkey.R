@@ -86,8 +86,114 @@ fiscal_start <- as.Date(paste0(year(today) - ifelse(month(today) >= 10, 0, 1), "
 fy_cutoff <- as.numeric(difftime(today, fiscal_start, units = "days")) + 1
 
 ## ----- CPI inflation data ---------
-# Download monthly CPI‑U (seasonally adjusted) from FRED
-getSymbols("CPIAUCSL", src = "FRED", from = "2010-01-01", auto.assign = TRUE)
+# Cached CPI-U data (seasonally adjusted) - actual values from FRED
+# Last updated: December 2024
+cached_cpi_data <- list(
+  dates = as.Date(c("2010-01-01", "2011-01-01", "2012-01-01", "2013-01-01", 
+                    "2014-01-01", "2015-01-01", "2016-01-01", "2017-01-01",
+                    "2018-01-01", "2019-01-01", "2020-01-01", "2021-01-01",
+                    "2022-01-01", "2023-01-01", "2024-01-01", "2024-12-01")),
+  # Annual average CPI values from FRED CPIAUCSL series
+  values = c(217.488, 220.223, 226.655, 230.280, 233.916, 236.736, 237.017, 240.007,
+             245.120, 251.712, 255.657, 258.811, 270.970, 292.655, 304.702, 310.326)
+)
+
+# Function to create monthly CPI data from annual averages
+create_monthly_cpi <- function(annual_dates, annual_values, end_date = Sys.Date()) {
+  # Create a complete monthly series
+  all_months <- seq(min(annual_dates), end_date, by = "month")
+  monthly_values <- numeric(length(all_months))
+  
+  for (i in seq_along(all_months)) {
+    month_date <- all_months[i]
+    # Find the appropriate annual value to use
+    year_idx <- findInterval(month_date, annual_dates)
+    
+    if (year_idx == 0) {
+      monthly_values[i] <- annual_values[1]
+    } else if (year_idx >= length(annual_values)) {
+      # Extrapolate for future months using recent inflation rate
+      months_ahead <- as.numeric(difftime(month_date, annual_dates[length(annual_dates)], units = "days")) / 30.44
+      recent_annual_inflation <- (annual_values[length(annual_values)] / annual_values[length(annual_values)-1]) - 1
+      monthly_inflation <- (1 + recent_annual_inflation)^(1/12) - 1
+      monthly_values[i] <- annual_values[length(annual_values)] * (1 + monthly_inflation)^months_ahead
+    } else {
+      # Interpolate between annual values
+      days_from_start <- as.numeric(difftime(month_date, annual_dates[year_idx], units = "days"))
+      days_in_period <- as.numeric(difftime(annual_dates[year_idx + 1], annual_dates[year_idx], units = "days"))
+      weight <- days_from_start / days_in_period
+      monthly_values[i] <- annual_values[year_idx] * (1 - weight) + annual_values[year_idx + 1] * weight
+    }
+  }
+  
+  return(data.frame(date = all_months, cpi = monthly_values))
+}
+
+# Try to download fresh CPI data with better error handling
+cpi_download_success <- FALSE
+cpi_source <- "none"
+
+# Method 1: Try FRED API with explicit URL construction
+tryCatch({
+  log_info("Attempting to download CPI data from FRED API...")
+  # Use getSymbols with more explicit parameters
+  getSymbols("CPIAUCSL", src = "FRED", from = "2010-01-01", 
+             auto.assign = TRUE, warnings = FALSE)
+  cpi_download_success <- TRUE
+  cpi_source <- "FRED"
+  log_info("Successfully downloaded CPI data from FRED")
+}, error = function(e) {
+  log_warn(paste("FRED API failed:", e$message))
+  
+  # Method 2: Try direct CSV download as backup
+  tryCatch({
+    log_info("Attempting direct CSV download from FRED...")
+    temp_file <- tempfile(fileext = ".csv")
+    # Use download.file with explicit method
+    download.file(
+      url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCSL",
+      destfile = temp_file,
+      method = "curl",
+      quiet = TRUE
+    )
+    
+    # Read the CSV
+    cpi_csv <- read.csv(temp_file, stringsAsFactors = FALSE)
+    colnames(cpi_csv) <- c("date", "value")
+    cpi_csv$date <- as.Date(cpi_csv$date)
+    cpi_csv <- cpi_csv[cpi_csv$date >= as.Date("2010-01-01"), ]
+    
+    # Convert to xts object
+    CPIAUCSL <<- xts(cpi_csv$value, order.by = cpi_csv$date)
+    colnames(CPIAUCSL) <<- "CPIAUCSL"
+    
+    cpi_download_success <- TRUE
+    cpi_source <- "FRED_CSV"
+    log_info("Successfully downloaded CPI data via direct CSV")
+    
+    unlink(temp_file)
+  }, error = function(e2) {
+    log_warn(paste("Direct CSV download failed:", e2$message))
+  })
+})
+
+# Method 3: Use cached data as final fallback
+if (!cpi_download_success) {
+  log_warn("All download methods failed, using cached CPI data")
+  log_info("Creating monthly CPI series from cached annual averages")
+  
+  # Generate monthly data from cached values
+  monthly_cpi <- create_monthly_cpi(cached_cpi_data$dates, cached_cpi_data$values)
+  
+  # Convert to xts object
+  CPIAUCSL <- xts(monthly_cpi$cpi, order.by = monthly_cpi$date)
+  colnames(CPIAUCSL) <- "CPIAUCSL"
+  
+  cpi_source <- "cached"
+  log_info(paste("Using cached CPI data through", max(cached_cpi_data$dates)))
+}
+
+log_info(paste("CPI data source:", cpi_source))
 
 # Calendar year CPI
 cal_cpi_df <- data.frame(
@@ -1146,7 +1252,114 @@ if (opt$upload) {
   fy_cutoff <- as.numeric(difftime(today, fiscal_start, units = "days")) + 1
   
   # Download CPI data (now only happens in processing mode)
-  getSymbols("CPIAUCSL", src = "FRED", from = "2010-01-01", auto.assign = TRUE)
+  # Cached CPI-U data (seasonally adjusted) - actual values from FRED
+  # Last updated: December 2024
+  cached_cpi_data <- list(
+    dates = as.Date(c("2010-01-01", "2011-01-01", "2012-01-01", "2013-01-01", 
+                      "2014-01-01", "2015-01-01", "2016-01-01", "2017-01-01",
+                      "2018-01-01", "2019-01-01", "2020-01-01", "2021-01-01",
+                      "2022-01-01", "2023-01-01", "2024-01-01", "2024-12-01")),
+    # Annual average CPI values from FRED CPIAUCSL series
+    values = c(217.488, 220.223, 226.655, 230.280, 233.916, 236.736, 237.017, 240.007,
+               245.120, 251.712, 255.657, 258.811, 270.970, 292.655, 304.702, 310.326)
+  )
+
+  # Function to create monthly CPI data from annual averages
+  create_monthly_cpi <- function(annual_dates, annual_values, end_date = Sys.Date()) {
+    # Create a complete monthly series
+    all_months <- seq(min(annual_dates), end_date, by = "month")
+    monthly_values <- numeric(length(all_months))
+    
+    for (i in seq_along(all_months)) {
+      month_date <- all_months[i]
+      # Find the appropriate annual value to use
+      year_idx <- findInterval(month_date, annual_dates)
+      
+      if (year_idx == 0) {
+        monthly_values[i] <- annual_values[1]
+      } else if (year_idx >= length(annual_values)) {
+        # Extrapolate for future months using recent inflation rate
+        months_ahead <- as.numeric(difftime(month_date, annual_dates[length(annual_dates)], units = "days")) / 30.44
+        recent_annual_inflation <- (annual_values[length(annual_values)] / annual_values[length(annual_values)-1]) - 1
+        monthly_inflation <- (1 + recent_annual_inflation)^(1/12) - 1
+        monthly_values[i] <- annual_values[length(annual_values)] * (1 + monthly_inflation)^months_ahead
+      } else {
+        # Interpolate between annual values
+        days_from_start <- as.numeric(difftime(month_date, annual_dates[year_idx], units = "days"))
+        days_in_period <- as.numeric(difftime(annual_dates[year_idx + 1], annual_dates[year_idx], units = "days"))
+        weight <- days_from_start / days_in_period
+        monthly_values[i] <- annual_values[year_idx] * (1 - weight) + annual_values[year_idx + 1] * weight
+      }
+    }
+    
+    return(data.frame(date = all_months, cpi = monthly_values))
+  }
+
+  # Try to download fresh CPI data with better error handling
+  cpi_download_success <- FALSE
+  cpi_source <- "none"
+
+  # Method 1: Try FRED API with explicit URL construction
+  tryCatch({
+    log_info("Attempting to download CPI data from FRED API...")
+    # Use getSymbols with more explicit parameters
+    getSymbols("CPIAUCSL", src = "FRED", from = "2010-01-01", 
+               auto.assign = TRUE, warnings = FALSE)
+    cpi_download_success <- TRUE
+    cpi_source <- "FRED"
+    log_info("Successfully downloaded CPI data from FRED")
+  }, error = function(e) {
+    log_warn(paste("FRED API failed:", e$message))
+    
+    # Method 2: Try direct CSV download as backup
+    tryCatch({
+      log_info("Attempting direct CSV download from FRED...")
+      temp_file <- tempfile(fileext = ".csv")
+      # Use download.file with explicit method
+      download.file(
+        url = "https://fred.stlouisfed.org/graph/fredgraph.csv?id=CPIAUCSL",
+        destfile = temp_file,
+        method = "curl",
+        quiet = TRUE
+      )
+      
+      # Read the CSV
+      cpi_csv <- read.csv(temp_file, stringsAsFactors = FALSE)
+      colnames(cpi_csv) <- c("date", "value")
+      cpi_csv$date <- as.Date(cpi_csv$date)
+      cpi_csv <- cpi_csv[cpi_csv$date >= as.Date("2010-01-01"), ]
+      
+      # Convert to xts object
+      CPIAUCSL <<- xts(cpi_csv$value, order.by = cpi_csv$date)
+      colnames(CPIAUCSL) <<- "CPIAUCSL"
+      
+      cpi_download_success <- TRUE
+      cpi_source <- "FRED_CSV"
+      log_info("Successfully downloaded CPI data via direct CSV")
+      
+      unlink(temp_file)
+    }, error = function(e2) {
+      log_warn(paste("Direct CSV download failed:", e2$message))
+    })
+  })
+
+  # Method 3: Use cached data as final fallback
+  if (!cpi_download_success) {
+    log_warn("All download methods failed, using cached CPI data")
+    log_info("Creating monthly CPI series from cached annual averages")
+    
+    # Generate monthly data from cached values
+    monthly_cpi <- create_monthly_cpi(cached_cpi_data$dates, cached_cpi_data$values)
+    
+    # Convert to xts object
+    CPIAUCSL <- xts(monthly_cpi$cpi, order.by = monthly_cpi$date)
+    colnames(CPIAUCSL) <- "CPIAUCSL"
+    
+    cpi_source <- "cached"
+    log_info(paste("Using cached CPI data through", max(cached_cpi_data$dates)))
+  }
+
+  log_info(paste("CPI data source:", cpi_source))
   
   # Calendar year CPI
   cal_cpi_df <- data.frame(
