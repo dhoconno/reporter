@@ -17,10 +17,46 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
+      # Free up disk space before starting
+      - name: Free Disk Space (Ubuntu)
+        uses: jlumbroso/free-disk-space@main
+        with:
+          # This might remove tools that are actually needed,
+          # if set to "true" but frees about 6 GB
+          tool-cache: false
+          
+          # All of these default to true, but feel free to set to
+          # "false" if necessary for your workflow
+          android: true
+          dotnet: true
+          haskell: true
+          large-packages: true
+          docker-images: true
+          swap-storage: true
+      
+      - name: Check initial disk space
+        run: |
+          echo "=== Initial Disk Space ==="
+          df -h
+      
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: true
+      
+      # Restore cache from previous runs
+      - name: Restore cache
+        uses: actions/cache@v4
+        id: cache-restore
+        with:
+          path: |
+            cache/reporter
+            cache/federal_register
+            cache/taggs
+          key: ${{ runner.os }}-nih-cache-${{ hashFiles('**/requirements.txt') }}-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-nih-cache-${{ hashFiles('**/requirements.txt') }}-
+            ${{ runner.os }}-nih-cache-
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -44,6 +80,28 @@ jobs:
           mkdir -p pages/reports pages/assets/images pages/assets/csv
           mkdir -p data/processed/reporter data/processed/federal_register data/processed/taggs
           mkdir -p data/external
+      
+      # Clean up very old cache files to prevent unbounded growth
+      - name: Clean up old cache files
+        run: |
+          echo "=== Cache cleanup ==="
+          echo "Cache size before cleanup:"
+          du -sh cache/* 2>/dev/null || echo "No cache directories"
+          
+          # Remove reporter cache files older than 6 months
+          find cache/reporter -name "*.json.zst" -mtime +180 -delete 2>/dev/null || true
+          
+          # Remove federal register cache files older than 1 year
+          find cache/federal_register -name "*.json" -mtime +365 -delete 2>/dev/null || true
+          
+          # Remove taggs cache files older than 90 days
+          find cache/taggs -name "*.json*" -mtime +90 -delete 2>/dev/null || true
+          
+          echo "Cache size after cleanup:"
+          du -sh cache/* 2>/dev/null || echo "No cache directories"
+          
+          echo "Disk space after cache cleanup:"
+          df -h
 
       - name: Migrate uncompressed cache files
         run: |
@@ -81,7 +139,12 @@ jobs:
 
       - name: Run reporter update
         run: |
+          echo "=== Starting reporter update ==="
+          echo "Disk space before reporter update:"
+          df -h
           python utils/data-processors/find_reporter_cumulative_grants.py --force-refresh
+          echo "Disk space after reporter update:"
+          df -h
 
       - name: Commit reporter data
         run: |
@@ -93,8 +156,8 @@ jobs:
           git pull origin main --rebase
           git stash pop || true
 
-          # Force add cache files (they may be in .gitignore)
-          git add -f cache/reporter/*.json.zst || true
+          # Do NOT add cache files - they should remain in .gitignore
+          # Only add processed output files
           
           # Add main reports and assets
           git add pages/reports/nih_awards.html pages/assets/nih_awards.png
@@ -112,7 +175,12 @@ jobs:
 
       - name: Run federal register update
         run: |
+          echo "=== Starting federal register update ==="
+          echo "Disk space before federal register update:"
+          df -h
           python utils/data-processors/find_federal_register_announcements.py
+          echo "Disk space after federal register update:"
+          df -h
 
       - name: Commit federal register data
         run: |
@@ -124,8 +192,8 @@ jobs:
           git pull origin main --rebase
           git stash pop || true
 
-          # Force add cache files (they may be in .gitignore)
-          git add -f cache/federal_register/**/* || true
+          # Do NOT add cache files - they should remain in .gitignore
+          # Only add processed output files
           
           # Add main reports and assets
           git add pages/reports/nih_fr_meetings.html pages/assets/nih_fr_meetings.png
@@ -140,7 +208,12 @@ jobs:
 
       - name: Run terminated grants update
         run: |
+          echo "=== Starting terminated grants update ==="
+          echo "Disk space before terminated grants update:"
+          df -h
           python utils/data-processors/find_taggs_terminated_grants.py
+          echo "Disk space after terminated grants update:"
+          df -h
 
       - name: Commit terminated grants data
         run: |
@@ -152,9 +225,9 @@ jobs:
           git pull origin main --rebase
           git stash pop || true
 
-          # Force add cache files (they may be in .gitignore)
-          git add -f cache/taggs/*.json || true
-          git add -f data/processed/taggs/hhs_grants_terminated.csv || true
+          # Do NOT add cache files - they should remain in .gitignore
+          # Only add processed output files
+          git add data/processed/taggs/hhs_grants_terminated.csv || true
           git add -f pages/assets/csv/hhs_grants_terminated.csv || true
 
           git diff --staged --quiet || git commit -m "Update terminated grants data"
@@ -176,3 +249,21 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+      
+      # Save cache for next run
+      - name: Save cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            cache/reporter
+            cache/federal_register
+            cache/taggs
+          key: ${{ runner.os }}-nih-cache-${{ hashFiles('**/requirements.txt') }}-${{ github.run_id }}
+      
+      - name: Final disk space check
+        if: always()
+        run: |
+          echo "=== Final Disk Space ==="
+          df -h
+          echo "=== Cache directory sizes ==="
+          du -sh cache/* 2>/dev/null || echo "No cache directories"
