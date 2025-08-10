@@ -65,7 +65,7 @@ def clean_dataframe(df):
             df = df.iloc[rows_to_keep]
     
     # Clean column names - remove newlines and extra spaces
-    df.columns = [' '.join(str(col).replace('\n', ' ').split()) for col in df.columns]
+    df.columns = [' '.join(str(col).replace('\n', ' ').replace('\r', ' ').split()) for col in df.columns]
 
     # Remove columns with 'nan' as the header name
     df = df.loc[:, [col for col in df.columns if str(col).lower() != 'nan']]
@@ -101,7 +101,7 @@ def clean_dataframe(df):
     return df
 
 def extract_data_from_pdf(pdf_path):
-    """Extract tables from PDF into a pandas DataFrame"""
+    """Extract tables from PDF into a pandas DataFrame - FIXED VERSION"""
     print(f"Attempting to extract tables from {pdf_path}")
     
     # Check if PDF exists and has content
@@ -114,7 +114,7 @@ def extract_data_from_pdf(pdf_path):
         return pd.DataFrame()
         
     try:
-        # First, try to extract tables with area and stream mode for better header parsing
+        # Extract tables with lattice mode for better structure
         tables = tabula.read_pdf(
             pdf_path,
             pages='all',
@@ -129,7 +129,7 @@ def extract_data_from_pdf(pdf_path):
             print("ERROR: No tables were extracted from the PDF")
             return pd.DataFrame()
             
-        # Standard column order used in the final CSV
+        # Standard column order
         expected_headers = [
             'Awarding Office',
             'FAIN',
@@ -151,34 +151,53 @@ def extract_data_from_pdf(pdf_path):
             print(f"Processing table {i+1} with shape: {table.shape}")
             
             # Skip empty tables
-            if table.empty:
+            if table.empty or table.shape[0] == 0:
                 continue
-                
-            # Check if this is a header row or data row
-            first_row = table.iloc[0].astype(str).tolist()
-            first_cell = first_row[0] if len(first_row) > 0 else ""
             
-            # If first table with merged headers, skip it
-            if i == 0 and "Awarding" in first_cell and "FAIN" in first_cell:
-                print(f"Skipping header table {i+1}")
-                continue
+            # Check if first row contains headers
+            first_row = table.iloc[0] if len(table) > 0 else None
+            if first_row is not None:
+                first_row_str = ' '.join([str(v) for v in first_row.values if pd.notna(v)])
                 
-            # If the first row looks like headers, drop it before standardising
-            if any('award' in str(x).lower() for x in first_row):
-                table = table.drop(index=0).reset_index(drop=True)
-
+                # If the first row contains header keywords, use it as headers
+                if any(keyword in first_row_str.lower() for keyword in ['awarding', 'fain', 'recipient', 'terminated']):
+                    # Use first row as headers
+                    headers = []
+                    for val in first_row.values:
+                        if pd.notna(val):
+                            # Clean the header value
+                            header = str(val).replace('\r', ' ').replace('\n', ' ').strip()
+                            headers.append(header)
+                        else:
+                            headers.append(f"Column_{len(headers)}")
+                    
+                    # Set headers and remove first row
+                    table.columns = headers
+                    table = table.iloc[1:].reset_index(drop=True)
+                    print(f"  Set headers from first row: {headers[:3]}...")
+            
+            # Standardize headers
             table = standardize_headers(table)
-
-            # Ensure all expected columns exist, filling missing ones with NA
+            
+            # Ensure all expected columns exist
             for col in expected_headers:
                 if col not in table.columns:
                     table[col] = None
-
-            # Reorder columns and keep any extras at the end
+            
+            # Reorder columns
             extra_cols = [c for c in table.columns if c not in expected_headers]
             table = table[expected_headers + extra_cols]
-
-            processed_tables.append(table)
+            
+            # Remove any additional header rows that might have been included
+            # Check if any row has "Awarding Office" in the Awarding Office column
+            if 'Awarding Office' in table.columns:
+                mask = table['Awarding Office'].astype(str).str.contains('Awarding', na=False, case=False)
+                table = table[~mask]
+            
+            # Only add tables with actual data
+            if len(table) > 0:
+                processed_tables.append(table)
+                print(f"  Added {len(table)} rows from table {i+1}")
         
         # Concatenate all processed tables
         if not processed_tables:
@@ -186,33 +205,34 @@ def extract_data_from_pdf(pdf_path):
             return pd.DataFrame()
             
         df = pd.concat(processed_tables, ignore_index=True)
-        print(f"Combined DataFrame shape: {df.shape}")
+        print(f"Combined DataFrame shape before cleaning: {df.shape}")
         
-        # Remove rows that contain header text again
-        header_text = "Awarding Office"
-        df = df[~df['Awarding Office'].astype(str).str.contains(header_text)]
+        # Remove rows where all key columns are empty
+        key_cols = ['Award Number', 'FAIN', 'Recipient Name']
+        df = df.dropna(subset=key_cols, how='all')
         
-        # Debug column names
-        print(f"Column names after extraction: {df.columns.tolist()}")
+        print(f"Combined DataFrame shape after removing empty rows: {df.shape}")
         
-        # Merge continuation rows
-        df = merge_continuation_rows(df)
+        # NOTE: Skipping merge_continuation_rows as it was causing data loss
+        # The current PDF format doesn't have continuation rows that need merging
         
-        # Debug column names after merging rows
-        print(f"Column names after merging rows: {df.columns.tolist()}")
-        
-        # Remove rows that still have header-like content
-        df = df[~df.apply(lambda x: x.astype(str).str.contains('FAIN', case=False)).any(axis=1)]
-        
-        # Remove completely empty columns and rows
-        df = df.dropna(axis=1, how='all')
-        df = df.dropna(how='all')
-        
-        # Clean the DataFrame
+        # Clean the dataframe
         df = clean_dataframe(df)
         
         print(f"Final DataFrame shape: {df.shape}")
-        print(f"Final column names: {df.columns.tolist()}")
+        print(f"Final column names: {df.columns.tolist()[:5]}...")
+        
+        # Sample of data for verification
+        if len(df) > 0:
+            print(f"\nSample of extracted data:")
+            print(f"  First award: {df.iloc[0]['Award Number'] if 'Award Number' in df.columns else 'N/A'}")
+            print(f"  First recipient: {df.iloc[0]['Recipient Name'] if 'Recipient Name' in df.columns else 'N/A'}")
+            
+            # Check for recent dates
+            if 'Action Date (Date Terminated)' in df.columns:
+                dates = pd.to_datetime(df['Action Date (Date Terminated)'], errors='coerce')
+                recent_dates = dates[dates >= '2025-07-01']
+                print(f"  Grants terminated after July 1, 2025: {len(recent_dates)}")
         
         return df
     except Exception as e:
@@ -667,8 +687,13 @@ def main():
         enriched_df = enrich_dataframe_with_reporter_data(df)
         
         # FILTER: Only keep records that have RePORTER data
-        filtered_df = enriched_df[~enriched_df['Organization_City'].isna()]
-        filtered_count = len(filtered_df)
+        if 'Organization_City' in enriched_df.columns:
+            filtered_df = enriched_df[~enriched_df['Organization_City'].isna()]
+            filtered_count = len(filtered_df)
+        else:
+            # If no Organization_City column, all records lack RePORTER data
+            filtered_df = enriched_df
+            filtered_count = len(filtered_df)
         
         print(f"\nFiltering results to only include RePORTER entries:")
         print(f"  - Original records: {original_count}")
