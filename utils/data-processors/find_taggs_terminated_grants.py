@@ -64,7 +64,7 @@ def clean_dataframe(df):
                            if not is_header or i == 0]
             df = df.iloc[rows_to_keep]
     
-    # Clean column names - remove newlines and extra spaces
+    # Clean column names - remove newlines, carriage returns and extra spaces
     df.columns = [' '.join(str(col).replace('\n', ' ').replace('\r', ' ').split()) for col in df.columns]
 
     # Remove columns with 'nan' as the header name
@@ -101,7 +101,7 @@ def clean_dataframe(df):
     return df
 
 def extract_data_from_pdf(pdf_path):
-    """Extract tables from PDF into a pandas DataFrame - FIXED VERSION"""
+    """Extract tables from PDF into a pandas DataFrame - COMPLETE VERSION"""
     print(f"Attempting to extract tables from {pdf_path}")
     
     # Check if PDF exists and has content
@@ -147,6 +147,29 @@ def extract_data_from_pdf(pdf_path):
 
         processed_tables = []
         
+        # First pass: check if table 1 has headers
+        headers_found = False
+        standard_headers = None
+        
+        if len(tables) > 0:
+            first_table = tables[0]
+            if not first_table.empty:
+                first_row = first_table.iloc[0]
+                first_row_str = ' '.join([str(v) for v in first_row.values if pd.notna(v)]).lower()
+                
+                # If first table's first row contains headers
+                if any(keyword in first_row_str for keyword in ['awarding', 'fain', 'recipient', 'terminated']):
+                    headers_found = True
+                    # Extract headers from first table
+                    standard_headers = []
+                    for val in first_table.iloc[0].values:
+                        if pd.notna(val):
+                            header = str(val).replace('\r', ' ').replace('\n', ' ').strip()
+                            standard_headers.append(header)
+                        else:
+                            standard_headers.append(f"Column_{len(standard_headers)}")
+                    print(f"Found headers in table 1: {standard_headers[:4]}...")
+        
         for i, table in enumerate(tables):
             print(f"Processing table {i+1} with shape: {table.shape}")
             
@@ -154,27 +177,17 @@ def extract_data_from_pdf(pdf_path):
             if table.empty or table.shape[0] == 0:
                 continue
             
-            # Check if first row contains headers
-            first_row = table.iloc[0] if len(table) > 0 else None
-            if first_row is not None:
-                first_row_str = ' '.join([str(v) for v in first_row.values if pd.notna(v)])
-                
-                # If the first row contains header keywords, use it as headers
-                if any(keyword in first_row_str.lower() for keyword in ['awarding', 'fain', 'recipient', 'terminated']):
-                    # Use first row as headers
-                    headers = []
-                    for val in first_row.values:
-                        if pd.notna(val):
-                            # Clean the header value
-                            header = str(val).replace('\r', ' ').replace('\n', ' ').strip()
-                            headers.append(header)
-                        else:
-                            headers.append(f"Column_{len(headers)}")
-                    
-                    # Set headers and remove first row
-                    table.columns = headers
-                    table = table.iloc[1:].reset_index(drop=True)
-                    print(f"  Set headers from first row: {headers[:3]}...")
+            # For the first table with headers, skip the header row
+            if i == 0 and headers_found:
+                table = table.iloc[1:].reset_index(drop=True)
+                print(f"  Removed header row from table 1")
+            
+            # Apply the standard headers to all tables
+            if standard_headers and len(table.columns) == len(standard_headers):
+                table.columns = standard_headers
+            else:
+                # Use numeric columns if headers don't match
+                table.columns = [f"col_{j}" for j in range(len(table.columns))]
             
             # Standardize headers
             table = standardize_headers(table)
@@ -188,11 +201,14 @@ def extract_data_from_pdf(pdf_path):
             extra_cols = [c for c in table.columns if c not in expected_headers]
             table = table[expected_headers + extra_cols]
             
-            # Remove any additional header rows that might have been included
-            # Check if any row has "Awarding Office" in the Awarding Office column
+            # Remove any rows that are actually headers (they snuck in)
             if 'Awarding Office' in table.columns:
-                mask = table['Awarding Office'].astype(str).str.contains('Awarding', na=False, case=False)
+                # Remove rows where Awarding Office contains header text
+                mask = table['Awarding Office'].astype(str).str.contains('Awarding Office|Awarding\\s+Office', na=False, case=False, regex=True)
+                before_filter = len(table)
                 table = table[~mask]
+                if before_filter != len(table):
+                    print(f"  Removed {before_filter - len(table)} header rows")
             
             # Only add tables with actual data
             if len(table) > 0:
@@ -207,11 +223,14 @@ def extract_data_from_pdf(pdf_path):
         df = pd.concat(processed_tables, ignore_index=True)
         print(f"Combined DataFrame shape before cleaning: {df.shape}")
         
-        # Remove rows where all key columns are empty
-        key_cols = ['Award Number', 'FAIN', 'Recipient Name']
-        df = df.dropna(subset=key_cols, how='all')
-        
-        print(f"Combined DataFrame shape after removing empty rows: {df.shape}")
+        # Remove rows where Award Number AND FAIN are both empty (these are likely not real data)
+        # But keep rows that have at least one of these identifiers
+        if 'Award Number' in df.columns and 'FAIN' in df.columns:
+            mask = df['Award Number'].isna() & df['FAIN'].isna()
+            df = df[~mask]
+            print(f"Combined DataFrame shape after removing rows without identifiers: {df.shape}")
+        else:
+            print(f"Warning: Could not filter by Award Number/FAIN columns")
         
         # NOTE: Skipping merge_continuation_rows as it was causing data loss
         # The current PDF format doesn't have continuation rows that need merging
