@@ -6,4 +6,4 @@ bs4
 pandas
 zstandard
 tabula-py
-labkey
+labkey==3.4.0
