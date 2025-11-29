@@ -3,14 +3,90 @@ on:
   schedule:
     - cron: '0 12 * * *' # Run at noon every day
   workflow_dispatch:    # Allow manual triggers
+    inputs:
+      force_update:
+        description: 'Force update even if no new data detected'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
   pages: write      # Required for GitHub Pages deployment
   id-token: write   # Required for GitHub Pages deployment
 
+# Prevent multiple runs from overlapping
+concurrency:
+  group: ${{ github.workflow }}
+  cancel-in-progress: true
+
 jobs:
+  # Quick job to check if new data is available (< 1 minute)
+  check-for-updates:
+    runs-on: ubuntu-latest
+    outputs:
+      has_updates: ${{ steps.check.outputs.has_updates }}
+      update_reporter: ${{ steps.check.outputs.update_reporter }}
+      update_federal_register: ${{ steps.check.outputs.update_federal_register }}
+      update_taggs: ${{ steps.check.outputs.update_taggs }}
+      sources: ${{ steps.check.outputs.sources }}
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install minimal dependencies
+        run: pip install requests
+
+      - name: Restore check metadata cache
+        uses: actions/cache@v4
+        with:
+          path: cache/last_check_metadata.json
+          key: ${{ runner.os }}-check-metadata-${{ github.run_id }}
+          restore-keys: |
+            ${{ runner.os }}-check-metadata-
+
+      - name: Check for new data
+        id: check
+        run: |
+          python utils/data-processors/check_for_new_data.py
+          exit_code=$?
+
+          # If force_update is true, override the check results
+          if [[ "${{ inputs.force_update }}" == "true" ]]; then
+            echo "Force update requested - will process all sources"
+            echo "has_updates=true" >> $GITHUB_OUTPUT
+            echo "update_reporter=true" >> $GITHUB_OUTPUT
+            echo "update_federal_register=true" >> $GITHUB_OUTPUT
+            echo "update_taggs=true" >> $GITHUB_OUTPUT
+            echo "sources=reporter,federal_register,taggs" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Save check metadata cache
+        uses: actions/cache/save@v4
+        if: always()
+        with:
+          path: cache/last_check_metadata.json
+          key: ${{ runner.os }}-check-metadata-${{ github.run_id }}
+
+      - name: Summary
+        run: |
+          echo "## Data Check Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [[ "${{ steps.check.outputs.has_updates }}" == "true" ]]; then
+            echo "New data detected from: ${{ steps.check.outputs.sources }}" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "No new data detected. Skipping heavy processing." >> $GITHUB_STEP_SUMMARY
+          fi
+
+  # Heavy processing job - only runs if new data is available
   update-data:
+    needs: check-for-updates
+    if: needs.check-for-updates.outputs.has_updates == 'true'
     runs-on: ubuntu-latest
     environment:
       name: github-pages
@@ -24,7 +100,7 @@ jobs:
           # This might remove tools that are actually needed,
           # if set to "true" but frees about 6 GB
           tool-cache: false
-          
+
           # All of these default to true, but feel free to set to
           # "false" if necessary for your workflow
           android: true
@@ -33,17 +109,17 @@ jobs:
           large-packages: true
           docker-images: true
           swap-storage: true
-      
+
       - name: Check initial disk space
         run: |
           echo "=== Initial Disk Space ==="
           df -h
-      
+
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
           persist-credentials: true
-      
+
       # Restore cache from previous runs
       - name: Restore cache
         uses: actions/cache@v4
@@ -80,26 +156,26 @@ jobs:
           mkdir -p pages/reports pages/assets/images pages/assets/csv
           mkdir -p data/processed/reporter data/processed/federal_register data/processed/taggs
           mkdir -p data/external
-      
+
       # Clean up very old cache files to prevent unbounded growth
       - name: Clean up old cache files
         run: |
           echo "=== Cache cleanup ==="
           echo "Cache size before cleanup:"
           du -sh cache/* 2>/dev/null || echo "No cache directories"
-          
+
           # Remove reporter cache files older than 6 months
           find cache/reporter -name "*.json.zst" -mtime +180 -delete 2>/dev/null || true
-          
+
           # Remove federal register cache files older than 1 year
           find cache/federal_register -name "*.json" -mtime +365 -delete 2>/dev/null || true
-          
+
           # Remove taggs cache files older than 90 days
           find cache/taggs -name "*.json*" -mtime +90 -delete 2>/dev/null || true
-          
+
           echo "Cache size after cleanup:"
           du -sh cache/* 2>/dev/null || echo "No cache directories"
-          
+
           echo "Disk space after cache cleanup:"
           df -h
 
@@ -110,7 +186,7 @@ jobs:
           import json
           import zstandard as zstd
           from pathlib import Path
-          
+
           cache_dir = Path('cache/reporter')
           if cache_dir.exists():
               for json_file in cache_dir.glob('*.json'):
@@ -119,17 +195,17 @@ jobs:
                       try:
                           with open(json_file, 'r') as f:
                               data = json.load(f)
-                          
+
                           json_str = json.dumps(data)
                           json_bytes = json_str.encode('utf-8')
-                          
+
                           compressor = zstd.ZstdCompressor(level=3)
                           compressed_data = compressor.compress(json_bytes)
-                          
+
                           compressed_file = json_file.with_suffix('.json.zst')
                           with open(compressed_file, 'wb') as f:
                               f.write(compressed_data)
-                          
+
                           # Remove the original uncompressed file
                           json_file.unlink()
                           print(f'Migrated {json_file} to {compressed_file}')
@@ -138,6 +214,7 @@ jobs:
           "
 
       - name: Run reporter update
+        if: needs.check-for-updates.outputs.update_reporter == 'true'
         run: |
           echo "=== Starting reporter update ==="
           echo "Disk space before reporter update:"
@@ -147,6 +224,7 @@ jobs:
           df -h
 
       - name: Commit reporter data
+        if: needs.check-for-updates.outputs.update_reporter == 'true'
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
@@ -158,12 +236,12 @@ jobs:
 
           # Do NOT add cache files - they should remain in .gitignore
           # Only add processed output files
-          
+
           # Add main reports and assets
           git add pages/reports/nih_awards.html pages/assets/nih_awards.png
           git add pages/reports/nih_award_amounts.html pages/assets/nih_award_amounts.png
           git add data/processed/reporter/nih_awards_all.csv.zst
-          
+
           # Add all IC-specific reports that were generated
           git add pages/reports/nih_awards_*.html || true
           git add pages/reports/nih_award_amounts_*.html || true
@@ -174,6 +252,7 @@ jobs:
           git push origin main
 
       - name: Run federal register update
+        if: needs.check-for-updates.outputs.update_federal_register == 'true'
         run: |
           echo "=== Starting federal register update ==="
           echo "Disk space before federal register update:"
@@ -183,6 +262,7 @@ jobs:
           df -h
 
       - name: Commit federal register data
+        if: needs.check-for-updates.outputs.update_federal_register == 'true'
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
@@ -194,11 +274,11 @@ jobs:
 
           # Do NOT add cache files - they should remain in .gitignore
           # Only add processed output files
-          
+
           # Add main reports and assets
           git add pages/reports/nih_fr_meetings.html pages/assets/nih_fr_meetings.png
           git add data/processed/federal_register/nih_fr_meetings_all.csv.zst
-          
+
           # Add all IC-specific Federal Register reports that were generated
           git add pages/reports/nih_fr_meetings_*.html || true
           git add pages/assets/nih_fr_meetings_*.png || true
@@ -207,6 +287,7 @@ jobs:
           git push origin main
 
       - name: Run terminated grants update
+        if: needs.check-for-updates.outputs.update_taggs == 'true'
         run: |
           echo "=== Starting terminated grants update ==="
           echo "Disk space before terminated grants update:"
@@ -216,6 +297,7 @@ jobs:
           df -h
 
       - name: Commit terminated grants data
+        if: needs.check-for-updates.outputs.update_taggs == 'true'
         run: |
           git config --global user.name "GitHub Action"
           git config --global user.email "action@github.com"
@@ -242,6 +324,7 @@ jobs:
           path: 'pages'
 
       - name: Upload NIH Reporter data to LabKey
+        if: needs.check-for-updates.outputs.update_reporter == 'true'
         run: python utils/data-processors/extract_reporter_to_labkey.py
         env:
           LABKEY_API_KEY: ${{ secrets.LABKEY_API_KEY }}
@@ -249,7 +332,7 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-      
+
       # Save cache for next run
       - name: Save cache
         uses: actions/cache@v4
@@ -259,7 +342,7 @@ jobs:
             cache/federal_register
             cache/taggs
           key: ${{ runner.os }}-nih-cache-${{ hashFiles('**/requirements.txt') }}-${{ github.run_id }}
-      
+
       - name: Final disk space check
         if: always()
         run: |
@@ -267,3 +350,19 @@ jobs:
           df -h
           echo "=== Cache directory sizes ==="
           du -sh cache/* 2>/dev/null || echo "No cache directories"
+
+  # Summary job that always runs
+  workflow-summary:
+    needs: [check-for-updates, update-data]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Workflow Summary
+        run: |
+          echo "## Workflow Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "| Check | Result |" >> $GITHUB_STEP_SUMMARY
+          echo "|-------|--------|" >> $GITHUB_STEP_SUMMARY
+          echo "| New data detected | ${{ needs.check-for-updates.outputs.has_updates }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Sources with updates | ${{ needs.check-for-updates.outputs.sources || 'none' }} |" >> $GITHUB_STEP_SUMMARY
+          echo "| Update job ran | ${{ needs.update-data.result || 'skipped' }} |" >> $GITHUB_STEP_SUMMARY
