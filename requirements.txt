@@ -1,7 +1,7 @@
 requests
 plotly
 numpy
-kaleido
+kaleido==0.2.1
 bs4
 pandas
 zstandard
