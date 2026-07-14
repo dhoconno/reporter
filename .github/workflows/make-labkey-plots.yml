@@ -36,7 +36,10 @@ jobs:
       - name: Install R packages
         uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          cache-version: 2
+          cache-version: 3
+          # Skip Suggests — `logger` suggests `log4r`, which was archived
+          # from CRAN on 2026-07-14 and would otherwise break resolution.
+          dependencies: '"hard"'
           # Tell pak exactly what to install — no DESCRIPTION lookup
           packages: |
             any::sessioninfo
